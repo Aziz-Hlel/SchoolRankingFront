@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import SignUp from "./pages/SignUp";
-import Dashboard from "./components/Dashboard";
+import { Dashboard } from "./components/Dashboard";
 
 
 const queryClient = new QueryClient();
@@ -33,7 +33,6 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
 
               </Route>
-
 
 
               <Route path="*" element={<NotFound />} />

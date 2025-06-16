@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const SignUp = () => {
 
@@ -37,7 +37,7 @@ const SignUp = () => {
             if (!response.success && response.status === 309) setErrors({ email: "Email already exists" });
 
             if (!response.success && response.status !== 309) alert("Uncaught error");
-            
+
 
 
         } finally {

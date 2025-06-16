@@ -1,4 +1,4 @@
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom"
 import Login from "./Login";
 import { ROLES } from "@/enums/roles";
@@ -12,11 +12,12 @@ const Index = () => {
 
     if (!user) return <Login />;
 
-    if (user.role === ROLES.SUPER_ADMIN){
-         console.log("t5l")
-        navigate("/dashboard");}
+    if (user.role === ROLES.SUPER_ADMIN) {
+        console.log("t5l")
+        navigate("/dashboard");
+    }
 
- console.log(user)
+    console.log(user)
 
 }
 

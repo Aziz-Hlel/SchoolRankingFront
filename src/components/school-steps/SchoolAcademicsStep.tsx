@@ -1,11 +1,11 @@
 
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { SchoolAcademicsData } from '@/types/school';
+import type { UseFormReturn } from 'react-hook-form';
+import type { SchoolAcademicsData } from '@/types/school';
 
 const accreditations = [
   { value: 'IB', label: 'International Baccalaureate (IB)' },
@@ -36,12 +36,9 @@ const curriculums = [
   { value: 'cambridge', label: 'Cambridge International' },
 ];
 
-interface SchoolAcademicsStepProps {
-  form: UseFormReturn<SchoolAcademicsData>;
-  onSubmit: (data: SchoolAcademicsData) => void;
-}
 
-export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }) => {
+
+export const SchoolAcademicsStep: React.FC<{ form: UseFormReturn<SchoolAcademicsData>, onSubmit: () => void }> = ({ form }) => {
   return (
     <Form {...form}>
       <div className="space-y-6">
@@ -52,8 +49,8 @@ export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }
             <FormItem>
               <FormLabel>Number of Languages of Instruction</FormLabel>
               <FormControl>
-                <Input 
-                  type="number" 
+                <Input
+                  type="number"
                   placeholder="Enter number of languages"
                   {...field}
                   onChange={e => field.onChange(parseInt(e.target.value) || undefined)}
@@ -93,14 +90,14 @@ export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }
                           <FormControl>
                             <Checkbox
                               checked={field.value?.includes(item.value as any)}
-                              onCheckedChange={(checked) => {
+                              onCheckedChange={(checked: any) => {
                                 return checked
                                   ? field.onChange([...field.value, item.value])
                                   : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.value
-                                      )
+                                    field.value?.filter(
+                                      (value) => value !== item.value
                                     )
+                                  )
                               }}
                             />
                           </FormControl>
@@ -125,7 +122,7 @@ export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }
             <FormItem>
               <FormLabel>Accreditation Documentation Links</FormLabel>
               <FormControl>
-                <Textarea 
+                <Textarea
                   placeholder="Provide links to accreditation documents or certificates..."
                   {...field}
                 />
@@ -164,14 +161,14 @@ export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }
                           <FormControl>
                             <Checkbox
                               checked={field.value?.includes(item.value as any)}
-                              onCheckedChange={(checked) => {
+                              onCheckedChange={(checked: any) => {
                                 return checked
                                   ? field.onChange([...field.value, item.value])
                                   : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.value
-                                      )
+                                    field.value?.filter(
+                                      (value) => value !== item.value
                                     )
+                                  )
                               }}
                             />
                           </FormControl>
@@ -215,14 +212,14 @@ export const SchoolAcademicsStep: React.FC<SchoolAcademicsStepProps> = ({ form }
                           <FormControl>
                             <Checkbox
                               checked={field.value?.includes(item.value as any)}
-                              onCheckedChange={(checked) => {
+                              onCheckedChange={(checked: any) => {
                                 return checked
                                   ? field.onChange([...field.value, item.value])
                                   : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.value
-                                      )
+                                    field.value?.filter(
+                                      (value) => value !== item.value
                                     )
+                                  )
                               }}
                             />
                           </FormControl>

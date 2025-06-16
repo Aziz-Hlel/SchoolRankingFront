@@ -40,13 +40,13 @@ export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
   ) => {
     const currentValues = form.getValues(field) || [];
     let newValues: string[];
-    
+
     if (checked) {
       newValues = [...currentValues, value];
     } else {
       newValues = currentValues.filter((item: string) => item !== value);
     }
-    
+
     form.setValue(field, newValues);
     onDataChange({ ...form.getValues() });
   };
@@ -92,7 +92,7 @@ export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium mb-4">School Facilities</h3>
-        
+
         <Form {...form}>
           <div className="space-y-6">
             <FormField
@@ -112,7 +112,7 @@ export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
                             <FormControl>
                               <Checkbox
                                 checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked: any) =>
                                   handleCheckboxChange('facilities', option.value, checked as boolean)
                                 }
                               />
@@ -145,7 +145,7 @@ export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
                             <FormControl>
                               <Checkbox
                                 checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked: any) =>
                                   handleCheckboxChange('accessibilityFeatures', option.value, checked as boolean)
                                 }
                               />
@@ -178,7 +178,7 @@ export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
                             <FormControl>
                               <Checkbox
                                 checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked) =>
+                                onCheckedChange={(checked: any) =>
                                   handleCheckboxChange('sustainabilityPractices', option.value, checked as boolean)
                                 }
                               />

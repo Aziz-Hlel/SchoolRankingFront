@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 
 const Login = () => {
@@ -34,7 +34,7 @@ const Login = () => {
             if (!response.success && response.status === 401) setErrors({ email: "Invalid email or password" });
 
             if (!response.success && response.status !== 401) alert("uncaught error");
-            
+
 
 
         } finally {
