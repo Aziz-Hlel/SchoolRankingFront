@@ -1,278 +1,245 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-
-const schoolStaffSchema = z.object({
-  leadershipTeam: z.string().optional(),
-  leadershipProfileLink: z.string().url('Please enter a valid URL').optional(),
-  staffSizeEstimate: z.number().min(1, 'Staff size must be at least 1').optional(),
-  teacherQualifications: z.string().optional(),
-  teacherNationalities: z.string().array().optional(),
-  teacherLanguages: z.string().array().optional(),
-  professionalDevelopment: z.string().optional(),
-  lastInspectionDate: z.string().optional(),
-});
-
-export type SchoolStaffData = z.infer<typeof schoolStaffSchema>;
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import type { SchoolStaffData } from '@/types/school';
+import type { UseFormReturn } from 'react-hook-form';
 
 interface SchoolStaffStepProps {
-  data: SchoolStaffData;
-  onDataChange: (data: SchoolStaffData) => void;
+  form: UseFormReturn<SchoolStaffData>;
 }
 
-export const SchoolStaffStep: React.FC<SchoolStaffStepProps> = ({
-  data,
-  onDataChange,
-}) => {
-  const form = useForm<SchoolStaffData>({
-    resolver: zodResolver(schoolStaffSchema),
-    defaultValues: data,
-  });
-
-  const handleCheckboxChange = (
-    field: 'teacherNationalities' | 'teacherLanguages',
-    value: string,
-    checked: boolean
-  ) => {
-    const currentValues = form.getValues(field) || [];
-    let newValues: string[];
-
-    if (checked) {
-      newValues = [...currentValues, value];
-    } else {
-      newValues = currentValues.filter((item: string) => item !== value);
-    }
-
-    form.setValue(field, newValues);
-    onDataChange({ ...form.getValues() });
-  };
-
-  const handleInputChange = (field: keyof SchoolStaffData, value: any) => {
-    form.setValue(field, value);
-    onDataChange({ ...form.getValues() });
-  };
-
+export const SchoolStaffStep: React.FC<SchoolStaffStepProps> = ({ form }) => {
   const countryOptions = [
-    { value: 'US', label: 'United States' },
-    { value: 'CA', label: 'Canada' },
-    { value: 'UK', label: 'United Kingdom' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'DE', label: 'Germany' },
-    { value: 'FR', label: 'France' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'SG', label: 'Singapore' },
-    { value: 'AE', label: 'UAE' },
-    { value: 'IN', label: 'India' },
-    { value: 'BR', label: 'Brazil' },
-    { value: 'MX', label: 'Mexico' },
-    { value: 'ZA', label: 'South Africa' },
+    { id: 'US', label: 'United States' },
+    { id: 'CA', label: 'Canada' },
+    { id: 'UK', label: 'United Kingdom' },
+    { id: 'AU', label: 'Australia' },
+    { id: 'DE', label: 'Germany' },
+    { id: 'FR', label: 'France' },
+    { id: 'ES', label: 'Spain' },
+    { id: 'IT', label: 'Italy' },
+    { id: 'JP', label: 'Japan' },
+    { id: 'CN', label: 'China' },
+    { id: 'IN', label: 'India' },
+    { id: 'ZA', label: 'South Africa' },
   ];
 
   const languageOptions = [
-    { value: 'english', label: 'English' },
-    { value: 'spanish', label: 'Spanish' },
-    { value: 'french', label: 'French' },
-    { value: 'german', label: 'German' },
-    { value: 'chinese', label: 'Chinese' },
-    { value: 'japanese', label: 'Japanese' },
-    { value: 'arabic', label: 'Arabic' },
-    { value: 'portuguese', label: 'Portuguese' },
-    { value: 'russian', label: 'Russian' },
-    { value: 'italian', label: 'Italian' },
-    { value: 'dutch', label: 'Dutch' },
-    { value: 'korean', label: 'Korean' },
+    { id: 'english', label: 'English' },
+    { id: 'arabic', label: 'Arabic' },
+    { id: 'french', label: 'French' },
+    { id: 'spanish', label: 'Spanish' },
+    { id: 'german', label: 'German' },
+    { id: 'italian', label: 'Italian' },
+    { id: 'mandarin', label: 'Mandarin' },
+    { id: 'japanese', label: 'Japanese' },
+    { id: 'hindi', label: 'Hindi' },
+    { id: 'portuguese', label: 'Portuguese' },
+    { id: 'korean', label: 'Korean' },
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-4">School Staff</h3>
+    <Form {...form}>
+      <div className="space-y-6">
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-semibold mb-2">School Staff & Leadership</h3>
+          <p className="text-muted-foreground">
+            Provide information about your school's staff and leadership team
+          </p>
+        </div>
 
-        <Form {...form}>
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="leadershipTeam"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Leadership Team</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your leadership team"
-                      {...field}
-                      onChange={(e) => handleInputChange('leadershipTeam', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="leadershipTeam"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Leadership Team *</FormLabel>
+              <FormDescription>Describe your school's leadership team</FormDescription>
+              <FormControl>
+                <Input placeholder="Principal, Vice Principal, Academic Directors..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="leadershipProfileLink"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Leadership Profile Link</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://example.com/leadership"
-                      {...field}
-                      onChange={(e) => handleInputChange('leadershipProfileLink', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="leadershipProfileLink"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Leadership Profile Link *</FormLabel>
+              <FormDescription>Link to leadership team profiles or bios</FormDescription>
+              <FormControl>
+                <Input placeholder="https://example.com/leadership" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="staffSizeEstimate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Staff Size Estimate</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="1"
-                      placeholder="Enter number of staff"
-                      {...field}
-                      onChange={(e) => handleInputChange('staffSizeEstimate', parseInt(e.target.value) || 0)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="staffSizeEstimate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Staff Size Estimate *</FormLabel>
+              <FormDescription>Total number of staff members</FormDescription>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder="50"
+                  {...field}
+                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="teacherQualifications"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Teacher Qualifications</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe teacher qualifications"
-                      {...field}
-                      onChange={(e) => handleInputChange('teacherQualifications', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="teacherQualifications"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Teacher Qualifications *</FormLabel>
+              <FormDescription>Describe the typical qualifications of your teachers</FormDescription>
+              <FormControl>
+                <Input placeholder="Bachelor's degree, Master's degree, Teaching certification..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="teacherNationalities"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Teacher Nationalities</FormLabel>
-                  <div className="grid grid-cols-2 gap-2">
-                    {countryOptions.map((option) => (
-                      <FormField
-                        key={option.value}
-                        control={form.control}
-                        name="teacherNationalities"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked: any) =>
-                                  handleCheckboxChange('teacherNationalities', option.value, checked as boolean)
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm">{option.label}</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="teacherNationalities"
+          render={() => (
+            <FormItem>
+              <FormLabel>Teacher Nationalities *</FormLabel>
+              <FormDescription>Select the nationalities represented in your teaching staff</FormDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-48 overflow-y-auto">
+                {countryOptions.map((country) => (
+                  <FormField
+                    key={country.id}
+                    control={form.control}
+                    name="teacherNationalities"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={country.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(country.id as any)}
+                              onCheckedChange={(checked: any) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, country.id])
+                                  : field.onChange(
+                                    currentValue?.filter(
+                                      (value) => value !== country.id
+                                    )
+                                  );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {country.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="teacherLanguages"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Teacher Languages</FormLabel>
-                  <div className="grid grid-cols-2 gap-2">
-                    {languageOptions.map((option) => (
-                      <FormField
-                        key={option.value}
-                        control={form.control}
-                        name="teacherLanguages"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked: any) =>
-                                  handleCheckboxChange('teacherLanguages', option.value, checked as boolean)
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm">{option.label}</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="teacherLanguages"
+          render={() => (
+            <FormItem>
+              <FormLabel>Teacher Languages *</FormLabel>
+              <FormDescription>Select languages spoken by your teaching staff</FormDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {languageOptions.map((language) => (
+                  <FormField
+                    key={language.id}
+                    control={form.control}
+                    name="teacherLanguages"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={language.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(language.id as any)}
+                              onCheckedChange={(checked: any) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, language.id])
+                                  : field.onChange(
+                                    currentValue?.filter(
+                                      (value) => value !== language.id
+                                    )
+                                  );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {language.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="professionalDevelopment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Professional Development</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe professional development programs"
-                      {...field}
-                      onChange={(e) => handleInputChange('professionalDevelopment', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="professionalDevelopment"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Professional Development *</FormLabel>
+              <FormDescription>Describe professional development opportunities for staff</FormDescription>
+              <FormControl>
+                <Input placeholder="Training programs, workshops, conferences..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="lastInspectionDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Inspection Date (Optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      {...field}
-                      onChange={(e) => handleInputChange('lastInspectionDate', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </Form>
+        <FormField
+          control={form.control}
+          name="lastInspectionDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Inspection Date</FormLabel>
+              <FormDescription>Date of the last official school inspection (YYYY-MM-DD)</FormDescription>
+              <FormControl>
+                <Input type="date" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
-    </div>
+    </Form>
   );
 };

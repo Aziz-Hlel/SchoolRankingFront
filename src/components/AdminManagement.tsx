@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
 import { AddAdminDialog } from './AddAdminDialog';
 import { EditAdminDialog } from './EditAdminDialog';
 import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface Admin {
   id: string;
@@ -20,44 +31,47 @@ interface Admin {
   createdAt: string;
 }
 
-const mockAdmins: Admin[] = [
-  {
-    id: '1',
-    name: 'John Smith',
-    email: 'john@school1.edu',
-    role: 'admin',
-    schoolId: '1',
-    schoolName: 'Lincoln Elementary',
-    status: 'active',
-    createdAt: '2024-01-15',
-  },
-  {
-    id: '2',
-    name: 'Sarah Johnson',
-    email: 'sarah@school2.edu',
-    role: 'admin',
-    schoolId: '2',
-    schoolName: 'Washington High School',
-    status: 'active',
-    createdAt: '2024-02-20',
-  },
-];
-
 export const AdminManagement: React.FC = () => {
-  const [admins, setAdmins] = useState<Admin[]>(mockAdmins);
-  const [searchTerm, setSearchTerm] = useState('');
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
-  const [deletingAdminId, setDeletingAdminId] = useState<string | null>(null);
+  const [deletingAdmin, setDeletingAdmin] = useState<Admin | null>(null);
 
-  const filteredAdmins = admins.filter(admin =>
-    admin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.schoolName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Mock data - in a real app, this would come from an API
+  const [admins, setAdmins] = useState<Admin[]>([
+    {
+      id: '1',
+      name: 'John Smith',
+      email: 'john@sunriseschool.edu',
+      role: 'admin',
+      schoolId: 'school-1',
+      schoolName: 'Sunrise International School',
+      status: 'active',
+      createdAt: '2024-01-15',
+    },
+    {
+      id: '2',
+      name: 'Sarah Johnson',
+      email: 'sarah@brightfuture.edu',
+      role: 'admin',
+      schoolId: 'school-2',
+      schoolName: 'Bright Future Academy',
+      status: 'active',
+      createdAt: '2024-01-20',
+    },
+    {
+      id: '3',
+      name: 'Michael Brown',
+      email: 'michael@globalschool.edu',
+      role: 'admin',
+      schoolId: 'school-3',
+      schoolName: 'Global Education Center',
+      status: 'inactive',
+      createdAt: '2024-02-01',
+    }
+  ]);
 
   const handleAddAdmin = (adminData: any) => {
     const newAdmin: Admin = {
-      id: (admins.length + 1).toString(),
+      id: `admin-${Date.now()}`,
       name: `${adminData.firstName} ${adminData.lastName}`,
       email: adminData.email,
       role: 'admin',
@@ -67,99 +81,96 @@ export const AdminManagement: React.FC = () => {
     setAdmins([...admins, newAdmin]);
   };
 
-  const handleEditAdmin = (admin: Admin) => {
-    setEditingAdmin(admin);
-  };
-
   const handleUpdateAdmin = (adminData: any) => {
     if (editingAdmin) {
-      const updatedAdmin: Admin = {
-        ...editingAdmin,
-        name: `${adminData.firstName} ${adminData.lastName}`,
-        email: adminData.email,
-      };
-      setAdmins(admins.map(admin => admin.id === editingAdmin.id ? updatedAdmin : admin));
+      setAdmins(admins.map(admin =>
+        admin.id === editingAdmin.id
+          ? { ...admin, name: `${adminData.firstName} ${adminData.lastName}`, email: adminData.email }
+          : admin
+      ));
       setEditingAdmin(null);
     }
   };
 
   const handleDeleteAdmin = () => {
-    if (deletingAdminId) {
-      setAdmins(admins.filter(admin => admin.id !== deletingAdminId));
-      setDeletingAdminId(null);
+    if (deletingAdmin) {
+      setAdmins(admins.filter(admin => admin.id !== deletingAdmin.id));
+      setDeletingAdmin(null);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 lg:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Admin Management</h2>
-          <p className="text-muted-foreground">Manage all school administrators</p>
+          <h2 className="text-xl lg:text-2xl font-bold">Admin Management</h2>
+          <p className="text-sm lg:text-base text-muted-foreground">
+            Manage school administrators and their permissions
+          </p>
         </div>
         <AddAdminDialog onAddAdmin={handleAddAdmin} />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Administrators</CardTitle>
-          <div className="flex items-center space-x-2">
-            <Input
-              placeholder="Search admins..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm"
-            />
-          </div>
-        </CardHeader>
-        <CardContent>
+      <div className="border rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>School</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="min-w-[150px]">Name</TableHead>
+                <TableHead className="min-w-[200px]">Email</TableHead>
+                <TableHead className="hidden sm:table-cell min-w-[150px]">School</TableHead>
+                <TableHead className="hidden md:table-cell">Status</TableHead>
+                <TableHead className="hidden lg:table-cell">Created</TableHead>
+                <TableHead className="w-[70px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredAdmins.map((admin) => (
+              {admins.map((admin) => (
                 <TableRow key={admin.id}>
                   <TableCell className="font-medium">{admin.name}</TableCell>
-                  <TableCell>{admin.email}</TableCell>
-                  <TableCell>{admin.schoolName}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-sm">{admin.email}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-sm">
+                    {admin.schoolName || 'Not assigned'}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
                     <Badge variant={admin.status === 'active' ? 'default' : 'secondary'}>
                       {admin.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{admin.createdAt}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditAdmin(admin)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setDeletingAdminId(admin.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+                  <TableCell className="hidden lg:table-cell text-sm">
+                    {new Date(admin.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-white">
+                        <DropdownMenuItem
+                          onClick={() => setEditingAdmin(admin)}
+                          className="flex items-center gap-2 hover:bg-gray-100"
+                        >
+                          <Edit className="h-4 w-4" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => setDeletingAdmin(admin)}
+                          className="flex items-center gap-2 text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {editingAdmin && (
         <EditAdminDialog
@@ -171,11 +182,11 @@ export const AdminManagement: React.FC = () => {
       )}
 
       <DeleteConfirmationDialog
-        open={!!deletingAdminId}
-        onOpenChange={(open) => !open && setDeletingAdminId(null)}
+        open={!!deletingAdmin}
+        onOpenChange={(open) => !open && setDeletingAdmin(null)}
         onConfirm={handleDeleteAdmin}
         title="Delete Administrator"
-        description="Are you sure you want to delete this administrator? This action cannot be undone."
+        description={`Are you sure you want to delete ${deletingAdmin?.name}? This action cannot be undone.`}
       />
     </div>
   );

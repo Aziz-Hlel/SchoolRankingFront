@@ -1,273 +1,273 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-
-const schoolFacilitiesSchema = z.object({
-  facilities: z.string().array().optional(),
-  accessibilityFeatures: z.string().array().optional(),
-  sustainabilityPractices: z.string().array().optional(),
-  universityDestinations: z.string().array().optional(),
-  csrActivities: z.string().optional(),
-  industryPartnerships: z.string().array().optional(),
-  awardsAndRecognitions: z.string().optional(),
-});
-
-export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import type { SchoolFacilitiesData } from '@/types/school';
+import type { UseFormReturn } from 'react-hook-form';
 
 interface SchoolFacilitiesStepProps {
-  data: SchoolFacilitiesData;
-  onDataChange: (data: SchoolFacilitiesData) => void;
+  form: UseFormReturn<SchoolFacilitiesData>;
 }
 
-export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({
-  data,
-  onDataChange,
-}) => {
-  const form = useForm<SchoolFacilitiesData>({
-    resolver: zodResolver(schoolFacilitiesSchema),
-    defaultValues: data,
-  });
-
-  const handleCheckboxChange = (
-    field: 'facilities' | 'accessibilityFeatures' | 'sustainabilityPractices' | 'industryPartnerships',
-    value: string,
-    checked: boolean
-  ) => {
-    const currentValues = form.getValues(field) || [];
-    let newValues: string[];
-
-    if (checked) {
-      newValues = [...currentValues, value];
-    } else {
-      newValues = currentValues.filter((item: string) => item !== value);
-    }
-
-    form.setValue(field, newValues);
-    onDataChange({ ...form.getValues() });
-  };
-
-  const handleInputChange = (field: keyof SchoolFacilitiesData, value: any) => {
-    form.setValue(field, value);
-    onDataChange({ ...form.getValues() });
-  };
-
+export const SchoolFacilitiesStep: React.FC<SchoolFacilitiesStepProps> = ({ form }) => {
   const facilityOptions = [
-    { value: 'library', label: 'Library' },
-    { value: 'laboratory', label: 'Laboratory' },
-    { value: 'gymnasium', label: 'Gymnasium' },
-    { value: 'cafeteria', label: 'Cafeteria' },
-    { value: 'auditorium', label: 'Auditorium' },
-    { value: 'playground', label: 'Playground' },
-    { value: 'swimming-pool', label: 'Swimming Pool' },
-    { value: 'art-studio', label: 'Art Studio' },
-    { value: 'music-room', label: 'Music Room' },
-    { value: 'computer-lab', label: 'Computer Lab' },
-    { value: 'sports-field', label: 'Sports Field' },
+    { id: 'library', label: 'Library' },
+    { id: 'laboratory', label: 'Laboratory' },
+    { id: 'gymnasium', label: 'Gymnasium' },
+    { id: 'cafeteria', label: 'Cafeteria' },
+    { id: 'auditorium', label: 'Auditorium' },
+    { id: 'playground', label: 'Playground' },
+    { id: 'swimming-pool', label: 'Swimming Pool' },
+    { id: 'art-studio', label: 'Art Studio' },
+    { id: 'music-room', label: 'Music Room' },
+    { id: 'computer-lab', label: 'Computer Lab' },
+    { id: 'sports-field', label: 'Sports Field' },
   ];
 
   const accessibilityOptions = [
-    { value: 'wheelchair-access', label: 'Wheelchair Access' },
-    { value: 'elevator', label: 'Elevator' },
-    { value: 'braille-signage', label: 'Braille Signage' },
-    { value: 'hearing-loop', label: 'Hearing Loop' },
-    { value: 'accessible-restrooms', label: 'Accessible Restrooms' },
-    { value: 'special-needs-support', label: 'Special Needs Support' },
+    { id: 'wheelchair-access', label: 'Wheelchair Access' },
+    { id: 'elevator', label: 'Elevator' },
+    { id: 'braille-signage', label: 'Braille Signage' },
+    { id: 'hearing-loop', label: 'Hearing Loop' },
+    { id: 'accessible-restrooms', label: 'Accessible Restrooms' },
   ];
 
   const sustainabilityOptions = [
-    { value: 'solar-panels', label: 'Solar Panels' },
-    { value: 'recycling-program', label: 'Recycling Program' },
-    { value: 'water-conservation', label: 'Water Conservation' },
-    { value: 'green-building', label: 'Green Building' },
-    { value: 'organic-garden', label: 'Organic Garden' },
-    { value: 'energy-efficiency', label: 'Energy Efficiency' },
+    { id: 'solar-panels', label: 'Solar Panels' },
+    { id: 'recycling-program', label: 'Recycling Program' },
+    { id: 'water-conservation', label: 'Water Conservation' },
+    { id: 'energy-efficient-lighting', label: 'Energy Efficient Lighting' },
+    { id: 'green-building-certification', label: 'Green Building Certification' },
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-4">School Facilities</h3>
+    <Form {...form}>
+      <div className="space-y-6">
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-semibold mb-2">School Facilities & Resources</h3>
+          <p className="text-muted-foreground">
+            Provide information about your school's facilities and resources
+          </p>
+        </div>
 
-        <Form {...form}>
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="facilities"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Available Facilities</FormLabel>
-                  <div className="grid grid-cols-2 gap-2">
-                    {facilityOptions.map((option) => (
-                      <FormField
-                        key={option.value}
-                        control={form.control}
-                        name="facilities"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked: any) =>
-                                  handleCheckboxChange('facilities', option.value, checked as boolean)
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm">{option.label}</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="facilities"
+          render={() => (
+            <FormItem>
+              <FormLabel>Facilities *</FormLabel>
+              <FormDescription>Select all facilities available at your school</FormDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {facilityOptions.map((facility) => (
+                  <FormField
+                    key={facility.id}
+                    control={form.control}
+                    name="facilities"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={facility.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(facility.id as any)}
+                              onCheckedChange={(checked: any) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, facility.id])
+                                  : field.onChange(
+                                    currentValue?.filter(
+                                      (value) => value !== facility.id
+                                    )
+                                  );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {facility.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="accessibilityFeatures"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Accessibility Features</FormLabel>
-                  <div className="grid grid-cols-2 gap-2">
-                    {accessibilityOptions.map((option) => (
-                      <FormField
-                        key={option.value}
-                        control={form.control}
-                        name="accessibilityFeatures"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked: any) =>
-                                  handleCheckboxChange('accessibilityFeatures', option.value, checked as boolean)
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm">{option.label}</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="accessibilityFeatures"
+          render={() => (
+            <FormItem>
+              <FormLabel>Accessibility Features *</FormLabel>
+              <FormDescription>Select accessibility features available</FormDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {accessibilityOptions.map((feature) => (
+                  <FormField
+                    key={feature.id}
+                    control={form.control}
+                    name="accessibilityFeatures"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={feature.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(feature.id as any)}
+                              onCheckedChange={(checked: any) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, feature.id])
+                                  : field.onChange(
+                                    currentValue?.filter(
+                                      (value) => value !== feature.id
+                                    )
+                                  );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {feature.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="sustainabilityPractices"
-              render={() => (
-                <FormItem>
-                  <FormLabel>Sustainability Practices</FormLabel>
-                  <div className="grid grid-cols-2 gap-2">
-                    {sustainabilityOptions.map((option) => (
-                      <FormField
-                        key={option.value}
-                        control={form.control}
-                        name="sustainabilityPractices"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.value)}
-                                onCheckedChange={(checked: any) =>
-                                  handleCheckboxChange('sustainabilityPractices', option.value, checked as boolean)
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-sm">{option.label}</FormLabel>
-                          </FormItem>
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="sustainabilityPractices"
+          render={() => (
+            <FormItem>
+              <FormLabel>Sustainability Practices *</FormLabel>
+              <FormDescription>Select sustainability practices implemented</FormDescription>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {sustainabilityOptions.map((practice) => (
+                  <FormField
+                    key={practice.id}
+                    control={form.control}
+                    name="sustainabilityPractices"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={practice.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(practice.id as any)}
+                              onCheckedChange={(checked: any) => {
+                                const currentValue = field.value || [];
+                                return checked
+                                  ? field.onChange([...currentValue, practice.id])
+                                  : field.onChange(
+                                    currentValue?.filter(
+                                      (value) => value !== practice.id
+                                    )
+                                  );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="text-sm font-normal">
+                            {practice.label}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="universityDestinations"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>University Destinations</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Enter university destinations (one per line)"
-                      value={field.value?.join('\n') || ''}
-                      onChange={(e) => handleInputChange('universityDestinations', e.target.value.split('\n').filter(Boolean))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="universityDestinations"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>University Destinations *</FormLabel>
+              <FormDescription>Enter universities where your graduates typically go (comma-separated)</FormDescription>
+              <FormControl>
+                <Input
+                  placeholder="Harvard University, Oxford University, MIT..."
+                  value={field.value?.join(', ') || ''}
+                  onChange={(e) => {
+                    const universities = e.target.value.split(',').map(s => s.trim()).filter(s => s);
+                    field.onChange(universities);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="csrActivities"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CSR Activities</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your CSR activities"
-                      {...field}
-                      onChange={(e) => handleInputChange('csrActivities', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="csrActivities"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>CSR Activities *</FormLabel>
+              <FormDescription>Describe your Corporate Social Responsibility activities</FormDescription>
+              <FormControl>
+                <Input placeholder="Community service, environmental projects, charity work..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="industryPartnerships"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Industry Partnerships</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Enter industry partnerships (one per line)"
-                      value={field.value?.join('\n') || ''}
-                      onChange={(e) => handleInputChange('industryPartnerships', e.target.value.split('\n').filter(Boolean))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <FormField
+          control={form.control}
+          name="industryPartnerships"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Industry Partnerships *</FormLabel>
+              <FormDescription>List your industry partnerships (comma-separated)</FormDescription>
+              <FormControl>
+                <Input
+                  placeholder="Tech companies, local businesses, NGOs..."
+                  value={field.value?.join(', ') || ''}
+                  onChange={(e) => {
+                    const partnerships = e.target.value.split(',').map(s => s.trim()).filter(s => s);
+                    field.onChange(partnerships);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <FormField
-              control={form.control}
-              name="awardsAndRecognitions"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Awards and Recognitions (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="List any awards and recognitions"
-                      {...field}
-                      onChange={(e) => handleInputChange('awardsAndRecognitions', e.target.value)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </Form>
+        <FormField
+          control={form.control}
+          name="awardsAndRecognitions"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Awards and Recognitions</FormLabel>
+              <FormDescription>List any awards or recognitions received</FormDescription>
+              <FormControl>
+                <Input placeholder="Academic excellence awards, sports championships..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
-    </div>
+    </Form>
   );
 };
