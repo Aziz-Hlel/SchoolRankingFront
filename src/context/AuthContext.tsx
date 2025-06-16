@@ -12,6 +12,7 @@ import type { User } from "../types/user";
 
 type IAuthContext = {
     user: User | null | undefined;
+    isLoading: boolean;
     signup: (data: signUpSchema) => Promise<ApiResponse<signUpApiResponse>>;
     login: (data: sigInSchema) => Promise<ApiResponse<sigInApiResponse>>;
     logout: () => void;
@@ -27,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     const [user, setUser] = useState<User | null | undefined>(undefined);
-
+    const [isLoading, setIsLoading] = useState(true);
 
     const getCurrentUser = async () => {
         const response = await apiService.get<User>(apiGateway.auth.me);
@@ -49,7 +50,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 // Load tokens from localStorage
                 jwtTokenManager.loadTokensFromStorage();
 
-                if (!jwtTokenManager.refreshTokenExist()) setUser(null);
+                if (!jwtTokenManager.refreshTokenExist()) {
+                    setUser(null);
+                    setIsLoading(false);
+                    return;
+                }
+
                 else {
                     // Try to get user profile to verify token is still valid
                     const refreshToken = jwtTokenManager.getRefreshToken();
@@ -64,17 +70,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                         userResponse.success ? setUser(userResponse.data) : setUser(null);
 
+
+
                     } else {
                         // Token invalid, clear it
                         setUser(null);
                         jwtTokenManager.clearTokens();
                     }
+
+                    setIsLoading(false);
                 }
 
 
             } catch (error) {
                 console.error('Auth initialization error:', error);
                 setUser(null);
+                setIsLoading(false);
                 jwtTokenManager.clearTokens();
             }
         };
@@ -85,7 +96,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     const signup = async (data: signUpSchema) => {
-        // const response = await Http.post(apiGateway.user.signUp, data);
+
+        setIsLoading(true);
+
         const response = await apiService.post<signUpApiResponse>(apiGateway.auth.signUp, data);
 
         if (response.success) {
@@ -95,14 +108,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         else setUser(null);
+
+        setIsLoading(false);
+
         return response
 
     }
 
     const login = async (data: sigInSchema) => {
 
+        setIsLoading(true);
 
-        // const response = await Http.post(apiGateway.user.sigIn, data)
         const response = await apiService.post<sigInApiResponse>(apiGateway.auth.login, data);
 
         if (response.success) {
@@ -113,6 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         }
 
+        setIsLoading(false);
 
         return response
     };
@@ -126,12 +143,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const contextValue: IAuthContext = {
         user,
+        isLoading,
         signup,
         login,
         logout,
         refreshUser: whoAmI,
     };
-    // console.log("user", user);
 
     return (
         <AuthContext.Provider value={contextValue}>

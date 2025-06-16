@@ -130,8 +130,10 @@ class ApiService {
     // Wrapper methods with error handling
     async get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.api.get<T>(url, config);
-            return { data: response.data, status: response.status, success: true };
+
+            const response = await this.api.get<ApiResponse<T>>(url, config);
+            return { data: response.data.data, status: response.status, success: true };
+
         } catch (error: any) {
 
             const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
@@ -146,8 +148,10 @@ class ApiService {
 
     async getThrowable<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.api.get<T>(url, config);
-            return { data: response.data, status: response.status, success: true };
+
+            const response = await this.api.get<ApiResponse<T>>(url, config);
+            return { data: response.data.data, status: response.status, success: true };
+
         } catch (error: any) {
 
             const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
@@ -162,8 +166,8 @@ class ApiService {
 
     async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.api.post<T>(url, data, config);
-            return { data: response.data, status: response.status, success: true };
+            const response = await this.api.post<ApiResponse<T>>(url, data, config);
+            return { data: response.data.data, status: response.status, success: true };
         } catch (error: any) {
 
             const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
@@ -179,8 +183,8 @@ class ApiService {
 
     async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.api.put<T>(url, data, config);
-            return { data: response.data, status: response.status, success: true };
+            const response = await this.api.put<ApiResponse<T>>(url, data, config);
+            return { data: response.data.data, status: response.status, success: true };
         } catch (error: any) {
 
             const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
@@ -196,8 +200,8 @@ class ApiService {
 
     async delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
-            const response = await this.api.delete<T>(url, config);
-            return { data: response.data, status: response.status, success: true };
+            const response = await this.api.delete<ApiResponse<T>>(url, config);
+            return { data: response.data.data, status: response.status, success: true };
         } catch (error: any) {
 
             const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
