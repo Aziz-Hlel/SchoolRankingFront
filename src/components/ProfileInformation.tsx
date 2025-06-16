@@ -63,10 +63,7 @@ export const ProfileInformation: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight">Profile Information</h2>
-        <p className="text-muted-foreground">Manage your personal information and account settings</p>
-      </div>
+    
 
       <Card>
         <CardHeader>

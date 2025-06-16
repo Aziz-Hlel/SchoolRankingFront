@@ -8,7 +8,6 @@ import Profile from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
-import Index from "./pages/Index";
 
 
 const queryClient = new QueryClient();
@@ -16,6 +15,7 @@ const queryClient = new QueryClient();
 
 function App() {
 
+  <Dashboard />
 
   return (
     <>

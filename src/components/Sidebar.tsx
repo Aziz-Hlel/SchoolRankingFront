@@ -3,32 +3,30 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Users, Book, User, School, LogOut } from 'lucide-react';
+import { User, LogOut } from 'lucide-react';
 import { ROLES } from '@/enums/roles';
+import type { Page } from '@/types/page';
+import { PAGES } from '@/data/pages';
 
 interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
+  currentPage: Page;
+  onPageChange: (page: Page) => void;
+  ordredPages: Page[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, ordredPages }) => {
   const { user, logout } = useAuth();
 
-  const superAdminItems = [
-    { id: 'admins', label: 'Manage Admins', icon: Users },
-    { id: 'schools', label: 'Manage Schools', icon: Book },
-  ];
+  if (!user) return null;
 
-  const adminItems = [
-    { id: 'school', label: 'School Profile', icon: Book },
-    { id: 'my-school', label: 'My School', icon: School },
-  ];
+  const userRole = user.role;
 
-  const items = user?.role === ROLES.SUPER_ADMIN ? superAdminItems : adminItems;
+
 
   return (
     <div className="w-64 bg-white border-r border-border h-screen flex flex-col">
-      <div className="p-4 lg:p-6 border-b border-border">
+
+      <div className="p-4 lg:p-6 border-b border-border h-28">
         <h2 className="text-lg lg:text-xl font-bold text-primary">Admin Dashboard</h2>
         <p className="text-xs lg:text-sm text-muted-foreground mt-1">
           {user?.role === ROLES.SUPER_ADMIN ? 'Super Admin' : 'School Admin'}
@@ -37,20 +35,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange }) =
 
       <nav className="flex-1 p-3 lg:p-4">
         <div className="space-y-1 lg:space-y-2">
-          {items.map((item) => {
-            const Icon = item.icon;
+          {ordredPages.map((page) => {
+
+            if (!page.allowedRoles.includes(userRole))
+              return null;
+
+            const Icon = page.icon;
             return (
               <Button
-                key={item.id}
-                variant={currentPage === item.id ? 'default' : 'ghost'}
+                key={page.id}
+                variant={currentPage === page ? 'default' : 'ghost'}
                 className={cn(
                   'w-full justify-start text-sm lg:text-base h-10 lg:h-11',
-                  currentPage === item.id && 'bg-primary text-primary-foreground'
+                  currentPage === page && 'bg-primary text-primary-foreground'
                 )}
-                onClick={() => onPageChange(item.id)}
+                onClick={() => onPageChange(page)}
               >
                 <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate">{page.sidebarLabel}</span>
               </Button>
             );
           })}
@@ -59,12 +61,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange }) =
 
       <div className="p-3 lg:p-4 border-t border-border">
         <Button
-          variant={currentPage === 'profile' ? 'default' : 'ghost'}
+          variant={currentPage === PAGES.profile ? 'default' : 'ghost'}
           className={cn(
             'w-full justify-start mb-2 text-sm lg:text-base h-10 lg:h-11',
-            currentPage === 'profile' && 'bg-primary text-primary-foreground'
+            currentPage === PAGES.profile && 'bg-primary text-primary-foreground'
           )}
-          onClick={() => onPageChange('profile')}
+          onClick={() => onPageChange(PAGES.profile)}
         >
           <User className="w-4 h-4 mr-2 flex-shrink-0" />
           <span className="truncate">Profile</span>

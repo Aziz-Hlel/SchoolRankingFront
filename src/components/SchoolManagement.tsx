@@ -1,11 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { SchoolDataTable } from './SchoolDataTable';
 
 interface School {
   id: string;
@@ -46,13 +44,6 @@ const mockSchools: School[] = [
 
 export const SchoolManagement: React.FC = () => {
   const [schools, setSchools] = useState<School[]>(mockSchools);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredSchools = schools.filter(school =>
-    school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.principalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.address.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleAddSchool = () => {
     console.log('Add new school');
@@ -69,80 +60,29 @@ export const SchoolManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">School Management</h2>
-          <p className="text-muted-foreground">Manage all schools in the system</p>
+          <h2 className="text-xl lg:text-2xl font-bold tracking-tight">Schools table</h2>
         </div>
+
         <Button onClick={handleAddSchool} className="flex items-center gap-2">
           <Plus className="w-4 h-4" />
           Add School
         </Button>
       </div>
 
+      
       <Card>
         <CardHeader>
           <CardTitle>Schools</CardTitle>
-          <div className="flex items-center space-x-2">
-            <Input
-              placeholder="Search schools..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm"
-            />
-          </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>School Name</TableHead>
-                <TableHead>Principal</TableHead>
-                <TableHead>Students</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredSchools.map((school) => (
-                <TableRow key={school.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{school.name}</div>
-                      <div className="text-sm text-muted-foreground">{school.address}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{school.principalName}</TableCell>
-                  <TableCell>{school.studentCount.toLocaleString()}</TableCell>
-                  <TableCell>{school.phone}</TableCell>
-                  <TableCell>
-                    <Badge variant={school.status === 'active' ? 'default' : 'secondary'}>
-                      {school.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditSchool(school.id)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteSchool(school.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <SchoolDataTable
+            data={schools}
+            onEdit={handleEditSchool}
+            onDelete={handleDeleteSchool}
+          />
         </CardContent>
       </Card>
     </div>

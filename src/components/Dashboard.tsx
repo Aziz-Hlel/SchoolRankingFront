@@ -3,64 +3,39 @@ import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
-import { AdminManagement } from './AdminManagement';
-import { SchoolManagement } from './SchoolManagement';
-import { SchoolProfile } from './SchoolProfile';
-import { ProfileInformation } from './ProfileInformation';
-import { MySchool } from './MySchool';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ROLES } from '@/enums/roles';
+import type { Page } from '@/types/page';
+import { ordredPages, PAGES } from '@/data/pages';
+
+
+
 
 export const Dashboard: React.FC = () => {
+
   const { user } = useAuth();
-  const [currentPage, setCurrentPage] = useState(() => {
-    return user?.role === ROLES.SUPER_ADMIN ? 'admins' : 'school';
-  });
+
+  if (!user) return <>User is either null or undefined</>;
+
+  const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.schools
+
+  const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const getPageTitle = () => {
-    switch (currentPage) {
-      case 'admins':
-        return 'Admin Management';
-      case 'schools':
-        return 'School Management';
-      case 'school':
-        return 'School Profile';
-      case 'my-school':
-        return 'My School';
-      case 'profile':
-        return 'Profile Information';
-      default:
-        return 'Dashboard';
-    }
-  };
+
 
   const renderPageContent = () => {
-    switch (currentPage) {
-      case 'admins':
-        return <AdminManagement />;
-      case 'schools':
-        return <SchoolManagement />;
-      case 'school':
-        return <SchoolProfile />;
-      case 'my-school':
-        return <MySchool />;
-      case 'profile':
-        return <ProfileInformation />;
-      default:
-        return <div>Page not found</div>;
-    }
+
+    const Component = currentPage.component;
+    return <Component />;
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
@@ -70,10 +45,11 @@ export const Dashboard: React.FC = () => {
       `}>
         <Sidebar
           currentPage={currentPage}
-          onPageChange={(page) => {
+          onPageChange={(page: Page) => {
             setCurrentPage(page);
             setSidebarOpen(false);
           }}
+          ordredPages={ordredPages}
         />
       </div>
 
@@ -89,13 +65,13 @@ export const Dashboard: React.FC = () => {
           >
             {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
-          <h1 className="text-lg font-semibold text-foreground">{getPageTitle()}</h1>
+          <h1 className="text-lg font-semibold text-foreground">{currentPage.mainPageTitle}</h1>
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
 
         {/* Desktop header */}
         <div className="hidden lg:block">
-          <Header title={getPageTitle()} />
+          <Header currentPage={currentPage} />
         </div>
 
         {/* Page content */}
