@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { useState, } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -7,25 +7,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
-import { Plus } from 'lucide-react';
+import { CheckLine, Plus } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiService } from '@/service/Api/apiService';
+import apiGateway from '@/service/Api/apiGateway';
+import safeAsyncMutate from '@/utils/safeAsyncMutate';
+import { AlertToast } from '@/hooks/useToast2';
 
 const addAdminSchema = z.object({
   firstName: z.string().min(3, 'First name must be at least 3 characters').max(20, 'First name must not exceed 20 characters'),
   lastName: z.string().min(3, 'Last name must be at least 3 characters').max(20, 'Last name must not exceed 20 characters'),
   email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+  password: z.string().min(1, 'Password must be at least 8 characters'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+
+})
+  ;
 
 type AddAdminFormData = z.infer<typeof addAdminSchema>;
 
-interface AddAdminDialogProps {
-  onAddAdmin: (adminData: AddAdminFormData) => void;
-}
 
-export const AddAdminDialog: React.FC<AddAdminDialogProps> = ({ onAddAdmin }) => {
-  const { toast } = useToast();
-  const [open, setOpen] = React.useState(false);
+export const AddAdminDialog = () => {
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const addAdmin = (form: AddAdminFormData) => apiService.post(apiGateway.user.add, form)
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: addAdmin,
+
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admins'], }); console.log("Admin added successfully") },
+  })
 
   const form = useForm<AddAdminFormData>({
     resolver: zodResolver(addAdminSchema),
@@ -34,26 +48,25 @@ export const AddAdminDialog: React.FC<AddAdminDialogProps> = ({ onAddAdmin }) =>
       lastName: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
   const onSubmit = async (data: AddAdminFormData) => {
-    try {
-      onAddAdmin(data);
-      toast({
-        title: 'Admin added successfully!',
-        description: `${data.firstName} ${data.lastName} has been added as an administrator.`,
-      });
-      form.reset();
-      setOpen(false);
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to add admin. Please try again.',
-        variant: 'destructive',
-      });
+
+    const response = await safeAsyncMutate(mutateAsync, data);
+
+    if (!response.success) {
+
+      AlertToast({ title: "Failed to add admin", description: "Failed to add admin", icon: < CheckLine /> })
+      return
     }
-  };
+
+    AlertToast({ title: "Admin has been added successfully", description: "Admin has been added successfully", icon: < CheckLine /> })
+
+    form.reset();
+    setOpen(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -124,8 +137,22 @@ export const AddAdminDialog: React.FC<AddAdminDialogProps> = ({ onAddAdmin }) =>
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Enter password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <DialogFooter>
-              <Button type="submit">Add Admin</Button>
+              <Button type="submit" disabled={isPending}>Add Admin</Button>
             </DialogFooter>
           </form>
         </Form>

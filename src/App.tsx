@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 
 
 const queryClient = new QueryClient();
@@ -15,12 +16,15 @@ const queryClient = new QueryClient();
 
 function App() {
 
-  <Dashboard />
+
+  // < Dashboard />
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <Sonner />
+
           <Router>
             <Routes>
 
@@ -41,8 +45,8 @@ function App() {
 
             </Routes>
           </Router>
-        </AuthProvider>
-      </QueryClientProvider>
+        </QueryClientProvider >
+      </AuthProvider >
     </>
   )
 }

@@ -1,13 +1,13 @@
 import type { User } from "../user";
 
 
-export type signUpApiResponse = {
+export type SignUpApiResponse = {
     accessToken: string;
     refreshToken: string;
     user: User;
 }
 
-export type sigInApiResponse = {
+export type SigInApiResponse = {
     accessToken: string;
     refreshToken: string;
     user: User;

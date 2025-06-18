@@ -7,7 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
+import type { Admin } from '@/types/Admin';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiService } from '@/service/Api/apiService';
+import apiGateway from '@/service/Api/apiGateway';
+import { toast } from "sonner"
+import { CheckLine } from 'lucide-react';
+import { AlertToast } from '@/hooks/useToast2';
+import safeAsyncMutate from '@/utils/safeAsyncMutate';
+
 
 const editAdminSchema = z.object({
   firstName: z.string().min(3, 'First name must be at least 3 characters').max(20, 'First name must not exceed 20 characters'),
@@ -17,16 +25,6 @@ const editAdminSchema = z.object({
 
 type EditAdminFormData = z.infer<typeof editAdminSchema>;
 
-interface Admin {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin';
-  schoolId?: string;
-  schoolName?: string;
-  status: 'active' | 'inactive';
-  createdAt: string;
-}
 
 interface EditAdminDialogProps {
   admin: Admin;
@@ -35,44 +33,52 @@ interface EditAdminDialogProps {
   onUpdateAdmin: (adminData: EditAdminFormData) => void;
 }
 
-export const EditAdminDialog: React.FC<EditAdminDialogProps> = ({ 
-  admin, 
-  open, 
-  onOpenChange, 
-  onUpdateAdmin 
+export const EditAdminDialog: React.FC<EditAdminDialogProps> = ({
+  admin,
+  open,
+  onOpenChange,
+  onUpdateAdmin
 }) => {
-  const { toast } = useToast();
-  const [firstName, lastName] = admin.name.split(' ');
 
   const form = useForm<EditAdminFormData>({
     resolver: zodResolver(editAdminSchema),
     defaultValues: {
-      firstName: firstName || '',
-      lastName: lastName || '',
+      firstName: admin.firstName,
+      lastName: admin.lastName,
       email: admin.email,
     },
   });
 
+  const queryClient = useQueryClient();
+
+  const mutationFn = (data: EditAdminFormData) => apiService.putThrowable<Admin>(apiGateway.user.update(admin.id), data);
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: mutationFn,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admins'], }),
+
+  })
+
   const onSubmit = async (data: EditAdminFormData) => {
-    try {
-      onUpdateAdmin(data);
-      toast({
-        title: 'Admin updated successfully!',
-        description: `${data.firstName} ${data.lastName} has been updated.`,
-      });
-      onOpenChange(false);
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update admin. Please try again.',
-        variant: 'destructive',
-      });
+
+
+
+    const response = await safeAsyncMutate(mutateAsync, data);
+
+    if (!response.success) {
+      toast("Failed to edit user");
+      return
     }
+
+    AlertToast({ title: "User has been edited successfully", description: "User has been edited successfully", icon: < CheckLine /> })
+    onOpenChange(false);
+
+
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md ">
         <DialogHeader>
           <DialogTitle>Edit Administrator</DialogTitle>
           <DialogDescription>
@@ -114,7 +120,7 @@ export const EditAdminDialog: React.FC<EditAdminDialogProps> = ({
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter email address" {...field} />
+                    <Input type="email" placeholder="Enter email address" {...field} disabled={true} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,7 +130,7 @@ export const EditAdminDialog: React.FC<EditAdminDialogProps> = ({
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Update Admin</Button>
+              <Button type="submit" disabled={isPending}>Update Admin</Button>
             </DialogFooter>
           </form>
         </Form>

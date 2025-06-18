@@ -4,7 +4,7 @@ import { apiService, type ApiResponse } from "../service/Api/apiService";
 import type { signUpSchema } from "../schemas/signUpSchema";
 import type { sigInSchema } from "../schemas/signInSchema";
 import { jwtTokenManager } from "../service/token/JwtTokenManager.class";
-import type { sigInApiResponse, signUpApiResponse } from "../types/Apis/auth";
+import type { SigInApiResponse, SignUpApiResponse } from "../types/Apis/auth";
 import type { User } from "../types/user";
 
 
@@ -13,8 +13,8 @@ import type { User } from "../types/user";
 type IAuthContext = {
     user: User | null | undefined;
     isLoading: boolean;
-    signup: (data: signUpSchema) => Promise<ApiResponse<signUpApiResponse>>;
-    login: (data: sigInSchema) => Promise<ApiResponse<sigInApiResponse>>;
+    signup: (data: signUpSchema) => Promise<ApiResponse<SignUpApiResponse>>;
+    login: (data: sigInSchema) => Promise<ApiResponse<SigInApiResponse>>;
     logout: () => void;
     refreshUser: () => void;
 }
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         setIsLoading(true);
 
-        const response = await apiService.post<signUpApiResponse>(apiGateway.auth.signUp, data);
+        const response = await apiService.post<SignUpApiResponse>(apiGateway.auth.signUp, data);
 
         if (response.success) {
             const { accessToken, refreshToken, user } = response.data
@@ -119,7 +119,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         setIsLoading(true);
 
-        const response = await apiService.post<sigInApiResponse>(apiGateway.auth.login, data);
+        const response = await apiService.post<SigInApiResponse>(apiGateway.auth.login, data);
 
         if (response.success) {
             const { accessToken, refreshToken, user } = response.data

@@ -13,14 +13,13 @@ const apiGateway = {
         signUp: "/users/",
     },
 
-    services: {
-        emailContactUs: "/services/email/contact-us",
-        emailProperty: "/services/email/property",
-    },
 
-    images: ENV.BASE_URL + "/images/",
-
-    getSignedUrl: ENV.BASE_URL + "/images/getSignedUrl",
+    user: {
+        getPageUser: "/users/",
+        add: "/users/",
+        update: (userId: string) => `/users/${userId}` as const,
+        delete: (userId: string) => `/users/${userId}` as const,
+    }
 
 }
 

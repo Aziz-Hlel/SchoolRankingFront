@@ -2,6 +2,8 @@ import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import axios from "axios";
 import ENV from "../../utils/env.variables";
 import { jwtTokenManager } from "../token/JwtTokenManager.class";
+// import { AlertInfo } from "@/hooks/useToast2";
+
 
 
 export interface ApiResponse<T = any> {
@@ -107,7 +109,9 @@ class ApiService {
     }
 
     private throwErrorAlert = (statusCode: number, error: string) => {
-        alert(`Request failed with status ${statusCode} - error message: ${error}`);
+        if (ENV.NODE_ENV === 'prod') return
+        alert(`Request failed with status ${statusCode} -\nerror message: ${error}`);
+        // AlertInfo("Error", error);
     }
 
     // Refresh access token
@@ -164,7 +168,7 @@ class ApiService {
         }
     }
 
-    async post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    async post<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
         try {
             const response = await this.api.post<ApiResponse<T>>(url, data, config);
             return { data: response.data.data, status: response.status, success: true };
@@ -181,7 +185,7 @@ class ApiService {
         }
     }
 
-    async put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+    async put<T>(url: string, data: any, config?: AxiosRequestConfig,): Promise<ApiResponse<T>> {
         try {
             const response = await this.api.put<ApiResponse<T>>(url, data, config);
             return { data: response.data.data, status: response.status, success: true };
@@ -195,6 +199,22 @@ class ApiService {
 
             return { error: apiErrorMessage, data: {} as any, status, success: false };
 
+        }
+    }
+
+    async putThrowable<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        try {
+            const response = await this.api.put<ApiResponse<T>>(url, data, config);
+            return { data: response.data.data, status: response.status, success: true };
+        } catch (error: any) {
+
+            const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
+
+            const status = error.response?.status
+
+            if (status !== 200) this.throwErrorAlert(status, apiErrorMessage);
+
+            throw { error: apiErrorMessage, data: {} as any, status, success: false };
         }
     }
 
@@ -214,6 +234,21 @@ class ApiService {
         }
     }
 
+    async deleteThrowable<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        try {
+            const response = await this.api.delete<ApiResponse<T>>(url, config);
+            return { data: response.data.data, status: response.status, success: true };
+        } catch (error: any) {
+
+            const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
+
+            const status = error.response?.status
+
+            if (status !== 200) this.throwErrorAlert(status, apiErrorMessage);
+
+            return { error: apiErrorMessage, data: {} as any, status, success: false };
+        }
+    }
 
 }
 

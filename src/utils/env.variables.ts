@@ -1,11 +1,13 @@
 
 const VITE_API_URL = import.meta.env.VITE_API_URL
 const BASE_URL = VITE_API_URL + "/api";
-
+const NODE_ENV: 'dev' | 'stage' | 'prod' = import.meta.env.VITE_NODE_ENV
 
 const ENV = {
     VITE_API_URL,
-    BASE_URL
+    BASE_URL,
+    NODE_ENV
+
 };
 
 

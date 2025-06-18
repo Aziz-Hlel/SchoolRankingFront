@@ -7,8 +7,24 @@ import type { Page } from '@/types/page';
 import { Users, User, School } from 'lucide-react';
 
 
+
+
+const admins: Page = {
+    id: "admins-superadmin",
+    sidebarTitle: 'Admins',
+    mainPageTitle: 'Admin Management',
+    mainPageDescription: 'Manage all admins in the system',
+    allowedRoles: [ROLES.SUPER_ADMIN],
+    icon: Users,
+    sidebarLabel: 'Admins',
+
+    component: AdminManagement,
+
+}
+
+
 const schools: Page = {
-    id: "schools-admin",
+    id: "schools-superadmin",
     sidebarTitle: 'Schools',
     mainPageTitle: 'Schools Management',
     mainPageDescription: 'Manage all schools in the system',
@@ -16,9 +32,10 @@ const schools: Page = {
     icon: School,
     sidebarLabel: 'Schools',
 
-    component: AdminManagement,
+    component: SchoolManagement,
 
 }
+
 
 const personalSchool: Page = {
     id: "personal-school",
@@ -32,18 +49,6 @@ const personalSchool: Page = {
     component: SchoolProfile // or this : MySchool
 }
 
-const admins: Page = {
-    id: "schools-admin",
-    sidebarTitle: 'Admins',
-    mainPageTitle: 'Admin Management',
-    mainPageDescription: 'Manage all admins in the system',
-    allowedRoles: [ROLES.SUPER_ADMIN],
-    icon: Users,
-    sidebarLabel: 'Admins',
-
-    component: SchoolManagement,
-
-}
 
 const profile: Page = {
     id: "profile",
@@ -66,4 +71,4 @@ export const PAGES = {
     personalSchool
 } as const;
 
-export const ordredPages = [PAGES.schools, PAGES.admins, PAGES.personalSchool];
+export const ordredPages = [PAGES.admins, PAGES.schools, PAGES.personalSchool];
