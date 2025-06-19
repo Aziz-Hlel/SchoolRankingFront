@@ -9,6 +9,6 @@ export type Page = {
     allowedRoles: ROLES[];
     icon: ComponentType<SVGProps<SVGSVGElement>>;
     sidebarLabel: string;
-
+    path: string;
     component: ComponentType;
 }

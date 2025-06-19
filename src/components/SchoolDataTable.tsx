@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2, Search } from 'lucide-react';
+import type { SchoolPage } from '@/types/SchoolPage';
 
 interface School {
   id: string;
@@ -26,7 +27,7 @@ interface School {
 }
 
 interface SchoolDataTableProps {
-  data: School[];
+  data: SchoolPage[];
   onEdit: (schoolId: string) => void;
   onDelete: (schoolId: string) => void;
 }
@@ -37,27 +38,40 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
   onDelete,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<keyof School>('name');
+  // Define the keys you want to sort by, matching SchoolPage properties
+  type SortableColumn = 'name' | 'adminUsername' | 'email' | 'studentCount';
+
+  const [sortBy, setSortBy] = useState<SortableColumn>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const filteredData = data.filter(school =>
     school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    school.principalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    school.adminUsername.toLowerCase().includes(searchTerm.toLowerCase()) ||
     school.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedData = [...filteredData].sort((a, b) => {
     const aValue = a[sortBy];
     const bValue = b[sortBy];
-    
-    if (sortOrder === 'asc') {
-      return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+
+    if (aValue === undefined || bValue === undefined) return 0;
+
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      if (sortOrder === 'asc') {
+        return aValue.localeCompare(bValue);
+      } else {
+        return bValue.localeCompare(aValue);
+      }
     } else {
-      return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+      if (sortOrder === 'asc') {
+        return (aValue as number) - (bValue as number);
+      } else {
+        return (bValue as number) - (aValue as number);
+      }
     }
   });
 
-  const handleSort = (column: keyof School) => {
+  const handleSort = (column: SortableColumn) => {
     if (sortBy === column) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
@@ -85,30 +99,38 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead 
+
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50"
                   onClick={() => handleSort('name')}
                 >
-                  School Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  School {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </TableHead>
-                <TableHead 
+
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => handleSort('principalName')}
+                  onClick={() => handleSort('adminUsername')}
                 >
-                  Principal {sortBy === 'principalName' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  Admin {sortBy === 'adminUsername' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </TableHead>
-                <TableHead 
+
+                <TableHead
                   className="cursor-pointer hover:bg-muted/50"
                   onClick={() => handleSort('studentCount')}
                 >
-                  Students {sortBy === 'studentCount' && (sortOrder === 'asc' ? '↑' : '↓')}
+                  Email {sortBy === 'studentCount' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </TableHead>
+
                 <TableHead>Phone</TableHead>
+
                 <TableHead>Status</TableHead>
+
                 <TableHead className="text-right">Actions</TableHead>
+
               </TableRow>
-            </TableHeader>
+            </TableHeader >
             <TableBody>
+
               {sortedData.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
@@ -121,15 +143,15 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
                     <TableCell>
                       <div>
                         <div className="font-medium">{school.name}</div>
-                        <div className="text-sm text-muted-foreground">{school.address}</div>
+                        <div className="text-sm text-muted-foreground">{`${school.country}-${school.city} ${school.address}`}</div>
                       </div>
                     </TableCell>
-                    <TableCell>{school.principalName}</TableCell>
-                    <TableCell>{school.studentCount.toLocaleString()}</TableCell>
-                    <TableCell>{school.phone}</TableCell>
+                    <TableCell>{school.adminUsername}</TableCell>
+                    <TableCell>{school.email}</TableCell>
+                    <TableCell>{school.phoneNumber}</TableCell>
                     <TableCell>
-                      <Badge variant={school.status === 'active' ? 'default' : 'secondary'}>
-                        {school.status}
+                      <Badge variant={school.isComplete ? 'default' : 'secondary'}>
+                        {school.isComplete ? 'Complete' : 'Incomplete'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -154,9 +176,9 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
                 ))
               )}
             </TableBody>
-          </Table>
-        </div>
-      </div>
-    </div>
+          </Table >
+        </div >
+      </div >
+    </div >
   );
 };

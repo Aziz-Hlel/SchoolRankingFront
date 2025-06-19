@@ -26,20 +26,18 @@ const Login = () => {
         if (Object.keys(validationErrors).length > 0) return;
 
         setIsSubmitting(true);
-        try {
-            const response = await login({ email, password });
-            if (response.success)
-                navigate("/protected")
 
-            if (!response.success && response.status === 401) setErrors({ email: "Invalid email or password" });
+        const response = await login({ email, password });
 
-            if (!response.success && response.status !== 401) alert("uncaught error");
+        if (response.success)
+            navigate("/")
 
+        if (!response.success && response.status === 401) setErrors({ email: "Invalid email or password" });
 
+        if (!response.success && response.status !== 401) alert("uncaught error");
 
-        } finally {
-            setIsSubmitting(false);
-        }
+        setIsSubmitting(false);
+
     };
 
     return (

@@ -14,4 +14,4 @@ export const AccreditationEnums = {
 
 }
 
-export type AccreditationEnum = keyof typeof AccreditationEnums;
+export type AccreditationEnums = keyof typeof AccreditationEnums;

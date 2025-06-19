@@ -4,7 +4,7 @@ const WHEELCHAIRS = 'WHEELCHAIRS'
 const ELEVATORS = 'ELEVATORS'
 const STAIRS = 'STAIRS'
 
-export const AccessibilityEnum = {
+export const AccessibilityEnums = {
     RAMPS,
     WHEELCHAIRS,
     ELEVATORS,
@@ -12,4 +12,4 @@ export const AccessibilityEnum = {
 
 } as const
 
-export type AccessibilityEnum = typeof AccessibilityEnum[keyof typeof AccessibilityEnum]
+export type AccessibilityEnums = typeof AccessibilityEnums[keyof typeof AccessibilityEnums]

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
 import { SchoolDataTable } from './SchoolDataTable';
+import useApi from '@/hooks/useApi';
+import apiGateway from '@/service/Api/apiGateway';
+import type { PageSchool } from '@/types/SchoolPage';
 
 interface School {
   id: string;
@@ -45,9 +46,19 @@ const mockSchools: School[] = [
 export const SchoolManagement: React.FC = () => {
   const [schools, setSchools] = useState<School[]>(mockSchools);
 
-  const handleAddSchool = () => {
-    console.log('Add new school');
-  };
+  const page = 1;
+  const size = 20;
+
+  const { data: schoolData } = useApi<PageSchool>({
+    url: apiGateway.school.getPageSchool(),
+    queryParams: { page: 1, size: 20 },
+    queryKey: ['schools'],
+    options: { fetchOnMount: true, config: { params: { page, size } } },
+  });
+
+  const schools2 = schoolData?.data.content
+
+
 
   const handleEditSchool = (id: string) => {
     console.log('Edit school:', id);
@@ -60,7 +71,7 @@ export const SchoolManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
         <div>
           <h2 className="text-xl lg:text-2xl font-bold tracking-tight">Schools table</h2>
@@ -70,16 +81,16 @@ export const SchoolManagement: React.FC = () => {
           <Plus className="w-4 h-4" />
           Add School
         </Button>
-      </div>
+      </div> */}
 
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Schools</CardTitle>
         </CardHeader>
         <CardContent>
           <SchoolDataTable
-            data={schools}
+            data={schools2 || []}
             onEdit={handleEditSchool}
             onDelete={handleDeleteSchool}
           />

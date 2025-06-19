@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ROLES } from '@/enums/roles';
 import type { Page } from '@/types/page';
 import { ordredPages, PAGES } from '@/data/pages';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 
 
@@ -18,18 +19,16 @@ export const Dashboard: React.FC = () => {
 
   if (!user) return <>User is either null or undefined</>;
 
-  const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.schools
+  const navigate = useNavigate();
+  const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.personalSchool;
 
   const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    navigate(user.role === ROLES.SUPER_ADMIN ? PAGES.admins.path : PAGES.personalSchool.path)
+  }, [])
 
-
-  const renderPageContent = () => {
-
-    const Component = currentPage.component;
-    return <Component />;
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -76,7 +75,8 @@ export const Dashboard: React.FC = () => {
 
         {/* Page content */}
         <main className="flex-1 p-4 lg:p-6 overflow-auto">
-          {renderPageContent()}
+          <Outlet />
+          {/* {renderPageContent()} */}
         </main>
       </div>
     </div>

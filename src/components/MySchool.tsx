@@ -1,13 +1,41 @@
 
-import React, { useState } from 'react';
+import React, { useState, type ComponentType, type JSX, type ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Edit, MapPin, Globe, Users, GraduationCap, Building } from 'lucide-react';
 import { EditSchoolSectionDialog } from './EditSchoolSectionDialog';
+import useApi from '@/hooks/useApi';
+import apiGateway from '@/service/Api/apiGateway';
+import { useAuth } from '@/contexts/AuthContext';
+import type { SchoolDetailed } from '@/types/School2.type';
+import GeneralCardContent from './MySchool/GeneralCardContent';
+import AcademicCardContent from './MySchool/AcademicCardContent';
+import FacilitiesCardContent from './MySchool/FacilitiesCardContent';
+import StaffCardContent from './MySchool/StaffCardContent';
+import MediaCardContent from './MySchool/MediaCardContent';
+import SectionHeader from './MySchool/SectionHeader';
+
+interface sectionsProps {
+  id: string,
+  title: string,
+  icon: any,
+  color: string,
+  data: any,
+  component: ReactNode
+}
+
 
 export const MySchool: React.FC = () => {
   const [editingSection, setEditingSection] = useState<string | null>(null);
+
+  const { user } = useAuth();
+  const schoolId = user!.schoolId;
+  const { data } = useApi<SchoolDetailed>({ url: apiGateway.school.getDetailedSchool(schoolId), queryKey: ['my-school'], options: { fetchOnMount: true } })
+
+  const school2 = data?.data;
+
+  if (!school2) return <div className="p-4">Loading school data...</div>;
 
   // Mock school data - in a real app, this would come from an API
   const schoolData = {
@@ -51,42 +79,47 @@ export const MySchool: React.FC = () => {
       videoTourLink: 'https://sunriseschool.edu/tour'
     }
   };
-
-  const sections = [
+  console.log(school2.schoolGeneral)
+  const sections: sectionsProps[] = [
     {
       id: 'general',
       title: 'School Information',
       icon: Building,
       color: 'bg-blue-100 text-blue-800',
-      data: schoolData.general
+      data: schoolData.general,
+      component: <GeneralCardContent section={school2.schoolGeneral} />
     },
     {
       id: 'academic',
       title: 'Academic Programs',
       icon: GraduationCap,
       color: 'bg-green-100 text-green-800',
-      data: schoolData.academic
+      data: schoolData.academic,
+      component: <AcademicCardContent section={school2.schoolAcademics} />
     },
     {
       id: 'facilities',
       title: 'Facilities & Resources',
       icon: Building,
       color: 'bg-purple-100 text-purple-800',
-      data: schoolData.facilities
+      data: schoolData.facilities,
+      component: <FacilitiesCardContent section={school2.schoolFacilities} />
     },
     {
       id: 'staff',
       title: 'Staff Information',
       icon: Users,
       color: 'bg-orange-100 text-orange-800',
-      data: schoolData.staff
+      data: schoolData.staff,
+      component: <StaffCardContent section={school2.schoolStaff} />
     },
     {
       id: 'media',
       title: 'Media & Links',
       icon: Globe,
       color: 'bg-pink-100 text-pink-800',
-      data: schoolData.media
+      data: schoolData.media,
+      component: <MediaCardContent section={school2.schoolMedia} />,
     }
   ];
 
@@ -262,6 +295,8 @@ export const MySchool: React.FC = () => {
                   </Button>
                 </div>
               </CardHeader>
+
+
               <CardContent className="pt-0">
                 {renderSectionContent(section)}
               </CardContent>
@@ -270,15 +305,32 @@ export const MySchool: React.FC = () => {
         })}
       </div>
 
-      <EditSchoolSectionDialog
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+        {
+          sections.map((section) => {
+            const Icon = section.icon;
+            return (
+              <Card key={section.id} className="h-fit">
+                <SectionHeader color={section.color} title={section.title} icon={Icon} />
+                <CardContent className="pt-0">
+                  {section.component}
+                </CardContent>
+              </Card>
+            );
+          })
+
+        }
+      </div>
+
+      {/* <EditSchoolSectionDialog
         section={editingSection}
         open={!!editingSection}
         onOpenChange={(open) => !open && setEditingSection(null)}
-        onSave={(data) => {
+        onSave={(data: any) => {
           console.log('Saving section data:', editingSection, data);
           setEditingSection(null);
         }}
-      />
+      /> */}
     </div>
   );
 };

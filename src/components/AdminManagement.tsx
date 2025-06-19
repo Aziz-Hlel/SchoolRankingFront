@@ -6,16 +6,14 @@ import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
 import { AdminDataTable } from './AdminDataTable';
 import useApi from '@/hooks/useApi';
 import apiGateway from '@/service/Api/apiGateway';
-import type { Admin } from '@/types/Admin';
-import type { ApiPageResponse } from '@/types/ApiPageResponse';
-import { Outlet } from 'react-router-dom';
+import type { Admin, AdminPage } from '@/types/Admin';
 
 
 
 export const AdminManagement: React.FC = () => {
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
   const [deletingAdmin, setDeletingAdmin] = useState<Admin | null>(null);
-  const { data } = useApi<ApiPageResponse<Admin>>({
+  const { data } = useApi<AdminPage>({
     url: apiGateway.user.getPageUser,
     queryParams: { page: 1, size: 20 },
     queryKey: ['admins'],

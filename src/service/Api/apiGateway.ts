@@ -19,6 +19,14 @@ const apiGateway = {
         add: "/users/",
         update: (userId: string) => `/users/${userId}` as const,
         delete: (userId: string) => `/users/${userId}` as const,
+    },
+
+    school: {
+        getPageSchool: () => "/schools/" as const,
+        add: () => "/schools/" as const,
+        update: (schoolId: string) => `/schools/${schoolId}` as const,
+        delete: (schoolId: string) => `/schools/${schoolId}` as const,
+        getDetailedSchool: (schoolId: string) => `/schools/infos/${schoolId}` as const,
     }
 
 }

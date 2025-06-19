@@ -1,4 +1,5 @@
 import type { ROLES } from "@/enums/roles";
+import type { ApiPageResponse } from "./ApiPageResponse";
 
 
 export type Admin = {
@@ -12,3 +13,6 @@ export type Admin = {
     isCompleted: boolean;
     createdAt: Date
 }
+
+
+export type AdminPage = ApiPageResponse<Admin>;

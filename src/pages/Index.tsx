@@ -13,13 +13,11 @@ const Index = () => {
 
     if (!user) return <Login />;
 
-    if (user.role === ROLES.SUPER_ADMIN) {
-        console.log("t5l")
-        navigate("/dashboard");
-    }
+
+    navigate("/dashboard");
 
 
-    return <Dashboard />
+
 
 }
 

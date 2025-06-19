@@ -1,5 +1,4 @@
 
-import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -7,6 +6,7 @@ import { User, LogOut } from 'lucide-react';
 import { ROLES } from '@/enums/roles';
 import type { Page } from '@/types/page';
 import { PAGES } from '@/data/pages';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   currentPage: Page;
@@ -14,12 +14,13 @@ interface SidebarProps {
   ordredPages: Page[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, ordredPages }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ ordredPages, currentPage, onPageChange }) => {
   const { user, logout } = useAuth();
 
   if (!user) return null;
 
   const userRole = user.role;
+
 
 
 
@@ -42,35 +43,41 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, ord
 
             const Icon = page.icon;
             return (
-              <Button
-                key={page.id}
-                variant={currentPage === page ? 'default' : 'ghost'}
-                className={cn(
-                  'w-full justify-start text-sm lg:text-base h-10 lg:h-11',
-                  currentPage === page && 'bg-primary text-primary-foreground'
-                )}
-                onClick={() => onPageChange(page)}
-              >
-                <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
-                <span className="truncate">{page.sidebarLabel}</span>
-              </Button>
+              <Link to={page.path}>
+                <Button
+                  key={page.id}
+                  variant={page === currentPage ? 'default' : 'ghost'}
+                  className={cn(
+                    'w-full justify-start text-sm lg:text-base h-10 lg:h-11',
+                    currentPage === page && 'bg-primary text-primary-foreground'
+                  )}
+                  // onClick={() => onPageChange(page)}
+                  onClick={() => onPageChange(page)}
+                >
+                  <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">{page.sidebarLabel}</span>
+                </Button>
+              </Link>
             );
           })}
         </div>
       </nav>
 
       <div className="p-3 lg:p-4 border-t border-border">
-        <Button
-          variant={currentPage === PAGES.profile ? 'default' : 'ghost'}
-          className={cn(
-            'w-full justify-start mb-2 text-sm lg:text-base h-10 lg:h-11',
-            currentPage === PAGES.profile && 'bg-primary text-primary-foreground'
-          )}
-          onClick={() => onPageChange(PAGES.profile)}
-        >
-          <User className="w-4 h-4 mr-2 flex-shrink-0" />
-          <span className="truncate">Profile</span>
-        </Button>
+
+        <Link to={PAGES.profile.path}>
+          <Button
+            variant={currentPage === PAGES.profile ? 'default' : 'ghost'}
+            className={cn(
+              'w-full justify-start mb-2 text-sm lg:text-base h-10 lg:h-11',
+              currentPage === PAGES.profile && 'bg-primary text-primary-foreground'
+            )}
+            onClick={() => onPageChange(PAGES.profile)}
+          >
+            <User className="w-4 h-4 mr-2 flex-shrink-0" />
+            <span className="truncate">Profile</span>
+          </Button>
+        </Link>
 
         <Button
           variant="ghost"
@@ -86,11 +93,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, ord
             <User className="w-4 h-4 text-primary-foreground" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.name}</p>
+            <p className="text-sm font-medium truncate">{user?.username}</p>
             <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };

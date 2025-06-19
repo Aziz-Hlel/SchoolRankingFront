@@ -12,7 +12,7 @@ export const useSafeAsyncMutate = <TData, TError, TVariables>(
     options?: SafeAsyncMutateOptions<TData, TError, TVariables>
 ): SafeAsyncMutateResult<TVariables> => {
 
-    const { mutateAsync, isPending }: UseMutationResult<TData, TError, TVariables> = useMutation<TData, TError, TVariables>(mutationFn, options);
+    const { mutateAsync, isPending }: UseMutationResult<TData, TError, TVariables> = useMutation<TData, TError, TVariables>({ mutationFn, ...options });
 
     const safeMutation = (data: TVariables): void => {
         mutateAsync(data);

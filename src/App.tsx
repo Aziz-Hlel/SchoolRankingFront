@@ -4,11 +4,15 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { AdminManagement } from "./components/AdminManagement";
+import { SchoolManagement } from "./components/SchoolManagement";
+import { ProfileInformation } from "./components/ProfileInformation";
+import { SchoolProfile } from "./components/SchoolProfile";
+import { MySchool } from "./components/MySchool";
 
 
 const queryClient = new QueryClient();
@@ -34,8 +38,14 @@ function App() {
 
               <Route element={<ProtectedRoutes />}>
 
-                <Route path="/protected" element={<Profile />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+
+                <Route path="/dashboard" element={<Dashboard />} >
+                  <Route path="admins" element={<AdminManagement />} />
+                  <Route path="schools" element={<SchoolManagement />} />
+                  <Route path="profile" element={<ProfileInformation />} />
+                  <Route path="my-school" element={<MySchool />} />
+                  {/* Add more nested routes as needed */}
+                </Route>
 
               </Route>
 

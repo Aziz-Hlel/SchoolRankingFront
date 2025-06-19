@@ -37,8 +37,8 @@ export const ProfileInformation: React.FC = () => {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: user?.name?.split(' ')[0] || '',
-      lastName: user?.name?.split(' ')[1] || '',
+      firstName: user?.firstName,
+      lastName: user?.lastName,
       email: user?.email || '',
       phone: '',
       currentPassword: '',
@@ -63,7 +63,7 @@ export const ProfileInformation: React.FC = () => {
 
   return (
     <div className="space-y-6">
-    
+
 
       <Card>
         <CardHeader>

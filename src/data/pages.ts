@@ -20,6 +20,8 @@ const admins: Page = {
 
     component: AdminManagement,
 
+    path: '/dashboard/admins',
+
 }
 
 
@@ -31,6 +33,8 @@ const schools: Page = {
     allowedRoles: [ROLES.SUPER_ADMIN],
     icon: School,
     sidebarLabel: 'Schools',
+
+    path: '/dashboard/schools',
 
     component: SchoolManagement,
 
@@ -46,6 +50,8 @@ const personalSchool: Page = {
     icon: School,
     sidebarLabel: 'My School',
 
+    path: '/dashboard/my-school',
+
     component: SchoolProfile // or this : MySchool
 }
 
@@ -58,6 +64,8 @@ const profile: Page = {
     allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
     icon: User,
     sidebarLabel: 'Profile',
+
+    path: '/dashboard/profile',
 
     component: ProfileInformation,
 
