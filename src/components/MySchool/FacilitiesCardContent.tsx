@@ -58,9 +58,23 @@ const FacilitiesCardContent = ({ section }: { section: SchoolFacilities }) => {
             <div className=' flex gap-2 '>
                 <p className="text-sm">Technology readiness</p>
                 <Badge variant="outline" className="text-xs bg-green-700 text-white">
-                    Expert
+                    {section.technologyReadiness}
                 </Badge>
             </div>
+
+
+
+            <div>
+                <p className="text-sm text-muted-foreground">Industry partnerships</p>
+                <div className="flex flex-wrap gap-1 mt-1">
+                    {section.industryPartnerships.map((partner: string, index: number) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                            {partner}
+                        </Badge>
+                    ))}
+                </div>
+            </div>
+
             {/* "basic" | "intermediate" | "advanced" | "expert" */}
             {/* <div>
                 <p className="text-sm text-muted-foreground">Resources</p>

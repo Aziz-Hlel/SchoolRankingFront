@@ -1,5 +1,5 @@
 import { AdminManagement } from '@/components/AdminManagement';
-import { ProfileInformation } from '@/components/ProfileInformation';
+import { ProfileInformation } from '@/components/Profile/ProfileInformation';
 import { SchoolManagement } from '@/components/SchoolManagement';
 import { SchoolProfile } from '@/components/SchoolProfile';
 import { ROLES } from '@/enums/roles';

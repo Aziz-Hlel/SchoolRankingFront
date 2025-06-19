@@ -31,7 +31,7 @@ export const Dashboard: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="h-screen bg-gray-50 flex">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -74,9 +74,8 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
           <Outlet />
-          {/* {renderPageContent()} */}
         </main>
       </div>
     </div>

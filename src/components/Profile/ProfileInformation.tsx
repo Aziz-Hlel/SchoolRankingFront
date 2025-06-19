@@ -2,48 +2,34 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { Link, Outlet } from 'react-router-dom';
+import z from 'zod';
 
 const profileSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
-  phone: z.string().min(10, 'Phone number must be at least 10 characters').optional().or(z.literal('')),
-  currentPassword: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
-  newPassword: z.string().min(8, 'Password must be at least 8 characters').optional().or(z.literal('')),
-  confirmPassword: z.string().optional().or(z.literal('')),
-}).refine((data) => {
-  if (data.newPassword && data.newPassword !== data.confirmPassword) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export const ProfileInformation: React.FC = () => {
-  const { user } = useAuth();
+  const { user: currentUser } = useAuth();
   const { toast } = useToast();
+  const user = currentUser!;
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      email: user?.email || '',
-      phone: '',
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
     },
   });
 
@@ -105,6 +91,7 @@ export const ProfileInformation: React.FC = () => {
                 <FormField
                   control={form.control}
                   name="email"
+                  disabled={true}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
@@ -115,69 +102,26 @@ export const ProfileInformation: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter phone number" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
               </div>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Change Password</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="currentPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Current Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="Enter current password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="newPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>New Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="Enter new password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Confirm Password</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="Confirm new password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+              <Outlet />
+
+
+              <div className='flex w-full justify-end'>
+                <div className="flex justify-end">
+                  
+                  <Button type="button" variant="link" className='hover:cursor-pointer'>
+                    <Link to={'/dashboard/profile/change-password'}>
+                    Change password
+                    </Link>
+                    </Button>
+                </div>
+                <div className="flex justify-end">
+                  <Button type="submit">Save Changes</Button>
                 </div>
               </div>
 
-              <div className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
-              </div>
             </form>
           </Form>
         </CardContent>

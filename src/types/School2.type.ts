@@ -9,6 +9,7 @@ import type { SustainabilityEnums } from "@/enums/SustainabilityEnums";
 import type { AccreditationEnums } from "@/enums/AccreditationEnums";
 import type { LevelEnums } from "@/enums/LevelEnums";
 
+
 export type SchoolStaff = {
   leadershipTeam: string;
   leadershipProfileLink: string;
@@ -19,6 +20,7 @@ export type SchoolStaff = {
   professionalDevelopment: string;
   lastInspectionDate: string; // ISO 8601 format, can be converted to Date if needed
 };
+
 
 export type SchoolFacilities = {
   id: string; // UUID
@@ -33,6 +35,7 @@ export type SchoolFacilities = {
   technologyReadiness: RatingLevel; 
   awardsAndRecognitions: string;
 };
+
 
 export type SchoolMedia = {
   id: string;
@@ -56,6 +59,7 @@ export type SchoolGeneral = {
   country: CountryEnums; // assume defined elsewhere
 };
 
+
 export type SchoolAcademics = {
   id: string; // UUID
   languagesOfInstruction: number;
@@ -64,7 +68,6 @@ export type SchoolAcademics = {
   levelsOffered: LevelEnums[];//
   curriculums: CurriculumEnums[];//
 };
-
 
 
 export type SchoolDetailed = {

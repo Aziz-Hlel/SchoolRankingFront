@@ -10,9 +10,10 @@ import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AdminManagement } from "./components/AdminManagement";
 import { SchoolManagement } from "./components/SchoolManagement";
-import { ProfileInformation } from "./components/ProfileInformation";
+import { ProfileInformation } from "./components/Profile/ProfileInformation";
 import { SchoolProfile } from "./components/SchoolProfile";
 import { MySchool } from "./components/MySchool";
+import ChangePassword from "./components/Profile/ChangePassword";
 
 
 const queryClient = new QueryClient();
@@ -42,9 +43,13 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} >
                   <Route path="admins" element={<AdminManagement />} />
                   <Route path="schools" element={<SchoolManagement />} />
-                  <Route path="profile" element={<ProfileInformation />} />
+
                   <Route path="my-school" element={<MySchool />} />
-                  {/* Add more nested routes as needed */}
+
+                  <Route path="profile" element={<ProfileInformation />} >
+                    <Route path="change-password" element={<ChangePassword />} />
+                  </Route>
+
                 </Route>
 
               </Route>

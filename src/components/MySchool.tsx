@@ -270,40 +270,6 @@ export const MySchool: React.FC = () => {
 
   return (
     <div className="space-y-4 lg:space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-        {sections.map((section) => {
-          const Icon = section.icon;
-          return (
-            <Card key={section.id} className="h-fit">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${section.color}`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-base lg:text-lg">{section.title}</CardTitle>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setEditingSection(section.id)}
-                    className="h-8 w-8 p-0"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </div>
-              </CardHeader>
-
-
-              <CardContent className="pt-0">
-                {renderSectionContent(section)}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {
