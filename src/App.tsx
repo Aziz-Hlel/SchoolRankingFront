@@ -16,6 +16,8 @@ import ProgressFormCheckup from "./protect/ProgressFormCheckup";
 import { FormProgressProvider } from "./contexts/FormProgress";
 import AuthorizedRoutes from "./protect/AuthorizedRoutes";
 import { ROLES } from "./enums/roles";
+import DashboardRedirect from "./components/DashboardRedirect";
+import { SchoolGeneralStep } from "./components/school-steps/SchoolGeneralStep";
 
 
 const queryClient = new QueryClient();
@@ -47,6 +49,9 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} >
 
+                      {/* Redirect when path is exactly /dashboard */}
+                      <Route index element={<DashboardRedirect />} />
+
                       <Route element={<AuthorizedRoutes roles={[ROLES.SUPER_ADMIN]} />} >
                         <Route path="admins" element={<AdminManagement />} />
                         <Route path="schools" element={<SchoolManagement />} />
@@ -63,6 +68,8 @@ function App() {
                       </Route>
 
                     </Route>
+
+                    <Route element={<SchoolGeneralStep />} />
 
                   </Route>
                 </Route>

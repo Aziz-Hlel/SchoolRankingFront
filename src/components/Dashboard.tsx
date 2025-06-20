@@ -1,5 +1,5 @@
 
-import  { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ROLES } from '@/enums/roles';
 import type { Page } from '@/types/page';
 import { ordredPages, PAGES } from '@/data/pages';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, } from 'react-router-dom';
 
 
 
@@ -19,15 +19,12 @@ export const Dashboard = () => {
 
   if (!user) return <>User is either null or undefined</>;
 
-  const navigate = useNavigate();
   const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.personalSchool;
 
   const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    navigate(user.role === ROLES.SUPER_ADMIN ? PAGES.admins.path : PAGES.personalSchool.path)
-  }, [])
+
 
 
   return (
