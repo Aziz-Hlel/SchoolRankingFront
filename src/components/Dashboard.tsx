@@ -2,13 +2,14 @@
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
-import { Header } from './Header';
+import { Header } from './Headers/Header';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ROLES } from '@/enums/roles';
 import type { Page } from '@/types/page';
 import { ordredPages, PAGES } from '@/data/pages';
 import { Outlet, } from 'react-router-dom';
+import { usePageContext } from '@/contexts/PageContext';
 
 
 
@@ -21,10 +22,12 @@ export const Dashboard = () => {
 
   const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.personalSchool;
 
-  const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
+  const { currentPage } = usePageContext();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
+  const CurrentHeader = currentPage.Header;
 
 
   return (
@@ -42,7 +45,7 @@ export const Dashboard = () => {
         <Sidebar
           currentPage={currentPage}
           onPageChange={(page: Page) => {
-            setCurrentPage(page);
+
             setSidebarOpen(false);
           }}
           ordredPages={ordredPages}
@@ -67,7 +70,8 @@ export const Dashboard = () => {
 
         {/* Desktop header */}
         <div className="hidden lg:block">
-          <Header currentPage={currentPage} />
+          {/* <Header currentPage={currentPage} /> */}
+          <CurrentHeader />
         </div>
 
         {/* Page content */}

@@ -31,7 +31,7 @@ const useApi = <K>({ url, onError, onSuccess, queryKey, options }: UseApiOptions
         queryFn: fetch,
         enabled: options.fetchOnMount, // don't fetch automatically
         staleTime: 1000 * 60 * 5, // cache for 5 minutes
-        retry: 1, // retry failed requests twice
+        retry: 0, // retry failed requests twice
         refetchOnWindowFocus: false, // refetch when window is focused
     });
 

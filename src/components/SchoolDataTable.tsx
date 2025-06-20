@@ -8,11 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2, Search } from 'lucide-react';
 import type { SchoolPage } from '@/types/SchoolPage';
+import { Eye } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface School {
   id: string;
@@ -156,20 +159,22 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onEdit(school.id)}
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
+                        <Link to={`./${school.id}`}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className=' cursor-pointer'
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        {/* <Button
                           variant="outline"
                           size="sm"
                           onClick={() => onDelete(school.id)}
                         >
                           <Trash2 className="w-4 h-4" />
-                        </Button>
+                        </Button> */}
                       </div>
                     </TableCell>
                   </TableRow>

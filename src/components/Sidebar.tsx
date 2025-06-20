@@ -8,6 +8,7 @@ import type { Page } from '@/types/page';
 import { PAGES } from '@/data/pages';
 import { Link } from 'react-router-dom';
 import type { FC } from 'react';
+import { usePageContext } from '@/contexts/PageContext';
 
 interface SidebarProps {
   currentPage: Page;
@@ -15,13 +16,14 @@ interface SidebarProps {
   ordredPages: Page[];
 }
 
-export const Sidebar: FC<SidebarProps> = ({ ordredPages, currentPage, onPageChange }) => {
+export const Sidebar: FC<SidebarProps> = ({ ordredPages }) => {
   const { user, logout } = useAuth();
 
   if (!user) return null;
 
   const userRole = user.role;
 
+  const { currentPage, changePage } = usePageContext();
 
 
 
@@ -50,10 +52,10 @@ export const Sidebar: FC<SidebarProps> = ({ ordredPages, currentPage, onPageChan
                   variant={page === currentPage ? 'default' : 'ghost'}
                   className={cn(
                     'w-full justify-start text-sm lg:text-base h-10 lg:h-11',
-                    currentPage === page && 'bg-primary text-primary-foreground'
+                    currentPage.sidebarButton === page.sidebarButton && 'bg-primary text-primary-foreground'
                   )}
                   // onClick={() => onPageChange(page)}
-                  onClick={() => onPageChange(page)}
+                  onClick={() => changePage(page)}
                 >
                   <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
                   <span className="truncate">{page.sidebarLabel}</span>
@@ -68,12 +70,12 @@ export const Sidebar: FC<SidebarProps> = ({ ordredPages, currentPage, onPageChan
 
         <Link to={PAGES.profile.path}>
           <Button
-            variant={currentPage === PAGES.profile ? 'default' : 'ghost'}
+            variant={currentPage.sidebarButton === PAGES.profile.sidebarButton ? 'default' : 'ghost'}
             className={cn(
               'w-full justify-start mb-2 text-sm lg:text-base h-10 lg:h-11',
-              currentPage === PAGES.profile && 'bg-primary text-primary-foreground'
+              currentPage.sidebarButton === PAGES.profile.sidebarButton && 'bg-primary text-primary-foreground'
             )}
-            onClick={() => onPageChange(PAGES.profile)}
+            onClick={() => changePage(PAGES.profile)}
           >
             <User className="w-4 h-4 mr-2 flex-shrink-0" />
             <span className="truncate">Profile</span>
