@@ -7,6 +7,7 @@ import { ROLES } from '@/enums/roles';
 import type { Page } from '@/types/page';
 import { PAGES } from '@/data/pages';
 import { Link } from 'react-router-dom';
+import type { FC } from 'react';
 
 interface SidebarProps {
   currentPage: Page;
@@ -14,7 +15,7 @@ interface SidebarProps {
   ordredPages: Page[];
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ ordredPages, currentPage, onPageChange }) => {
+export const Sidebar: FC<SidebarProps> = ({ ordredPages, currentPage, onPageChange }) => {
   const { user, logout } = useAuth();
 
   if (!user) return null;
@@ -36,14 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ ordredPages, currentPage, onPa
 
       <nav className="flex-1 p-3 lg:p-4">
         <div className="space-y-1 lg:space-y-2">
-          {ordredPages.map((page) => {
+          {ordredPages.map((page, index) => {
 
             if (!page.allowedRoles.includes(userRole))
               return null;
 
             const Icon = page.icon;
             return (
-              <Link to={page.path}>
+              <Link to={page.path} key={index} >
                 <Button
                   key={page.id}
                   variant={page === currentPage ? 'default' : 'ghost'}

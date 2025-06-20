@@ -47,6 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const initializeAuth = async () => {
             try {
+                console.log("ousll useffect");
+
                 // Load tokens from localStorage
                 jwtTokenManager.loadTokensFromStorage();
 

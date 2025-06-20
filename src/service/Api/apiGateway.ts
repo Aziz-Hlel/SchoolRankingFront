@@ -27,6 +27,7 @@ const apiGateway = {
         update: (schoolId: string) => `/schools/${schoolId}` as const,
         delete: (schoolId: string) => `/schools/${schoolId}` as const,
         getDetailedSchool: (schoolId: string) => `/schools/infos/${schoolId}` as const,
+        getFormProgress: () => "/schools/form-progress" as const,
     }
 
 }

@@ -1,19 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
-import Home from "./pages/Index";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import ProtectedRoutes from "./pages/ProtectedRoutes";
+import AuthenticatedRoutes from "./protect/AuthenticatedRoutes";
 import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AdminManagement } from "./components/AdminManagement";
 import { SchoolManagement } from "./components/SchoolManagement";
 import { ProfileInformation } from "./components/Profile/ProfileInformation";
-import { SchoolProfile } from "./components/SchoolProfile";
 import { MySchool } from "./components/MySchool";
 import ChangePassword from "./components/Profile/ChangePassword";
+import ProgressFormCheckup from "./protect/ProgressFormCheckup";
+import { FormProgressProvider } from "./contexts/FormProgress";
+import AuthorizedRoutes from "./protect/AuthorizedRoutes";
+import { ROLES } from "./enums/roles";
 
 
 const queryClient = new QueryClient();
@@ -28,38 +30,50 @@ function App() {
     <>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
-          <Sonner />
+          <FormProgressProvider>
 
-          <Router>
-            <Routes>
+            <Sonner />
 
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
+            <Router>
+              <Routes>
 
-              <Route element={<ProtectedRoutes />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+
+                <Route element={<AuthenticatedRoutes />}>
+
+                  <Route element={<ProgressFormCheckup />} >
+
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/dashboard" element={<Dashboard />} >
+
+                      <Route element={<AuthorizedRoutes roles={[ROLES.SUPER_ADMIN]} />} >
+                        <Route path="admins" element={<AdminManagement />} />
+                        <Route path="schools" element={<SchoolManagement />} />
+                      </Route>
 
 
-                <Route path="/dashboard" element={<Dashboard />} >
-                  <Route path="admins" element={<AdminManagement />} />
-                  <Route path="schools" element={<SchoolManagement />} />
+                      <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
+                        <Route path="my-school" element={<MySchool />} />
+                      </Route>
 
-                  <Route path="my-school" element={<MySchool />} />
 
-                  <Route path="profile" element={<ProfileInformation />} >
-                    <Route path="change-password" element={<ChangePassword />} />
+                      <Route path="profile" element={<ProfileInformation />} >
+                        <Route path="change-password" element={<ChangePassword />} />
+                      </Route>
+
+                    </Route>
+
                   </Route>
-
                 </Route>
 
-              </Route>
+
+                <Route path="*" element={<NotFound />} />
 
 
-              <Route path="*" element={<NotFound />} />
-
-
-            </Routes>
-          </Router>
+              </Routes>
+            </Router>
+          </FormProgressProvider>
         </QueryClientProvider >
       </AuthProvider >
     </>

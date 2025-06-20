@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -13,7 +13,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 
 
-export const Dashboard: React.FC = () => {
+export const Dashboard = () => {
 
   const { user } = useAuth();
 

@@ -30,7 +30,7 @@ const Login = () => {
         const response = await login({ email, password });
 
         if (response.success)
-            navigate("/")
+            navigate("/dashboard");
 
         if (!response.success && response.status === 401) setErrors({ email: "Invalid email or password" });
 
