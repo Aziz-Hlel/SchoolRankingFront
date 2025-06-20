@@ -71,8 +71,8 @@ function App() {
 
 
 
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/dashboard" element={<Dashboard />} >
+                        {/* <Route path="/" element={<Dashboard />} /> */}
+                        <Route path="dashboard" element={<Dashboard />} >
 
                           {/* Redirect when path is exactly /dashboard */}
                           <Route index element={<DashboardRedirect />} />
@@ -83,7 +83,7 @@ function App() {
 
                             <Route path="schools" element={<Outlet />} >
                               <Route index element={<SchoolManagement />} />
-                              <Route path=":schoolId" element={<AdminSchoolView/>} />
+                              <Route path=":schoolId" element={<AdminSchoolView />} />
                             </Route>
 
                           </Route>

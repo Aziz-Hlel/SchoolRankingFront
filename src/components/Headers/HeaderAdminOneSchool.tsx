@@ -1,5 +1,7 @@
 import { useDetailedSchool } from "@/contexts/DetailedSchoolProvider";
 import { PAGES } from "@/data/pages";
+import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 
 
@@ -17,6 +19,9 @@ export const HeaderAdminViewSchool = () => {
                 <h2 className="text-3xl font-bold tracking-tight">{`${page.mainPageTitle} (${detailedSchool?.schoolGeneral.name})`}</h2>
                 <p className="text-muted-foreground">{page.mainPageDescription}</p>
             </div>
+            <Link to={".."}>
+                <Button>Go Back</Button>
+            </Link>
             {/* </div> */}
         </header>
     );

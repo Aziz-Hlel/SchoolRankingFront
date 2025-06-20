@@ -140,9 +140,6 @@ export const MySchool: FC<{ userRole: ROLES }> = ({ userRole }) => {
 
   return (
     <div className="space-y-4 lg:space-y-6">
-      <div className=' w-full flex justify-end items-end '>
-        <Button>Go Back</Button>
-      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {
           sections.map((section) => {
