@@ -185,6 +185,23 @@ class ApiService {
         }
     }
 
+    async postThrowable<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
+        try {
+            const response = await this.api.post<ApiResponse<T>>(url, data, config);
+            return { data: response.data.data, status: response.status, success: true };
+        } catch (error: any) {
+
+            const apiErrorMessage = error.response?.data?.error || error.message || 'Request failed'
+
+            const status = error.response?.status
+
+            if (status !== 201) this.throwErrorAlert(status, apiErrorMessage);
+
+            throw { error: apiErrorMessage, data: {} as any, status, success: false };
+
+        }
+    }
+
     async put<T>(url: string, data: any, config?: AxiosRequestConfig,): Promise<ApiResponse<T>> {
         try {
             const response = await this.api.put<ApiResponse<T>>(url, data, config);

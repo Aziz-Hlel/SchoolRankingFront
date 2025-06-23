@@ -5,3 +5,5 @@
 - add optional validation with zod in the api level chechking the type you entered to the function and the type receive in the response body
 
 - add a safeAsyncMutate function that wraps the try catch of mutateAsync from useMutation and sends back the response without needing to catch the error every time use call mutateAsync
+
+- add authorized routes on top the authenticated one 

@@ -7,7 +7,8 @@ import type { FormProgress } from "@/types/FormProgress";
 
 
 interface IFormContext {
-    formProgress: FormProgress | undefined;
+    formProgress: FormProgress | null;
+    isLoading: boolean;
     fetchProgress: () => void;
 }
 
@@ -21,16 +22,16 @@ export const FormProgressProvider = ({ children }: { children: React.ReactNode }
 
 
 
-    const { data, refetch } = useApi<FormProgress>({ url: apiGateway.school.getFormProgress(), queryKey: ["formProgress"], options: { fetchOnMount: false, } })
+    const { data, refetch, isLoading } = useApi<FormProgress>({ url: apiGateway.school.getFormProgress(), queryKey: ["formProgress"], options: { fetchOnMount: false, } })
 
-    const formProgress: FormProgress | undefined = data?.data
+    const formProgress: FormProgress | null = data?.data ?? null
 
     const fetchProgress = () => {
         refetch();
     }
 
     return (
-        <FormContext.Provider value={{ formProgress, fetchProgress }}>
+        <FormContext.Provider value={{ formProgress, fetchProgress, isLoading }}>
             {children}
         </FormContext.Provider>
     );

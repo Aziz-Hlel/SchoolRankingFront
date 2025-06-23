@@ -37,7 +37,7 @@ interface SchoolGeneralStepProps {
 
 export const SchoolGeneralStep: React.FC<SchoolGeneralStepProps> = ({ form }) => {
   return (
-    <Form {...form}>
+    <Form {...form} >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormField
           control={form.control}
@@ -166,8 +166,8 @@ export const SchoolGeneralStep: React.FC<SchoolGeneralStepProps> = ({ form }) =>
             <FormItem>
               <FormLabel>Year Established</FormLabel>
               <FormControl>
-                <Input 
-                  type="number" 
+                <Input
+                  type="number"
                   placeholder="Enter year"
                   {...field}
                   onChange={e => field.onChange(parseInt(e.target.value) || undefined)}

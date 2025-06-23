@@ -3,11 +3,11 @@ import { z } from 'zod';
 
 // Enums
 export const CountryEnum = z.enum([
-  'US', 'CA', 'UK', 'AU', 'DE', 'FR', 'JP', 'SG', 'AE', 'IN', 'BR', 'MX', 'ZA'
+  'US', 'CA', 'UK', 'AU', 'DE', 'FRANCE', 'JP', 'SG', 'AE', 'IN', 'BR', 'MX', 'ZA'
 ]);
 
 export const SchoolTypeEnum = z.enum([
-  'public', 'private', 'charter', 'international', 'religious', 'boarding'
+  'public', 'private', 'charter', 'International', 'religious', 'boarding'
 ]);
 
 export const AccreditationEnum = z.enum([

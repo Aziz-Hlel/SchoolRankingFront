@@ -2,14 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { OnboardingLayout } from './onboarding/OnboardingLayout';
 import { NavigationButtons } from './onboarding/NavigationButtons';
 import { SchoolGeneralStep } from './school-steps/SchoolGeneralStep';
 import { SchoolAcademicsStep } from './school-steps/SchoolAcademicsStep';
-import { SchoolFacilitiesStep } from './school-steps/SchoolFacilitiesStep';
-import { SchoolStaffStep } from './school-steps/SchoolStaffStep';
 import { SchoolMediaStep } from './school-steps/SchoolMediaStep';
 import { 
   schoolGeneralSchema, 

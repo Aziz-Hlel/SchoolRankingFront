@@ -12,13 +12,12 @@ const AuthorizedRoutes: FC<{ roles: ROLES[] }> = ({ roles }) => {
     const { user: currentUser } = useAuth();
 
     const user = currentUser!;
-    console.log("ousil auhtroze routes")
-    if (!roles.includes(user.role)) {
-        console.log("t5l l exception")
-        return <div>Permission Denied, User with this role cannot access this path</div>
-    }
 
-   else  return <Outlet />
+    if (!roles.includes(user.role))
+        return <div>Permission Denied, User with this role cannot access this path</div>
+
+
+    return <Outlet />
 
 }
 

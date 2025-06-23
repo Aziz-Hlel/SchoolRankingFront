@@ -25,6 +25,8 @@ import { useState } from "react";
 import { DetailedSchoolProvider } from "./contexts/DetailedSchoolProvider";
 import { PageProvider } from "./contexts/PageContext";
 import AdminSchoolView from "./components/MySchool/AdminSchoolView";
+import { MultiStepSchoolOnboarding } from "./components/MultiStepSchoolOnboarding";
+import GeneralForm from "./components/MultiForm/GeneralForm/GeneralForm";
 
 
 const queryClient = new QueryClient();
@@ -50,6 +52,13 @@ function App() {
   });
   // < Dashboard />
 
+  const steps = [
+    { title: 'School Information', description: 'Basic details about your school' },
+    { title: 'Academic Programs', description: 'Curriculum and accreditation details' },
+    { title: 'Facilities & Sustainability', description: 'Infrastructure and environmental practices' },
+    { title: 'Staff & Leadership', description: 'Team qualifications and structure' },
+    { title: 'Media & Documentation', description: 'Links to reports and media content' },
+  ];
   return (
     <>
       <AuthProvider>
@@ -67,10 +76,16 @@ function App() {
                     <Route path="/signup" element={<SignUp />} />
 
                     <Route element={<AuthenticatedRoutes />}>
+
+                      <Route path="forms" element={<Outlet />}>
+                        <Route path="general" element={<GeneralForm />} />
+                        <Route path="academics" element={<>aaaa</>} />
+                        <Route path="facilities" element={<>Facilities Step</>} />
+                        <Route path="staff" element={<div>Staff Step</div>} />
+                        <Route path="media" element={<div>Media Step</div>} />
+                      </Route>
+
                       <Route element={<ProgressFormCheckup />} >
-
-
-
                         {/* <Route path="/" element={<Dashboard />} /> */}
                         <Route path="dashboard" element={<Dashboard />} >
 
