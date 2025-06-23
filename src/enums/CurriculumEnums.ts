@@ -1,11 +1,42 @@
-const BRITISH = 'BRITISH';
-const AMERICAN = 'AMERICAN';
-const IB_CURRICULUM = 'IB';
-const CBSE = 'CBSE';
-const IGCSE = 'IGCSE';
-const A_LEVEL = 'A_LEVEL';
-const FRENCH = 'FRENCH';
-const GERMAN = 'GERMAN';
+const BRITISH = {
+    value: 'BRITISH' as const,
+    label: 'British Curriculum'
+};
+
+const AMERICAN = {
+    value: 'AMERICAN' as const,
+    label: 'American Curriculum'
+};
+
+const IB_CURRICULUM = {
+    value: 'IB' as const,
+    label: 'International Baccalaureate Curriculum'
+};
+
+const CBSE = {
+    value: 'CBSE' as const,
+    label: 'Central Board of Secondary Education'
+};
+
+const IGCSE = {
+    value: 'IGCSE' as const,
+    label: 'International General Certificate of Secondary Education'
+};
+
+const A_LEVEL = {
+    value: 'A_LEVEL' as const,
+    label: 'Advanced Level'
+};
+
+const FRENCH = {
+    value: 'FRENCH' as const,
+    label: 'French Curriculum'
+};
+
+const GERMAN = {
+    value: 'GERMAN' as const,
+    label: 'German Curriculum'
+};
 
 export const CurriculumEnums = {
     BRITISH,

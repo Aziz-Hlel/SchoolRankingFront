@@ -13,7 +13,10 @@ import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { useNavigate } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import type { Checkbox } from '@radix-ui/react-checkbox';
+import { Checkbox } from '@radix-ui/react-checkbox';
+import { AccreditationEnums } from '@/enums/AccreditationEnums';
+import { LevelEnums } from '@/enums/LevelEnums';
+import { CurriculumEnums } from '@/enums/CurriculumEnums';
 
 
 const countries = [
@@ -52,7 +55,7 @@ export const schoolAcademicsSchema = z.object({
         .min(1, 'At least one accreditation is required'),
     accreditationDocsLinks: z.string()
         .min(5, 'Please provide documentation links'),
-    levelsOffered: z.array(LevelsEnum)
+    levelsOffered: z.array(z.enum(Object.keys(LevelEnums) as [string, ...string[]]))
         .min(1, 'At least one level is required'),
     curriculums: z.array(CurriculumEnum)
         .min(1, 'At least one curriculum is required'),
@@ -111,7 +114,7 @@ const FormBody = () => {
                                 </FormDescription>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {AccreditationEnum.map((item) => (
+                                {Object.values(AccreditationEnums).map((item) => (
                                     <FormField
                                         key={item.value}
                                         control={form.control}
@@ -182,7 +185,7 @@ const FormBody = () => {
                                 </FormDescription>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {levels.map((item) => (
+                                {Object.values(LevelEnums).map((item) => (
                                     <FormField
                                         key={item.value}
                                         control={form.control}
@@ -233,7 +236,7 @@ const FormBody = () => {
                                 </FormDescription>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {curriculums.map((item) => (
+                                {Object.values(CurriculumEnums).map((item) => (
                                     <FormField
                                         key={item.value}
                                         control={form.control}
