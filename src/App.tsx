@@ -27,6 +27,7 @@ import { PageProvider } from "./contexts/PageContext";
 import AdminSchoolView from "./components/MySchool/AdminSchoolView";
 import { MultiStepSchoolOnboarding } from "./components/MultiStepSchoolOnboarding";
 import GeneralForm from "./components/MultiForm/GeneralForm/GeneralForm";
+import AcademicsForm from "./components/MultiForm/Academics/AcademicsForm";
 
 
 const queryClient = new QueryClient();
@@ -79,7 +80,7 @@ function App() {
 
                       <Route path="forms" element={<Outlet />}>
                         <Route path="general" element={<GeneralForm />} />
-                        <Route path="academics" element={<>aaaa</>} />
+                        <Route path="academics" element={<AcademicsForm />} />
                         <Route path="facilities" element={<>Facilities Step</>} />
                         <Route path="staff" element={<div>Staff Step</div>} />
                         <Route path="media" element={<div>Media Step</div>} />

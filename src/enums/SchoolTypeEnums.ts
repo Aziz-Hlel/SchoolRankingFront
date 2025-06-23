@@ -1,4 +1,4 @@
-const INTERNATIONAL = 'INTERNATIONAL';
+const INTERNATIONAL = 'International';
 const PRIVATE = 'PRIVATE';
 const PUBLIC = 'PUBLIC';
 const CHARTER = 'CHARTER';

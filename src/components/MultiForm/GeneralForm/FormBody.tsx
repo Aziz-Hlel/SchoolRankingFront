@@ -1,8 +1,6 @@
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CountryEnum, SchoolTypeEnum, } from '@/types/school';
-import { type FC } from 'react'
-import { useForm, type UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import NavigationButtons from '../NavigationButtons';
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod';
@@ -13,38 +11,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { useNavigate } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { PhoneInput } from '@/components/ui/phone-input';
+import { CountryEnums, } from '@/enums/CountryEnums';
+import { SchoolTypeEnums } from '@/enums/SchoolTypeEnums';
 
-
-const countries = [
-    { value: 'US', label: 'United States' },
-    { value: 'CA', label: 'Canada' },
-    { value: 'UK', label: 'United Kingdom' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'DE', label: 'Germany' },
-    { value: 'FRANCE', label: 'France' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'SG', label: 'Singapore' },
-    { value: 'AE', label: 'United Arab Emirates' },
-    { value: 'IN', label: 'India' },
-    { value: 'BR', label: 'Brazil' },
-    { value: 'MX', label: 'Mexico' },
-    { value: 'ZA', label: 'South Africa' },
-];
-
-const schoolTypes = [
-    { value: 'public', label: 'Public School' },
-    { value: 'private', label: 'Private School' },
-    { value: 'charter', label: 'Charter School' },
-    { value: 'International', label: 'International School' },
-    { value: 'religious', label: 'Religious School' },
-    { value: 'boarding', label: 'Boarding School' },
-];
 
 
 
 export const schoolGeneralSchema = z.object({
     name: z.string().min(2, 'School name must be at least 2 characters'),
-    country: CountryEnum,
+    country: z.enum(Object.values(CountryEnums) as [string, ...string[]]),
     city: z.string().min(2, 'City must be at least 2 characters'),
     address: z.string().min(5, 'Address must be at least 5 characters'),
     phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
@@ -53,21 +29,20 @@ export const schoolGeneralSchema = z.object({
         .int('Year must be a whole number')
         .min(1800, 'Year must be after 1800')
         .max(2025, 'Year cannot be in the future'),
-    website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
-    type: SchoolTypeEnum,
+    website: z.string().url('Please enter a valid website URL').optional(),
+    type: z.enum(Object.values(SchoolTypeEnums) as [string, ...string[]]),
 });
 
-export type SchoolGeneralData = z.infer<typeof schoolGeneralSchema>;
-
+type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
 
 const FormBody = () => {
 
 
-    const generalForm = useForm<SchoolGeneralData>({ resolver: zodResolver(schoolGeneralSchema), });
+    const generalForm = useForm<SchoolGeneral>({ resolver: zodResolver(schoolGeneralSchema), });
 
     const { refreshUser } = useAuth();
 
-    const mutationFn = (formData: SchoolGeneralData) => apiService.postThrowable(apiGateway.form.general.create(), formData);
+    const mutationFn = (formData: SchoolGeneral) => apiService.postThrowable(apiGateway.form.general.create(), formData);
 
     const { mutateAsync, isPending } = useMutation({
         mutationFn,
@@ -76,7 +51,7 @@ const FormBody = () => {
 
     const navigate = useNavigate();
 
-    const onSubmit = async (data: SchoolGeneralData) => {
+    const onSubmit = async (data: SchoolGeneral) => {
 
         const response = await safeAsyncMutate(mutateAsync, data);
 
@@ -110,21 +85,22 @@ const FormBody = () => {
                     />
 
                     <FormField
+
                         control={generalForm.control}
                         name="type"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>School Type</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
+                                    <FormControl className=' w-full'>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select school type" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {schoolTypes.map((type) => (
-                                            <SelectItem key={type.value} value={type.value}>
-                                                {type.label}
+                                        {Object.values(SchoolTypeEnums).map((type) => (
+                                            <SelectItem key={type} value={type}>
+                                                {type}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -141,15 +117,15 @@ const FormBody = () => {
                             <FormItem>
                                 <FormLabel>Country</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
+                                    <FormControl className=' w-full'>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select country" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {countries.map((country) => (
-                                            <SelectItem key={country.value} value={country.value}>
-                                                {country.label}
+                                        {Object.values(CountryEnums).map((country) => (
+                                            <SelectItem key={country} value={country}>
+                                                {country}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -194,7 +170,11 @@ const FormBody = () => {
                             <FormItem>
                                 <FormLabel>Phone Number</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Enter phone number" {...field} />
+                                    <PhoneInput
+                                        placeholder="Placeholder"
+                                        {...field}
+                                        defaultCountry="TR"
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
