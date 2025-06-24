@@ -11,14 +11,11 @@ const DashboardRedirect = () => {
 
     if (!user) return null;
 
-    
-    if (user.role === ROLES.SUPER_ADMIN) {
-        return <Navigate to={PAGES.admins.path} replace />;
-    }
 
-    if (user.role === ROLES.ADMIN) {
-        return <Navigate to={PAGES.personalSchool.path} replace />;
-    }
+    if (user.role === ROLES.SUPER_ADMIN) return <Navigate to={PAGES.admins.path} replace />;
+
+
+    if (user.role === ROLES.ADMIN) return <Navigate to={PAGES.personalSchool.path} replace />;
 
     // Optional: fallback route
     return <Navigate to="/unauthorized" replace />;

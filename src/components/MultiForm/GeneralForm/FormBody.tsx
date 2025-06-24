@@ -14,24 +14,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PhoneInput } from '@/components/ui/phone-input';
 import { CountryEnums, } from '@/enums/CountryEnums';
 import { SchoolTypeEnums } from '@/enums/SchoolTypeEnums';
+import { schoolGeneralSchema } from '@/types/School2.type';
 
 
 
 
-export const schoolGeneralSchema = z.object({
-    name: z.string().min(2, 'School name must be at least 2 characters'),
-    country: z.enum(Object.values(CountryEnums).map(country => country.value) as [string, ...string[]]),
-    city: z.string().min(2, 'City must be at least 2 characters'),
-    address: z.string().min(5, 'Address must be at least 5 characters'),
-    phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
-    email: z.string().email('Please enter a valid email address'),
-    yearEstablished: z.number()
-        .int('Year must be a whole number')
-        .min(1800, 'Year must be after 1800')
-        .max(2025, 'Year cannot be in the future'),
-    website: z.string().url('Please enter a valid website URL').optional(),
-    type: z.enum(Object.values(SchoolTypeEnums) as [string, ...string[]]),
-});
+
 
 type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
 
@@ -170,7 +158,7 @@ const FormBody = () => {
                                     <PhoneInput
                                         placeholder="Placeholder"
                                         {...field}
-                                        defaultCountry="TR"
+                                        defaultCountry="AE"
                                     />
                                 </FormControl>
                                 <FormMessage />

@@ -16,29 +16,13 @@ import { TagInput } from '@/components/ui/TagInput';
 import { FacilityEnums } from '@/enums/FacilityEnums';
 import { AccessibilityEnums } from '@/enums/AccessibilityEnums';
 import { SustainabilityEnums } from '@/enums/SustainabilityEnums';
+import { schoolFacilitiesSchema } from '@/types/School2.type';
 
 
 
 
 
-export const schoolFacilitiesSchema = z.object({
-    facilities: z.array(z.enum(Object.keys(FacilityEnums) as [string, ...string[]]))
-        .min(1, 'At least one facility is required'),
-    accessibilityFeatures: z.array(z.enum(Object.keys(AccessibilityEnums) as [string, ...string[]]))
-        .min(1, 'At least one accessibility feature is required'),
-    sustainabilityPractices: z.array(z.enum(Object.keys(SustainabilityEnums) as [string, ...string[]]))
-        .min(1, 'At least one sustainability practice is required'),
-    universityDestinations: z.array(z.string().min(2, 'University name must be at least 2 characters'))
-        .min(1, 'At least one university destination is required'),
-    csrActivities: z.string()
-        .min(10, 'CSR activities description must be at least 10 characters'),
-    safetyCompliance: z.boolean({ required_error: 'Safety compliance is required' }),
-    aiIntegration: z.boolean({ required_error: 'AI integration is required' }),
-    technologyReadiness: RatingLevelEnum.optional(),
-    industryPartnerships: z.array(z.string().min(2, 'Partnership name must be at least 2 characters'))
-        .min(1, 'At least one industry partnership is required'),
-    awardsAndRecognitions: z.string().optional(),
-});
+
 
 export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 

@@ -1,7 +1,10 @@
 import type { SchoolGeneral } from '@/types/School2.type'
 import { Globe, MapPin } from 'lucide-react'
 
-const GeneralCardContent = ({ section }: { section: SchoolGeneral }) => {
+const GeneralCardContent = ({ section }: { section?: SchoolGeneral }) => {
+
+    if (!section) return null;
+    
     return (
         <div className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -1,7 +1,10 @@
 import { Badge } from '../ui/badge'
 import type { SchoolAcademics } from '@/types/School2.type'
 
-const AcademicCardContent = ({ section }: { section: SchoolAcademics }) => {
+const AcademicCardContent = ({ section }: { section?: SchoolAcademics }) => {
+
+    if (!section) return null;
+
     return (
         <div className="space-y-3">
 
@@ -36,7 +39,7 @@ const AcademicCardContent = ({ section }: { section: SchoolAcademics }) => {
                 </div>
                 <div>
                     <p className="text-sm text-muted-foreground">Accreditation links</p>
-                   <p className="font-medium text-xs overflow-hidden">{section.accreditationDocsLinks}</p>
+                    <p className="font-medium text-xs overflow-hidden">{section.accreditationDocsLinks}</p>
                 </div>
             </div>
 

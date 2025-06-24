@@ -148,9 +148,9 @@ export type SchoolMedia = SchoolMediaNoID & Id;
 
 
 export type SchoolDetailed = {
-  schoolGeneral: SchoolGeneral;
-  schoolStaff: SchoolStaff;
-  schoolFacilities: SchoolFacilities;
-  schoolMedia: SchoolMedia;
-  schoolAcademics: SchoolAcademics;
+  schoolGeneral?: SchoolGeneral;
+  schoolStaff?: SchoolStaff;
+  schoolFacilities?: SchoolFacilities;
+  schoolMedia?: SchoolMedia;
+  schoolAcademics?: SchoolAcademics;
 };

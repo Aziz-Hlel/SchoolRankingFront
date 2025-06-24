@@ -25,6 +25,7 @@ import AcademicsForm from "./components/MultiForm/Academics/AcademicsForm";
 import FacilitiesForm from "./components/MultiForm/Facilities/FacilitiesForm";
 import StaffForm from "./components/MultiForm/Staff/StaffForm";
 import MediaForm from "./components/MultiForm/Media/MediaForm";
+import FormBody from "./components/MultiForm/GeneralForm/FormBody";
 
 
 const queryClient = new QueryClient();
@@ -79,7 +80,14 @@ function App() {
 
 
                           <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
-                            <Route path="my-school" element={<MySchool userRole={ROLES.ADMIN} />} />
+                            <Route path="my-school" element={<Outlet />} >
+                              <Route index element={<MySchool userRole={ROLES.ADMIN} />} />
+                              <Route path="general" element={<FormBody />} />
+                              <Route path="academics" element={<AcademicsForm />} />
+                              <Route path="facilities" element={<FacilitiesForm />} />
+                              <Route path="staff" element={<StaffForm />} />
+                              <Route path="media" element={<MediaForm />} />
+                            </Route>
                           </Route>
 
 

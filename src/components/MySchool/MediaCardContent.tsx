@@ -1,5 +1,10 @@
+import type { SchoolMedia } from "@/types/School2.type"
 
-const MediaCardContent = ({ section }: { section: any }) => {
+const MediaCardContent = ({ section }: { section?: SchoolMedia }) => {
+
+    if (!section) return null;
+
+
     return (
         <div className="space-y-3">
             <div className="space-y-2">

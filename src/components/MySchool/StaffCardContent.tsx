@@ -3,7 +3,10 @@ import { Badge } from '../ui/badge'
 import { CountryEnums } from '@/enums/CountryEnums';
 import { CalendarCheck } from 'lucide-react';
 
-const StaffCardContent = ({ section }: { section: SchoolStaff }) => {
+const StaffCardContent = ({ section }: { section?: SchoolStaff }) => {
+
+    if (!section) return null;
+
     return (
         <div className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -46,9 +49,9 @@ const StaffCardContent = ({ section }: { section: SchoolStaff }) => {
             <div>
                 <p className="text-sm text-muted-foreground">Nationalities</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                    {section.teacherNationalities.map((nationality: keyof typeof CountryEnums, idx) => (
+                    {section.teacherNationalities.map((nationality, idx) => (
                         <Badge key={idx} variant="secondary" className="text-xs">
-                            {CountryEnums[nationality]}
+                            {CountryEnums[nationality as keyof typeof CountryEnums]?.label ?? nationality}
                         </Badge>
                     ))}
                 </div>

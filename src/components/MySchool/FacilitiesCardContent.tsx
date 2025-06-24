@@ -7,7 +7,10 @@ import { Bot } from 'lucide-react';
 import { BotOff } from 'lucide-react';
 
 
-const FacilitiesCardContent = ({ section }: { section: SchoolFacilities }) => {
+const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
+
+    if (!section) return null;
+
     return (
         <div className="space-y-3">
             <div>
