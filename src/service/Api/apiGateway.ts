@@ -40,6 +40,12 @@ const apiGateway = {
         facilities: {
             create: () => "/school-facilities/" as const,
         },
+        staff: {
+            create: () => "/school-staff/" as const,
+        },
+        media: {
+            create: () => "/school-media/" as const,
+        },
     }
 
 }

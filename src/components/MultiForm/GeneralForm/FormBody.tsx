@@ -20,7 +20,7 @@ import { SchoolTypeEnums } from '@/enums/SchoolTypeEnums';
 
 export const schoolGeneralSchema = z.object({
     name: z.string().min(2, 'School name must be at least 2 characters'),
-    country: z.enum(Object.values(CountryEnums) as [string, ...string[]]),
+    country: z.enum(Object.values(CountryEnums).map(country => country.value) as [string, ...string[]]),
     city: z.string().min(2, 'City must be at least 2 characters'),
     address: z.string().min(5, 'Address must be at least 5 characters'),
     phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
@@ -38,7 +38,7 @@ type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
 const FormBody = () => {
 
 
-    const generalForm = useForm<SchoolGeneral>({ resolver: zodResolver(schoolGeneralSchema), });
+    const form = useForm<SchoolGeneral>({ resolver: zodResolver(schoolGeneralSchema), });
 
     const { refreshUser } = useAuth();
 
@@ -63,12 +63,12 @@ const FormBody = () => {
     }
 
     return (
-        <Form {...generalForm} >
-            <form onSubmit={generalForm.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+        <Form {...form} >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="name"
                         render={({ field }) => (
                             <FormItem>
@@ -83,7 +83,7 @@ const FormBody = () => {
 
                     <FormField
 
-                        control={generalForm.control}
+                        control={form.control}
                         name="type"
                         render={({ field }) => (
                             <FormItem>
@@ -108,7 +108,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="country"
                         render={({ field }) => (
                             <FormItem>
@@ -121,8 +121,8 @@ const FormBody = () => {
                                     </FormControl>
                                     <SelectContent>
                                         {Object.values(CountryEnums).map((country) => (
-                                            <SelectItem key={country} value={country}>
-                                                {country}
+                                            <SelectItem key={country.value} value={country.value}>
+                                                {country.label}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -133,7 +133,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="city"
                         render={({ field }) => (
                             <FormItem>
@@ -147,7 +147,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="address"
                         render={({ field }) => (
                             <FormItem className="md:col-span-2">
@@ -161,7 +161,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="phoneNumber"
                         render={({ field }) => (
                             <FormItem>
@@ -179,7 +179,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="email"
                         render={({ field }) => (
                             <FormItem>
@@ -193,7 +193,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="yearEstablished"
                         render={({ field }) => (
                             <FormItem>
@@ -212,7 +212,7 @@ const FormBody = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
+                        control={form.control}
                         name="website"
                         render={({ field }) => (
                             <FormItem>

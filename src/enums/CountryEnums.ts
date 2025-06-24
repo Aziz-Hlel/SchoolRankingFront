@@ -3,12 +3,31 @@ export type Country = {
     displayName: string;
 };
 
+
+
+
+const USA = {
+    value: 'USA' as const,
+    label: 'United States'
+};
+
+const FRANCE = {
+    value: 'FRANCE' as const,
+    label: 'France'
+};
+
+const MOROCCO = {
+    value: 'MOROCCO' as const,
+    label: 'Maroc'
+};
+
 export const CountryEnums = {
-    'USA': 'United States',
-    'FRANCE': 'France',
-    'MOROCCO': 'Maroc'
+    USA,
+    FRANCE,
+    MOROCCO
 } as const;
 
-export type CountryEnums = keyof typeof CountryEnums;
+
+export type CountryEnums =  typeof CountryEnums[keyof typeof CountryEnums]['value'];
 
 

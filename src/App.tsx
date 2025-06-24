@@ -29,6 +29,7 @@ import { MultiStepSchoolOnboarding } from "./components/MultiStepSchoolOnboardin
 import GeneralForm from "./components/MultiForm/GeneralForm/GeneralForm";
 import AcademicsForm from "./components/MultiForm/Academics/AcademicsForm";
 import FacilitiesForm from "./components/MultiForm/Facilities/FacilitiesForm";
+import StaffForm from "./components/MultiForm/Staff/StaffForm";
 
 
 const queryClient = new QueryClient();
@@ -83,7 +84,7 @@ function App() {
                         <Route path="general" element={<GeneralForm />} />
                         <Route path="academics" element={<AcademicsForm />} />
                         <Route path="facilities" element={<FacilitiesForm />} />
-                        <Route path="staff" element={<div>Staff Step</div>} />
+                        <Route path="staff" element={<StaffForm/>} />
                         <Route path="media" element={<div>Media Step</div>} />
                       </Route>
 
