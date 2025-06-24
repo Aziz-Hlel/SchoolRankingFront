@@ -9,7 +9,8 @@ const useFormRedirect = (user: User | null | undefined, formProgress: FormProgre
     const navigate = useNavigate();
 
     useEffect(() => {
-        
+
+        console.log('t5l useeffect tbdlt haja , formcomplete = ', formProgress?.formsCompleted);
         // Early return if we don't have required data yet
         if (!user || !formProgress) return;
 

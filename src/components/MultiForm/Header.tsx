@@ -13,7 +13,7 @@ const Header: FC<{ currentStep: number }> = ({ currentStep, }) => {
         { title: 'Media & Documentation', description: 'Links to reports and media content' },
     ];
 
-    const totalSteps = 4
+    const totalSteps = 5
     const progress = ((currentStep + 1) / totalSteps) * 100;
 
     return (

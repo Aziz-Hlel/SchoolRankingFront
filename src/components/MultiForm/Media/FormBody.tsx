@@ -9,59 +9,33 @@ import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
 import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { useNavigate } from 'react-router-dom';
-import { CountryEnums, } from '@/enums/CountryEnums';
-import { Checkbox } from '@/components/ui/checkbox';
-import { LanguageEnums } from '@/enums/LanguagesEnums';
+import { useFormProgress } from '@/contexts/FormProgress';
+import { schoolMediaSchema } from '@/types/School2.type';
 
 
 
-export const schoolStaffSchema = z.object({
-    leadershipTeam: z.string()
-        .min(10, 'Leadership team description must be at least 10 characters'),
-
-    leadershipProfileLink: z.string()
-        .url('Please enter a valid URL for leadership profile'),
-
-    staffSizeEstimate: z.number()
-        .int('Staff size must be a whole number')
-        .min(1, 'Staff size must be at least 1'),
-
-    teacherQualifications: z.string()
-        .min(10, 'Teacher qualifications must be at least 10 characters'),
-
-    teacherNationalities: z.array(z.enum(Object.values(CountryEnums).map(country => country.value) as [string, ...string[]]))
-        .min(1, 'At least one teacher nationality is required'),
-
-    teacherLanguages: z.array(z.enum(Object.values(LanguageEnums).map(language => language.value) as [string, ...string[]]))
-        .min(1, 'At least one teacher language is required'),
-
-    professionalDevelopment: z.string()
-        .min(10, 'Professional development description must be at least 10 characters'),
-
-    lastInspectionDate: z.string()
-        .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in yyyy-MM-dd format')
-        .refine((date) => new Date(date) <= new Date(), 'Inspection date must be in the past')
-        .optional(),
-
-});
 
 
 
-type SchoolStaff = z.infer<typeof schoolStaffSchema>;
+
+type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
 const FormBody = () => {
 
+    const { fetchProgress } = useFormProgress();
 
-    const form = useForm<SchoolStaff>({ resolver: zodResolver(schoolStaffSchema), });
+    const form = useForm<SchoolMedia>({ resolver: zodResolver(schoolMediaSchema), });
 
 
-    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
+
+
     const navigate = useNavigate();
 
-    const onSubmit = async (data: SchoolStaff) => {
+    const onSubmit = async (data: SchoolMedia) => {
 
         const response = await safeAsyncMutate(mutateAsync, data);
 
@@ -70,7 +44,8 @@ const FormBody = () => {
             return;
         }
 
-        navigate('/forms/media');
+        fetchProgress();
+        navigate('/dashboard');
 
 
     }
@@ -82,21 +57,21 @@ const FormBody = () => {
 
                 <div className="space-y-6">
                     <div className="text-center mb-6">
-                        <h3 className="text-lg font-semibold mb-2">School Staff & Leadership</h3>
+                        <h3 className="text-lg font-semibold mb-2">School Media & Documentation</h3>
                         <p className="text-muted-foreground">
-                            Provide information about your school's staff and leadership team
+                            Provide links to your school's media and documentation (all fields are optional)
                         </p>
                     </div>
 
                     <FormField
                         control={form.control}
-                        name="leadershipTeam"
+                        name="bqaReportLink"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Leadership Team *</FormLabel>
-                                <FormDescription>Describe your school's leadership team</FormDescription>
+                                <FormLabel>BQA Report Link</FormLabel>
+                                <FormDescription>Link to your school's BQA (Bahrain Quality Assurance) report</FormDescription>
                                 <FormControl>
-                                    <Input placeholder="Principal, Vice Principal, Academic Directors..." {...field} />
+                                    <Input placeholder="https://example.com/bqa-report" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -105,13 +80,13 @@ const FormBody = () => {
 
                     <FormField
                         control={form.control}
-                        name="leadershipProfileLink"
+                        name="brochureLink"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Leadership Profile Link *</FormLabel>
-                                <FormDescription>Link to leadership team profiles or bios</FormDescription>
+                                <FormLabel>School Brochure Link</FormLabel>
+                                <FormDescription>Link to your school's digital brochure or prospectus</FormDescription>
                                 <FormControl>
-                                    <Input placeholder="https://example.com/leadership" {...field} />
+                                    <Input placeholder="https://example.com/brochure" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -120,18 +95,13 @@ const FormBody = () => {
 
                     <FormField
                         control={form.control}
-                        name="staffSizeEstimate"
+                        name="galleryLink"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Staff Size Estimate *</FormLabel>
-                                <FormDescription>Total number of staff members</FormDescription>
+                                <FormLabel>Photo Gallery Link</FormLabel>
+                                <FormDescription>Link to your school's photo gallery or virtual campus tour</FormDescription>
                                 <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="50"
-                                        {...field}
-                                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                                    />
+                                    <Input placeholder="https://example.com/gallery" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -140,146 +110,19 @@ const FormBody = () => {
 
                     <FormField
                         control={form.control}
-                        name="teacherQualifications"
+                        name="videoTourLink"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Teacher Qualifications *</FormLabel>
-                                <FormDescription>Describe the typical qualifications of your teachers</FormDescription>
+                                <FormLabel>Video Tour Link</FormLabel>
+                                <FormDescription>Link to your school's video tour or promotional video</FormDescription>
                                 <FormControl>
-                                    <Input placeholder="Bachelor's degree, Master's degree, Teaching certification..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="teacherNationalities"
-                        render={() => (
-                            <FormItem>
-                                <FormLabel>Teacher Nationalities *</FormLabel>
-                                <FormDescription>Select the nationalities represented in your teaching staff</FormDescription>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-48 overflow-y-auto">
-                                    {Object.values(CountryEnums).map((country) => (
-                                        <FormField
-                                            key={country.value}
-                                            control={form.control}
-                                            name="teacherNationalities"
-                                            render={({ field }) => {
-                                                return (
-                                                    <FormItem
-                                                        key={country.value}
-                                                        className="flex flex-row items-start space-x-3 space-y-0"
-                                                    >
-                                                        <FormControl>
-                                                            <Checkbox
-                                                                checked={field.value?.includes(country.value)}
-                                                                onCheckedChange={(checked) => {
-                                                                    const currentValue = field.value || [];
-                                                                    return checked
-                                                                        ? field.onChange([...currentValue, country.value])
-                                                                        : field.onChange(
-                                                                            currentValue?.filter(
-                                                                                (value) => value !== country.value
-                                                                            )
-                                                                        );
-                                                                }}
-                                                            />
-                                                        </FormControl>
-                                                        <FormLabel className="text-sm font-normal">
-                                                            {country.label}
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                );
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="teacherLanguages"
-                        render={() => (
-                            <FormItem>
-                                <FormLabel>Teacher Languages *</FormLabel>
-                                <FormDescription>Select languages spoken by your teaching staff</FormDescription>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {Object.values(LanguageEnums).map((language) => (
-                                        <FormField
-                                            key={language.value}
-                                            control={form.control}
-                                            name="teacherLanguages"
-                                            render={({ field }) => {
-                                                return (
-                                                    <FormItem
-                                                        key={language.value}
-                                                        className="flex flex-row items-start space-x-3 space-y-0"
-                                                    >
-                                                        <FormControl>
-                                                            <Checkbox
-                                                                checked={field.value?.includes(language.value)}
-                                                                onCheckedChange={(checked) => {
-                                                                    const currentValue = field.value || [];
-                                                                    return checked
-                                                                        ? field.onChange([...currentValue, language.value])
-                                                                        : field.onChange(
-                                                                            currentValue?.filter(
-                                                                                (value) => value !== language.value
-                                                                            )
-                                                                        );
-                                                                }}
-                                                            />
-                                                        </FormControl>
-                                                        <FormLabel className="text-sm font-normal">
-                                                            {language.label}
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                );
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="professionalDevelopment"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Professional Development *</FormLabel>
-                                <FormDescription>Describe professional development opportunities for staff</FormDescription>
-                                <FormControl>
-                                    <Input placeholder="Training programs, workshops, conferences..." {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="lastInspectionDate"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Last Inspection Date</FormLabel>
-                                <FormDescription>Date of the last official school inspection (YYYY-MM-DD)</FormDescription>
-                                <FormControl>
-                                    <Input type="date" {...field} />
+                                    <Input placeholder="https://example.com/video-tour" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
                 </div>
-
                 <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
 
             </form>

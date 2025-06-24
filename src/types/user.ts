@@ -9,6 +9,6 @@ export type User = {
     lastName: string;
     email: string;
     role: ROLES;
-    schoolId: string;
+    schoolId: string | null;
 
 };

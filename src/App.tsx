@@ -17,19 +17,14 @@ import { FormProgressProvider } from "./contexts/FormProgress";
 import AuthorizedRoutes from "./protect/AuthorizedRoutes";
 import { ROLES } from "./enums/roles";
 import DashboardRedirect from "./components/DashboardRedirect";
-import { SchoolGeneralStep } from "./components/school-steps/SchoolGeneralStep";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { type CompleteSchoolData, type SchoolGeneralData, schoolGeneralSchema } from "./types/school";
-import { useState } from "react";
 import { DetailedSchoolProvider } from "./contexts/DetailedSchoolProvider";
 import { PageProvider } from "./contexts/PageContext";
 import AdminSchoolView from "./components/MySchool/AdminSchoolView";
-import { MultiStepSchoolOnboarding } from "./components/MultiStepSchoolOnboarding";
 import GeneralForm from "./components/MultiForm/GeneralForm/GeneralForm";
 import AcademicsForm from "./components/MultiForm/Academics/AcademicsForm";
 import FacilitiesForm from "./components/MultiForm/Facilities/FacilitiesForm";
 import StaffForm from "./components/MultiForm/Staff/StaffForm";
+import MediaForm from "./components/MultiForm/Media/MediaForm";
 
 
 const queryClient = new QueryClient();
@@ -37,31 +32,7 @@ const queryClient = new QueryClient();
 
 function App() {
 
-  const [formData, setFormData] = useState<Partial<CompleteSchoolData>>({});
 
-  const generalForm = useForm<SchoolGeneralData>({
-    resolver: zodResolver(schoolGeneralSchema),
-    defaultValues: {
-      name: formData.name || '',
-      country: formData.country || undefined,
-      city: formData.city || '',
-      address: formData.address || '',
-      phoneNumber: formData.phoneNumber || '',
-      email: formData.email || '',
-      yearEstablished: formData.yearEstablished || undefined,
-      website: formData.website || '',
-      type: formData.type || undefined,
-    },
-  });
-  // < Dashboard />
-
-  const steps = [
-    { title: 'School Information', description: 'Basic details about your school' },
-    { title: 'Academic Programs', description: 'Curriculum and accreditation details' },
-    { title: 'Facilities & Sustainability', description: 'Infrastructure and environmental practices' },
-    { title: 'Staff & Leadership', description: 'Team qualifications and structure' },
-    { title: 'Media & Documentation', description: 'Links to reports and media content' },
-  ];
   return (
     <>
       <AuthProvider>
@@ -84,8 +55,8 @@ function App() {
                         <Route path="general" element={<GeneralForm />} />
                         <Route path="academics" element={<AcademicsForm />} />
                         <Route path="facilities" element={<FacilitiesForm />} />
-                        <Route path="staff" element={<StaffForm/>} />
-                        <Route path="media" element={<div>Media Step</div>} />
+                        <Route path="staff" element={<StaffForm />} />
+                        <Route path="media" element={<MediaForm />} />
                       </Route>
 
                       <Route element={<ProgressFormCheckup />} >
@@ -106,7 +77,6 @@ function App() {
 
                           </Route>
 
-                          <Route path="form/general" element={<SchoolGeneralStep form={generalForm} />} />
 
                           <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
                             <Route path="my-school" element={<MySchool userRole={ROLES.ADMIN} />} />

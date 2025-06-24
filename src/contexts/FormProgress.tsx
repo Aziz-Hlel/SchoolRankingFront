@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 import useApi from "@/hooks/useApi";
 import apiGateway from "@/service/Api/apiGateway";
 import type { FormProgress } from "@/types/FormProgress";
@@ -26,9 +26,8 @@ export const FormProgressProvider = ({ children }: { children: React.ReactNode }
 
     const formProgress: FormProgress | null = data?.data ?? null
 
-    const fetchProgress = () => {
-        refetch();
-    }
+    const fetchProgress = async () => await refetch();
+
 
     return (
         <FormContext.Provider value={{ formProgress, fetchProgress, isLoading }}>

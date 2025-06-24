@@ -37,7 +37,7 @@ export const DetailedSchoolProvider: FC<{ children: ReactNode }> = ({ children }
 
     useEffect(() => {
 
-        if (user && user.role === ROLES.ADMIN) {
+        if (user && user.role === ROLES.ADMIN && user.schoolId) {
             console.log("Fetching detailed school for admin", user.schoolId);
             setSchoolId(user.schoolId);
         }
