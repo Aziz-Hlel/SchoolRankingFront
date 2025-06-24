@@ -33,7 +33,13 @@ const apiGateway = {
     form: {
         general: {
             create: () => "/schools/" as const,
-        }
+        },
+        academics: {
+            create: () => "/school-academics/" as const,
+        },
+        facilities: {
+            create: () => "/school-facilities/" as const,
+        },
     }
 
 }

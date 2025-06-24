@@ -31,7 +31,7 @@ const NavigationButtons: FC<NavigationButtonsProps> = ({ currentStep, onNext, on
                         {isSubmitting ? 'Completing...' : 'Complete Registration'}
                     </Button>
                 ) : (
-                    <Button onClick={onNext} type='submit' disabled={isSubmitting}>
+                    <Button onClick={onNext} type='submit' disabled={isSubmitting} className=' cursor-pointer '>
                         Next
                     </Button>
                 )}

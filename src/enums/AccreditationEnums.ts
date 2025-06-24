@@ -40,12 +40,13 @@ const BSO = {
 
 const Cognia = {
     value: 'Cognia' as const,
-    label: 'Cognia'
-}
+    label: 'Cognia Accreditation'
+};
+
 const AEFE = {
     value: 'AEFE' as const,
-    label: 'AEFE'
-}
+    label: "Agence pour l'Enseignement Français à l'Etranger (AEFE)"
+};
 
 export const AccreditationEnums = {
     IB,

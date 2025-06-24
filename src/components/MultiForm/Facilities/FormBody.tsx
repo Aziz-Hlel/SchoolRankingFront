@@ -1,8 +1,7 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { CountryEnum, SchoolTypeEnum, } from '@/types/school';
-import { type FC } from 'react'
-import { useForm, type UseFormReturn } from 'react-hook-form';
+import { RatingLevelEnum, } from '@/types/school';
+import { useForm } from 'react-hook-form';
 import NavigationButtons from '../NavigationButtons';
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod';
@@ -12,74 +11,66 @@ import { apiService } from '@/service/Api/apiService';
 import { useAuth } from '@/contexts/AuthContext';
 import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { useNavigate } from 'react-router-dom';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { TagInput } from '@/components/ui/TagInput';
+import { FacilityEnums } from '@/enums/FacilityEnums';
+import { AccessibilityEnums } from '@/enums/AccessibilityEnums';
+import { SustainabilityEnums } from '@/enums/SustainabilityEnums';
 
 
-const countries = [
-    { value: 'US', label: 'United States' },
-    { value: 'CA', label: 'Canada' },
-    { value: 'UK', label: 'United Kingdom' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'DE', label: 'Germany' },
-    { value: 'FRANCE', label: 'France' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'SG', label: 'Singapore' },
-    { value: 'AE', label: 'United Arab Emirates' },
-    { value: 'IN', label: 'India' },
-    { value: 'BR', label: 'Brazil' },
-    { value: 'MX', label: 'Mexico' },
-    { value: 'ZA', label: 'South Africa' },
-];
-
-const schoolTypes = [
-    { value: 'public', label: 'Public School' },
-    { value: 'private', label: 'Private School' },
-    { value: 'charter', label: 'Charter School' },
-    { value: 'International', label: 'International School' },
-    { value: 'religious', label: 'Religious School' },
-    { value: 'boarding', label: 'Boarding School' },
-];
-
-interface SchoolGeneralStepProps {
-    form: UseFormReturn<SchoolGeneralData>;
-}
 
 
-export const schoolGeneralSchema = z.object({
-    name: z.string().min(2, 'School name must be at least 2 characters'),
-    country: CountryEnum,
-    city: z.string().min(2, 'City must be at least 2 characters'),
-    address: z.string().min(5, 'Address must be at least 5 characters'),
-    phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
-    email: z.string().email('Please enter a valid email address'),
-    yearEstablished: z.number()
-        .int('Year must be a whole number')
-        .min(1800, 'Year must be after 1800')
-        .max(2025, 'Year cannot be in the future'),
-    website: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
-    type: SchoolTypeEnum,
+
+export const schoolFacilitiesSchema = z.object({
+    facilities: z.array(z.enum(Object.keys(FacilityEnums) as [string, ...string[]]))
+        .min(1, 'At least one facility is required'),
+    accessibilityFeatures: z.array(z.enum(Object.keys(AccessibilityEnums) as [string, ...string[]]))
+        .min(1, 'At least one accessibility feature is required'),
+    sustainabilityPractices: z.array(z.enum(Object.keys(SustainabilityEnums) as [string, ...string[]]))
+        .min(1, 'At least one sustainability practice is required'),
+    universityDestinations: z.array(z.string().min(2, 'University name must be at least 2 characters'))
+        .min(1, 'At least one university destination is required'),
+    csrActivities: z.string()
+        .min(10, 'CSR activities description must be at least 10 characters'),
+    safetyCompliance: z.boolean({ required_error: 'Safety compliance is required' }),
+    aiIntegration: z.boolean({ required_error: 'AI integration is required' }),
+    technologyReadiness: RatingLevelEnum.optional(),
+    industryPartnerships: z.array(z.string().min(2, 'Partnership name must be at least 2 characters'))
+        .min(1, 'At least one industry partnership is required'),
+    awardsAndRecognitions: z.string().optional(),
 });
 
-export type SchoolGeneralData = z.infer<typeof schoolGeneralSchema>;
+export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 
 
-const FormBody: FC<SchoolGeneralStepProps> = () => {
+const FormBody = () => {
 
 
-    const generalForm = useForm<SchoolGeneralData>({ resolver: zodResolver(schoolGeneralSchema), });
+    const form = useForm<SchoolFacilitiesData>({
+        resolver: zodResolver(schoolFacilitiesSchema),
+        defaultValues: {
+            facilities: [],
+            accessibilityFeatures: [],
+            sustainabilityPractices: [],
+            universityDestinations: [],
+            csrActivities: '',
+            safetyCompliance: false, // required and default false
+            aiIntegration: false,    // required and default false
+            technologyReadiness: undefined,
+            industryPartnerships: [],
+            awardsAndRecognitions: '',
+        },
+    });
 
     const { refreshUser } = useAuth();
 
-    const mutationFn = (formData: SchoolGeneralData) => apiService.postThrowable(apiGateway.form.general.create(), formData);
+    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(), formData);
 
-    const { mutateAsync, isPending } = useMutation({
-        mutationFn,
-
-    });
+    const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
     const navigate = useNavigate();
 
-    const onSubmit = async (data: SchoolGeneralData) => {
+    const onSubmit = async (data: SchoolFacilitiesData) => {
 
         const response = await safeAsyncMutate(mutateAsync, data);
 
@@ -88,148 +79,225 @@ const FormBody: FC<SchoolGeneralStepProps> = () => {
             return;
         }
         refreshUser()
-        navigate('/forms/academics');
+        navigate('/forms/staff');
 
 
     }
 
+
     return (
-        <Form {...generalForm} >
-            <form onSubmit={generalForm.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                    {/* <div className="text-center mb-6">
+                        <h3 className="text-lg font-semibold mb-2">School Facilities & Resources</h3>
+                        <p className="text-muted-foreground">
+                            Provide information about your school's facilities and resources
+                        </p>
+                    </div> */}
+
                     <FormField
-                        control={generalForm.control}
-                        name="name"
+                        control={form.control}
+                        name="aiIntegration"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>School Name</FormLabel>
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                                 <FormControl>
-                                    <Input placeholder="Enter school name" {...field} />
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+
+                                    />
                                 </FormControl>
-                                <FormMessage />
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Ai Integration</FormLabel>
+                                    <FormDescription>Check if your school currently uses artificial intelligence (AI) in any of its operations or systems.</FormDescription>
+                                    <FormMessage />
+                                </div>
                             </FormItem>
                         )}
                     />
 
                     <FormField
-                        control={generalForm.control}
-                        name="type"
+                        control={form.control}
+                        name="safetyCompliance"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>School Type</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select school type" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {schoolTypes.map((type) => (
-                                            <SelectItem key={type.value} value={type.value}>
-                                                {type.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={generalForm.control}
-                        name="country"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Country</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select country" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {countries.map((country) => (
-                                            <SelectItem key={country.value} value={country.value}>
-                                                {country.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={generalForm.control}
-                        name="city"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>City</FormLabel>
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                                 <FormControl>
-                                    <Input placeholder="Enter city" {...field} />
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        
+
+                                    />
                                 </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>Safety Compliance</FormLabel>
+                                    <FormDescription>Confirm that your school is in compliance with all relevant safety regulations and standards.</FormDescription>
+                                    <FormMessage />
+                                </div>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="facilities"
+                        render={() => (
+                            <FormItem>
+                                <FormLabel>Facilities *</FormLabel>
+                                <FormDescription>Select all facilities available at your school</FormDescription>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {Object.values(FacilityEnums).map((facility) => (
+                                        <FormField
+                                            key={facility.value}
+                                            control={form.control}
+                                            name="facilities"
+                                            render={({ field }) => {
+                                                return (
+                                                    <FormItem
+                                                        key={facility.value}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(facility.value)}
+                                                                onCheckedChange={(checked) => {
+                                                                    const currentValue = field.value || [];
+                                                                    return checked
+                                                                        ? field.onChange([...currentValue, facility.value])
+                                                                        : field.onChange(
+                                                                            currentValue?.filter(
+                                                                                (value) => value !== facility.value
+                                                                            )
+                                                                        );
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormLabel className="text-sm font-normal">
+                                                            {facility.label}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                );
+                                            }}
+                                        />
+                                    ))}
+                                </div>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
                     <FormField
-                        control={generalForm.control}
-                        name="address"
-                        render={({ field }) => (
-                            <FormItem className="md:col-span-2">
-                                <FormLabel>Address</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter complete address" {...field} />
-                                </FormControl>
+                        control={form.control}
+                        name="accessibilityFeatures"
+                        render={() => (
+                            <FormItem>
+                                <FormLabel>Accessibility Features *</FormLabel>
+                                <FormDescription>Select accessibility features available</FormDescription>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {Object.values(AccessibilityEnums).map((feature) => (
+                                        <FormField
+                                            key={feature.value}
+                                            control={form.control}
+                                            name="accessibilityFeatures"
+                                            render={({ field }) => {
+                                                return (
+                                                    <FormItem
+                                                        key={feature.value}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(feature.value)}
+                                                                onCheckedChange={(checked) => {
+                                                                    const currentValue = field.value || [];
+                                                                    return checked
+                                                                        ? field.onChange([...currentValue, feature.value])
+                                                                        : field.onChange(
+                                                                            currentValue?.filter(
+                                                                                (value) => value !== feature.value
+                                                                            )
+                                                                        );
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormLabel className="text-sm font-normal">
+                                                            {feature.label}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                );
+                                            }}
+                                        />
+                                    ))}
+                                </div>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
 
                     <FormField
-                        control={generalForm.control}
-                        name="phoneNumber"
+                        control={form.control}
+                        name="sustainabilityPractices"
+                        render={() => (
+                            <FormItem>
+                                <FormLabel>Sustainability Practices *</FormLabel>
+                                <FormDescription>Select sustainability practices implemented</FormDescription>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {Object.values(SustainabilityEnums).map((practice) => (
+                                        <FormField
+                                            key={practice.value}
+                                            control={form.control}
+                                            name="sustainabilityPractices"
+                                            render={({ field }) => {
+                                                return (
+                                                    <FormItem
+                                                        key={practice.value}
+                                                        className="flex flex-row items-start space-x-3 space-y-0"
+                                                    >
+                                                        <FormControl>
+                                                            <Checkbox
+                                                                checked={field.value?.includes(practice.value as any)}
+                                                                onCheckedChange={(checked: any) => {
+                                                                    const currentValue = field.value || [];
+                                                                    return checked
+                                                                        ? field.onChange([...currentValue, practice.value])
+                                                                        : field.onChange(
+                                                                            currentValue?.filter(
+                                                                                (value) => value !== practice.value
+                                                                            )
+                                                                        );
+                                                                }}
+                                                            />
+                                                        </FormControl>
+                                                        <FormLabel className="text-sm font-normal">
+                                                            {practice.label}
+                                                        </FormLabel>
+                                                    </FormItem>
+                                                );
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="universityDestinations"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Phone Number</FormLabel>
+                                <FormLabel>University Destinations *</FormLabel>
+                                <FormDescription>
+                                    Enter universities where your graduates typically go
+                                </FormDescription>
                                 <FormControl>
-                                    <Input placeholder="Enter phone number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={generalForm.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input type="email" placeholder="Enter school email" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={generalForm.control}
-                        name="yearEstablished"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Year Established</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="number"
-                                        placeholder="Enter year"
-                                        {...field}
-                                        onChange={e => field.onChange(parseInt(e.target.value) || undefined)}
+                                    <TagInput
+                                        value={field.value || []}
+                                        onChange={field.onChange}
+                                        placeholder="Harvard University, Oxford University, MIT..."
                                     />
                                 </FormControl>
                                 <FormMessage />
@@ -238,13 +306,53 @@ const FormBody: FC<SchoolGeneralStepProps> = () => {
                     />
 
                     <FormField
-                        control={generalForm.control}
-                        name="website"
+                        control={form.control}
+                        name="csrActivities"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Website (Optional)</FormLabel>
+                                <FormLabel>CSR Activities *</FormLabel>
+                                <FormDescription>Describe your Corporate Social Responsibility activities</FormDescription>
                                 <FormControl>
-                                    <Input placeholder="https://example.com" {...field} />
+                                    <Input placeholder="Community service, environmental projects, charity work..." {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="industryPartnerships"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Industry Partnerships *</FormLabel>
+                                <FormDescription>List your industry partnerships (comma-separated)</FormDescription>
+                                <FormControl>
+
+                                    <TagInput
+                                        value={field.value || []}
+                                        onChange={field.onChange}
+                                        placeholder="Tech companies, local businesses, NGOs..."
+                                    />
+
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+
+
+
+                    <FormField
+                        control={form.control}
+                        name="awardsAndRecognitions"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Awards and Recognitions</FormLabel>
+                                <FormDescription>List any awards or recognitions received</FormDescription>
+                                <FormControl>
+                                    <Input placeholder="Academic excellence awards, sports championships..." {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -253,7 +361,6 @@ const FormBody: FC<SchoolGeneralStepProps> = () => {
                 </div>
                 <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
             </form>
-
         </Form>
     );
 }
