@@ -58,12 +58,12 @@ const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
                 </div>
 
             </div>
-            <div className=' flex gap-2 '>
+            {/* <div className=' flex gap-2 '>
                 <p className="text-sm">Technology readiness</p>
                 <Badge variant="outline" className="text-xs bg-green-700 text-white">
                     {section.technologyReadiness}
                 </Badge>
-            </div>
+            </div> */}
 
 
 

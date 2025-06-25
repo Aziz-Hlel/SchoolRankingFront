@@ -20,8 +20,6 @@ export const Dashboard = () => {
 
   if (!user) return <>User is either null or undefined</>;
 
-  const userFirstRendredPage = user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.personalSchool;
-
   const { currentPage } = usePageContext();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
@@ -20,12 +20,11 @@ import DashboardRedirect from "./components/DashboardRedirect";
 import { DetailedSchoolProvider } from "./contexts/DetailedSchoolProvider";
 import { PageProvider } from "./contexts/PageContext";
 import AdminSchoolView from "./components/MySchool/AdminSchoolView";
-import GeneralForm from "./components/MultiForm/GeneralForm/GeneralForm";
-import AcademicsForm from "./components/MultiForm/Academics/AcademicsForm";
-import FacilitiesForm from "./components/MultiForm/Facilities/FacilitiesForm";
-import StaffForm from "./components/MultiForm/Staff/StaffForm";
-import MediaForm from "./components/MultiForm/Media/MediaForm";
-import FormBody from "./components/MultiForm/GeneralForm/FormBody";
+import GeneralForm from "./components/Forms/InitialForms/Wrapper/GeneralForm";
+import AcademicsForm from "./components/Forms/InitialForms/Wrapper/AcademicsForm";
+import FacilitiesForm from "./components/Forms/InitialForms/Wrapper/FacilitiesForm";
+import StaffForm from "./components/Forms/InitialForms/Wrapper/StaffForm";
+import MediaForm from "./components/Forms/InitialForms/Wrapper/MediaForm";
 
 
 const queryClient = new QueryClient();
@@ -46,7 +45,7 @@ function App() {
 
                 <Router>
                   <Routes>
-
+                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
 
@@ -73,7 +72,13 @@ function App() {
 
                             <Route path="schools" element={<Outlet />} >
                               <Route index element={<SchoolManagement />} />
-                              <Route path=":schoolId" element={<AdminSchoolView />} />
+                              <Route path=":schoolId" element={<Outlet />} >
+                                <Route index element={<AdminSchoolView />} />
+                                <Route path="edit" element={<Outlet />} >
+                                  <Route path="general" element={<GeneralForm />} />
+                                </Route>
+
+                              </Route>
                             </Route>
 
                           </Route>
@@ -82,11 +87,13 @@ function App() {
                           <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
                             <Route path="my-school" element={<Outlet />} >
                               <Route index element={<MySchool userRole={ROLES.ADMIN} />} />
-                              <Route path="general" element={<FormBody />} />
-                              <Route path="academics" element={<AcademicsForm />} />
-                              <Route path="facilities" element={<FacilitiesForm />} />
-                              <Route path="staff" element={<StaffForm />} />
-                              <Route path="media" element={<MediaForm />} />
+                              <Route path="edit" element={<Outlet />} >
+                                <Route path="general" element={<GeneralForm />} />
+                                <Route path="academics" element={<AcademicsForm />} />
+                                <Route path="facilities" element={<FacilitiesForm />} />
+                                <Route path="staff" element={<StaffForm />} />
+                                <Route path="media" element={<MediaForm />} />
+                              </Route>
                             </Route>
                           </Route>
 

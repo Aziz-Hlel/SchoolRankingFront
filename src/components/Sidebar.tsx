@@ -26,6 +26,7 @@ export const Sidebar: FC<SidebarProps> = ({ ordredPages }) => {
   const { currentPage, changePage } = usePageContext();
 
 
+console.log("current page", currentPage);
 
   return (
     <div className="w-64 bg-white border-r border-border h-screen flex flex-col">

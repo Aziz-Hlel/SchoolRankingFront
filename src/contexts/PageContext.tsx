@@ -1,6 +1,6 @@
 import { ordredPages, PAGES } from "@/data/pages";
 import type { Page } from "@/types/page";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { ROLES } from "@/enums/roles";
 
@@ -22,11 +22,15 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { user } = useAuth();
 
-    const userFirstRendredPage = !user ? PAGES.profile
-        : user.role === ROLES.SUPER_ADMIN ? PAGES.admins : PAGES.personalSchool;
+    const userFirstRendredPage = PAGES.profile;
 
     const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
 
+    useEffect(() => {
+        user && user.role === ROLES.SUPER_ADMIN && setCurrentPage(PAGES.admins);
+        user && user.role === ROLES.ADMIN && setCurrentPage(PAGES.personalSchool);
+
+    }, [user?.role]);
 
     const changePage = (page: Page) => {
         setCurrentPage(page);

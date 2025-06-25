@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, Outlet } from 'react-router-dom';
 import z from 'zod';
+import { usePageContext } from '@/contexts/PageContext';
+import { PAGES } from '@/data/pages';
+import { useChangePage } from '@/hooks/useChangePage';
 
 const profileSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -20,6 +23,11 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export const ProfileInformation: React.FC = () => {
+
+  useChangePage(PAGES.profile)
+
+
+
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
   const user = currentUser!;
@@ -110,12 +118,12 @@ export const ProfileInformation: React.FC = () => {
 
               <div className='flex w-full justify-end'>
                 <div className="flex justify-end">
-                  
+
                   <Button type="button" variant="link" className='hover:cursor-pointer'>
                     <Link to={'/dashboard/profile/change-password'}>
-                    Change password
+                      Change password
                     </Link>
-                    </Button>
+                  </Button>
                 </div>
                 <div className="flex justify-end">
                   <Button type="submit">Save Changes</Button>

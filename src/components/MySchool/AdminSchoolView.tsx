@@ -3,17 +3,11 @@ import { useEffect } from 'react'
 import { MySchool } from './MySchool';
 import { ROLES } from '@/enums/roles';
 import { PAGES } from '@/data/pages';
+import { useChangePage } from '@/hooks/useChangePage';
 
 const AdminSchoolView = () => {
 
-    const { changePage } = usePageContext();
-
-
-    useEffect(() => {
-        changePage(PAGES.admins_school_view)
-
-    }, [])
-
+    useChangePage(PAGES.admins_school_view);
     return (
 
         <>

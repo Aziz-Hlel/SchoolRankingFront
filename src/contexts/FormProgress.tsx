@@ -2,6 +2,8 @@ import { createContext, useContext } from "react";
 import useApi from "@/hooks/useApi";
 import apiGateway from "@/service/Api/apiGateway";
 import type { FormProgress } from "@/types/FormProgress";
+import type { QueryObserverResult } from "@tanstack/react-query";
+import type { ApiResponse } from "@/service/Api/apiService";
 
 
 
@@ -9,7 +11,7 @@ import type { FormProgress } from "@/types/FormProgress";
 interface IFormContext {
     formProgress: FormProgress | null;
     isLoading: boolean;
-    fetchProgress: () => void;
+    fetchProgress: () => Promise<QueryObserverResult<ApiResponse<FormProgress>, Error>>;
 }
 
 

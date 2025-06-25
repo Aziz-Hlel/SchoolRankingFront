@@ -1,4 +1,3 @@
-import { AdminManagement } from '@/components/AdminManagement';
 import AdminsHeader from '@/components/Headers/MySchoolHeader';
 import { HeaderAdminViewSchool } from '@/components/Headers/HeaderAdminOneSchool';
 import SchoolsHeader from '@/components/Headers/SchoolsHeader';
@@ -10,6 +9,7 @@ import { sidebarButton, type Page } from '@/types/page';
 import { Users, User, School } from 'lucide-react';
 import MySchoolHeader from '@/components/Headers/MySchoolHeader';
 import HeaderProfile from '@/components/Headers/HeaderProfile';
+import { AdminManagement } from '@/components/AdminManagement';
 
 
 

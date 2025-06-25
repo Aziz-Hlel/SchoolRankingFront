@@ -7,10 +7,15 @@ import { AdminDataTable } from './AdminDataTable';
 import useApi from '@/hooks/useApi';
 import apiGateway from '@/service/Api/apiGateway';
 import type { Admin, AdminPage } from '@/types/Admin';
+import { PAGES } from '@/data/pages';
+import { useChangePage } from '@/hooks/useChangePage';
 
 
 
 export const AdminManagement: React.FC = () => {
+
+  useChangePage(PAGES.admins);
+
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
   const [deletingAdmin, setDeletingAdmin] = useState<Admin | null>(null);
   const { data } = useApi<AdminPage>({
