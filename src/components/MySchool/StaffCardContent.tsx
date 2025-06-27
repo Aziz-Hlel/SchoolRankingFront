@@ -2,6 +2,7 @@ import type { SchoolStaff } from '@/types/School2.type';
 import { Badge } from '../ui/badge'
 import { CountryEnums } from '@/enums/CountryEnums';
 import { CalendarCheck } from 'lucide-react';
+import { LanguageEnums } from '@/enums/LanguagesEnums';
 
 const StaffCardContent = ({ section }: { section?: SchoolStaff }) => {
 
@@ -62,7 +63,7 @@ const StaffCardContent = ({ section }: { section?: SchoolStaff }) => {
                 <div className="flex flex-wrap gap-1 mt-1">
                     {section.teacherLanguages.map((language, idx) => (
                         <Badge key={idx} variant="secondary" className="text-xs">
-                            {language}
+                            {LanguageEnums[language as keyof typeof LanguageEnums]?.label ?? language}
                         </Badge>
                     ))}
                 </div>

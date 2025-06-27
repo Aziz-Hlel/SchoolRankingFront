@@ -20,6 +20,7 @@ export const Dashboard = () => {
 
   if (!user) return <>User is either null or undefined</>;
 
+
   const { currentPage } = usePageContext();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);

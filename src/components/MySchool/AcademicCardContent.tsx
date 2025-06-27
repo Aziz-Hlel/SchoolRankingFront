@@ -1,5 +1,7 @@
 import { Badge } from '../ui/badge'
 import type { SchoolAcademics } from '@/types/School2.type'
+import { LevelEnums } from '@/enums/LevelEnums';
+import { CurriculumEnums } from '@/enums/CurriculumEnums';
 
 const AcademicCardContent = ({ section }: { section?: SchoolAcademics }) => {
 
@@ -8,23 +10,18 @@ const AcademicCardContent = ({ section }: { section?: SchoolAcademics }) => {
     return (
         <div className="space-y-3">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                <div>
-                    <p className="text-sm text-muted-foreground">Grade Range</p>
-                    {/* <p className="font-medium">{section.gradeRange}</p> */}
-                    <p className="font-medium">{section.levelsOffered.map((level) => level.charAt(0).toUpperCase() + level.slice(1) + " - ")}</p>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
 
 
-                </div>
+
+
                 <div>
                     <p className="text-sm text-muted-foreground">Curriculum</p>
-                    <p className="font-medium">IB</p>
-                    {/* <p className="font-medium">
+                    <p className="font-medium">
                         {section.curriculums.map((curriculum) => {
-                            return curriculum.charAt(0).toUpperCase() + curriculum.slice(1)
+                            return (CurriculumEnums[curriculum as keyof typeof CurriculumEnums]?.label ?? curriculum) + " - "
                         })}
-                    </p> */}
+                    </p>
                 </div>
             </div>
 
@@ -41,6 +38,16 @@ const AcademicCardContent = ({ section }: { section?: SchoolAcademics }) => {
                     <p className="text-sm text-muted-foreground">Accreditation links</p>
                     <p className="font-medium text-xs overflow-hidden">{section.accreditationDocsLinks}</p>
                 </div>
+            </div>
+
+            <div>
+                <p className="text-sm text-muted-foreground">Grade Range</p>
+
+                {section.levelsOffered.map((level, index: number) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                        {LevelEnums[level as keyof typeof LevelEnums]?.label ?? level + "-"}
+                    </Badge>
+                ))}
             </div>
 
             <div>

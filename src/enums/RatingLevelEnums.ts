@@ -1,6 +1,15 @@
-const HIGH = 'HIGH';
-const MEDIUM = 'MEDIUM';
-const LOW = 'LOW';
+const HIGH = {
+    value: 'HIGH' as const,
+    label: 'High'
+}
+const MEDIUM = {
+    value: 'MEDIUM' as const,
+    label: 'Medium'
+}
+const LOW = {
+    value: 'LOW' as const,
+    label: 'Low'
+}
 
 export const RatingLevelEnums = {
     HIGH,
@@ -8,7 +17,7 @@ export const RatingLevelEnums = {
     LOW
 } as const;
 
-export type RatingLevelEnums = typeof RatingLevelEnums[keyof typeof RatingLevelEnums];
+export type RatingLevelEnums = typeof RatingLevelEnums[keyof typeof RatingLevelEnums]['value'];
 
 
 

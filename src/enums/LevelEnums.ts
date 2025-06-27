@@ -1,31 +1,30 @@
-// LevelsEnums.ts
 const KG = {
     value: 'KG' as const,
     label: 'Kindergarten'
 };
 
-const PRIMARY = {
-    value: 'PRIMARY' as const,
+const PRI = {
+    value: 'PRI' as const,
     label: 'Primary'
 };
 
-const MIDDLE_SCHOOL = {
-    value: 'MIDDLE_SCHOOL' as const,
+const MS = {
+    value: 'MS' as const,
     label: 'Middle School'
 };
 
-const SECONDARY = {
-    value: 'SECONDARY' as const,
+const SEC = {
+    value: 'SEC' as const,
     label: 'Secondary'
 };
 
-const HIGH_SCHOOL = {
-    value: 'HIGH_SCHOOL' as const,
+const HS = {
+    value: 'HS' as const,
     label: 'High School'
 };
 
-const A_LEVEL = {
-    value: 'A_LEVEL' as const,
+const AL = {
+    value: 'AL' as const,
     label: 'A Level'
 };
 
@@ -34,44 +33,45 @@ const IB = {
     label: 'International Baccalaureate'
 };
 
-const PRESCHOOL = {
-    value: 'PRESCHOOL' as const,
-    label: 'Preschool (Ages 3-5)'
+const PS = {
+    value: 'PS' as const,
+    label: 'Preschool (Ages 3–5)'
 };
 
-const ELEMENTARY = {
-    value: 'ELEMENTARY' as const,
-    label: 'Elementary (Ages 6-11)'
+const EL = {
+    value: 'EL' as const,
+    label: 'Elementary (Ages 6–11)'
 };
 
-const MIDDLE = {
-    value: 'MIDDLE' as const,
-    label: 'Middle School (Ages 12-14)'
+const MID = {
+    value: 'MID' as const,
+    label: 'Middle School (Ages 12–14)'
 };
 
-const HIGH = {
-    value: 'HIGH' as const,
-    label: 'High School (Ages 15-18)'
+const HIG = {
+    value: 'HIG' as const,
+    label: 'High School (Ages 15–18)'
 };
 
-const UNIVERSITY = {
-    value: 'UNIVERSITY' as const,
+const UNI = {
+    value: 'UNI' as const,
     label: 'University/College'
 };
 
+
 export const LevelEnums = {
     KG,
-    PRIMARY,
-    MIDDLE_SCHOOL,
-    SECONDARY,
-    HIGH_SCHOOL,
-    A_LEVEL,
+    PRI,
+    MS,
+    SEC,
+    HS,
+    AL,
     IB,
-    PRESCHOOL,
-    ELEMENTARY,
-    MIDDLE,
-    HIGH,
-    UNIVERSITY,
+    PS,
+    EL,
+    MID,
+    HIG,
+    UNI
 } as const;
 
-export type LevelEnums = keyof typeof LevelEnums;
+export type LevelEnums = keyof typeof LevelEnums[keyof typeof LevelEnums]['value'];

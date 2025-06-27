@@ -1,5 +1,4 @@
 import { Form } from '@/components/ui/form';
-import { useAuth } from '@/contexts/AuthContext';
 import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
 import { schoolFacilitiesSchema } from '@/types/School2.type';
@@ -12,32 +11,22 @@ import type z from 'zod';
 import DetachedFacilities from '../../DetachedForms/Facilities/DetachedFacilities';
 import AbstractWrapper from './AbstractWrapper';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
+import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 
 export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 
 
-const FacilitiesForm = () => {
+const FacilitiesUpdatedForm = () => {
 
+    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const school = detailedSchool!;
 
     const form = useForm<SchoolFacilitiesData>({
         resolver: zodResolver(schoolFacilitiesSchema),
-        defaultValues: {
-            facilities: [],
-            accessibilityFeatures: [],
-            sustainabilityPractices: [],
-            universityDestinations: [],
-            csrActivities: '',
-            safetyCompliance: false, // required and default false
-            aiIntegration: false,    // required and default false
-            technologyReadiness: undefined,
-            industryPartnerships: [],
-            awardsAndRecognitions: '',
-        },
+        defaultValues: school.schoolFacilities
     });
 
-    const { refreshUser } = useAuth();
-
-    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(), formData);
+    const mutationFn = (payload: SchoolFacilitiesData) => apiService.putThrowable(apiGateway.form.facilities.update(school.schoolFacilities!.id), payload);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -51,12 +40,12 @@ const FacilitiesForm = () => {
             console.error("Failed to submit general form", response.error);
             return;
         }
-        refreshUser()
-        navigate('/forms/staff');
+        await fetchMyDetailedSchool();
+        navigate('../../');
 
 
     }
-
+console.log(form.formState.errors)
 
     return (
         <>
@@ -70,8 +59,8 @@ const FacilitiesForm = () => {
 
                         <DetachedFacilities form={form} />
 
-                        <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
-                    
+                        <NavigationButtons cancelPath='../../' currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
+
                     </form>
                 </Form>
 
@@ -85,4 +74,4 @@ const FacilitiesForm = () => {
     )
 }
 
-export default FacilitiesForm
+export default FacilitiesUpdatedForm;

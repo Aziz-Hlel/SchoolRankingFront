@@ -2,7 +2,7 @@ import AdminsHeader from '@/components/Headers/MySchoolHeader';
 import { HeaderAdminViewSchool } from '@/components/Headers/HeaderAdminOneSchool';
 import SchoolsHeader from '@/components/Headers/SchoolsHeader';
 import { ProfileInformation } from '@/components/Profile/ProfileInformation';
-import { SchoolManagement } from '@/components/SchoolManagement';
+import { SchoolsManagement } from '@/components/SchoolsManagement';
 import { SchoolProfile } from '@/components/SchoolProfile';
 import { ROLES } from '@/enums/roles';
 import { sidebarButton, type Page } from '@/types/page';
@@ -48,7 +48,7 @@ const schools: Page = {
     Header: SchoolsHeader,
     path: '/dashboard/schools',
 
-    component: SchoolManagement,
+    component: SchoolsManagement,
 
 }
 

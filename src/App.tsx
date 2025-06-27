@@ -3,28 +3,34 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import AuthenticatedRoutes from "./protect/AuthenticatedRoutes";
+import AuthenticatedRoutes from "./Guard/AuthenticatedRoutes";
 import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AdminManagement } from "./components/AdminManagement";
-import { SchoolManagement } from "./components/SchoolManagement";
+import { SchoolsManagement } from "./components/SchoolsManagement";
 import { ProfileInformation } from "./components/Profile/ProfileInformation";
-import { MySchool } from "./components/MySchool/MySchool";
+import { SchoolView } from "./components/MySchool/SchoolView";
 import ChangePassword from "./components/Profile/ChangePassword";
-import ProgressFormCheckup from "./protect/ProgressFormCheckup";
+import ProgressFormCheckup from "./Guard/ProgressFormCheckup";
 import { FormProgressProvider } from "./contexts/FormProgress";
-import AuthorizedRoutes from "./protect/AuthorizedRoutes";
+import AuthorizedRoutes from "./Guard/AuthorizedRoutes";
 import { ROLES } from "./enums/roles";
 import DashboardRedirect from "./components/DashboardRedirect";
 import { DetailedSchoolProvider } from "./contexts/DetailedSchoolProvider";
 import { PageProvider } from "./contexts/PageContext";
-import AdminSchoolView from "./components/MySchool/AdminSchoolView";
 import GeneralForm from "./components/Forms/InitialForms/Wrapper/GeneralForm";
 import AcademicsForm from "./components/Forms/InitialForms/Wrapper/AcademicsForm";
 import FacilitiesForm from "./components/Forms/InitialForms/Wrapper/FacilitiesForm";
 import StaffForm from "./components/Forms/InitialForms/Wrapper/StaffForm";
 import MediaForm from "./components/Forms/InitialForms/Wrapper/MediaForm";
+import GeneralUpdateForm from "./components/Forms/UpdateForm/Wrapper/GeneralUpdateForm";
+import DetailedSchoolExists from "./Guard/DetailedSchoolExists";
+import AcademicsUpdateForm from "./components/Forms/UpdateForm/Wrapper/AcademicsUpdateForm";
+import FacilitiesUpdatedForm from "./components/Forms/UpdateForm/Wrapper/FacilitiesUpdatedForm";
+import StaffUpdatedForm from "./components/Forms/UpdateForm/Wrapper/StaffUpdatedForm";
+import MediaUpdatedForm from "./components/Forms/UpdateForm/Wrapper/MediaUpdatedForm";
+import SchoolViewManagemet from "./components/MySchool/SchoolViewManagemet";
 
 
 const queryClient = new QueryClient();
@@ -71,28 +77,37 @@ function App() {
                             <Route path="admins" element={<AdminManagement />} />
 
                             <Route path="schools" element={<Outlet />} >
-                              <Route index element={<SchoolManagement />} />
-                              <Route path=":schoolId" element={<Outlet />} >
-                                <Route index element={<AdminSchoolView />} />
-                                <Route path="edit" element={<Outlet />} >
-                                  <Route path="general" element={<GeneralForm />} />
-                                </Route>
+                              <Route index element={<SchoolsManagement />} />
+                              <Route path=":schoolId" element={<SchoolViewManagemet userRole={ROLES.SUPER_ADMIN} />} >
+                                <Route index element={<SchoolView />} />
 
+                                <Route element={<DetailedSchoolExists />}>
+                                  <Route path="edit" element={<Outlet />} >
+                                    <Route path="general" element={<GeneralUpdateForm />} />
+                                    <Route path="academics" element={<AcademicsUpdateForm />} />
+                                    <Route path="facilities" element={<FacilitiesUpdatedForm />} />
+                                    <Route path="staff" element={<StaffUpdatedForm />} />
+                                    <Route path="media" element={<MediaUpdatedForm />} />
+                                  </Route>
+
+                                </Route>
                               </Route>
                             </Route>
 
                           </Route>
 
 
-                          <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
-                            <Route path="my-school" element={<Outlet />} >
-                              <Route index element={<MySchool userRole={ROLES.ADMIN} />} />
-                              <Route path="edit" element={<Outlet />} >
-                                <Route path="general" element={<GeneralForm />} />
-                                <Route path="academics" element={<AcademicsForm />} />
-                                <Route path="facilities" element={<FacilitiesForm />} />
-                                <Route path="staff" element={<StaffForm />} />
-                                <Route path="media" element={<MediaForm />} />
+                          <Route element={<DetailedSchoolExists />}>
+                            <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
+                              <Route path="my-school" element={<SchoolViewManagemet userRole={ROLES.ADMIN} />} >
+                                <Route index element={<SchoolView />} />
+                                <Route path="edit" element={<Outlet />} >
+                                  <Route path="general" element={<GeneralUpdateForm />} />
+                                  <Route path="academics" element={<AcademicsUpdateForm />} />
+                                  <Route path="facilities" element={<FacilitiesUpdatedForm />} />
+                                  <Route path="staff" element={<StaffUpdatedForm />} />
+                                  <Route path="media" element={<MediaUpdatedForm />} />
+                                </Route>
                               </Route>
                             </Route>
                           </Route>

@@ -1,3 +1,4 @@
+import { FacilityEnums } from '@/enums/FacilityEnums';
 import { Badge } from '../ui/badge'
 import type { SchoolFacilities } from '@/types/School2.type'
 import { ShieldCheck } from 'lucide-react';
@@ -5,6 +6,8 @@ import { ShieldMinus } from 'lucide-react';
 
 import { Bot } from 'lucide-react';
 import { BotOff } from 'lucide-react';
+import { AccessibilityEnums } from '@/enums/AccessibilityEnums';
+import { SustainabilityEnums } from '@/enums/SustainabilityEnums';
 
 
 const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
@@ -18,7 +21,7 @@ const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
                 <div className="flex flex-wrap gap-1 mt-1">
                     {section.facilities.map((facility: string, index: number) => (
                         <Badge key={index} variant="secondary" className="text-xs">
-                            {facility}
+                            {FacilityEnums[facility as keyof typeof FacilityEnums]?.label ?? facility}
                         </Badge>
                     ))}
                 </div>
@@ -26,9 +29,9 @@ const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
             <div>
                 <p className="text-sm text-muted-foreground">Accessibility Features</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                    {section.accessibilityFeatures.map((facility: string, index: number) => (
+                    {section.accessibilityFeatures.map((accessibility: string, index: number) => (
                         <Badge key={index} variant="secondary" className="text-xs">
-                            {facility}
+                            {AccessibilityEnums[accessibility as keyof typeof AccessibilityEnums]?.label ?? accessibility}
                         </Badge>
                     ))}
                 </div>
@@ -39,7 +42,7 @@ const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
                 <div className="flex flex-wrap gap-1 mt-1">
                     {section.sustainabilityPractices.map((facility: string, index: number) => (
                         <Badge key={index} variant="secondary" className="text-xs">
-                            {facility}
+                            {SustainabilityEnums[facility as keyof typeof SustainabilityEnums]?.label ?? facility}
                         </Badge>
                     ))}
                 </div>

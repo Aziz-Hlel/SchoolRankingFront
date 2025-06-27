@@ -2,11 +2,13 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescripti
 import { Input } from '@/components/ui/input';
 import { type UseFormReturn } from 'react-hook-form';
 import z from 'zod';
-import { CountryEnums, } from '@/enums/CountryEnums';
 import { Checkbox } from '@/components/ui/checkbox';
 import { LanguageEnums } from '@/enums/LanguagesEnums';
 import { schoolStaffSchema } from '@/types/School2.type';
 import type { FC } from 'react';
+import { CountriesDropdown } from '@/components/ui/countries-dropdown';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { CountryEnums } from '@/enums/CountryEnums';
 
 
 
@@ -102,48 +104,35 @@ const DetachedStaff: FC<DetachedStaffProps> = ({ form }) => {
             <FormField
                 control={form.control}
                 name="teacherNationalities"
-                render={() => (
-                    <FormItem>
-                        <FormLabel>Teacher Nationalities *</FormLabel>
-                        <FormDescription>Select the nationalities represented in your teaching staff</FormDescription>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-48 overflow-y-auto">
-                            {Object.values(CountryEnums).map((country) => (
-                                <FormField
-                                    key={country.value}
-                                    control={form.control}
-                                    name="teacherNationalities"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={country.value}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(country.value)}
-                                                        onCheckedChange={(checked) => {
-                                                            const currentValue = field.value || [];
-                                                            return checked
-                                                                ? field.onChange([...currentValue, country.value])
-                                                                : field.onChange(
-                                                                    currentValue?.filter(
-                                                                        (value) => value !== country.value
-                                                                    )
-                                                                );
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal">
-                                                    {country.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        );
-                                    }}
+                render={({ }) => (
+                    // Corrected FormField implementation
+                    <FormField
+                        control={form.control}
+                        name="teacherNationalities"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Teacher Nationalities *</FormLabel>
+                                <FormDescription>
+                                    Select the nationalities represented in your teaching staff
+                                </FormDescription>
+                                <MultiSelect
+                                    options={Object.values(CountryEnums).map((country) => country)}
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    placeholder="Select options"
+                                    variant="inverted"
+                                    maxCount={10}
                                 />
-                            ))}
-                        </div>
-                        <FormMessage />
-                    </FormItem>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    // Make sure your schema expects an array of strings:
+                    // const formSchema = z.object({
+                    //   teacherNationalities: z.array(z.string()).min(1, "Select at least one nationality"),
+                    //   // ... other fields
+                    // });
                 )}
             />
 
@@ -151,47 +140,26 @@ const DetachedStaff: FC<DetachedStaffProps> = ({ form }) => {
                 control={form.control}
                 name="teacherLanguages"
                 render={() => (
-                    <FormItem>
-                        <FormLabel>Teacher Languages *</FormLabel>
-                        <FormDescription>Select languages spoken by your teaching staff</FormDescription>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {Object.values(LanguageEnums).map((language) => (
-                                <FormField
-                                    key={language.value}
-                                    control={form.control}
-                                    name="teacherLanguages"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={language.value}
-                                                className="flex flex-row items-start space-x-3 space-y-0"
-                                            >
-                                                <FormControl>
-                                                    <Checkbox
-                                                        checked={field.value?.includes(language.value)}
-                                                        onCheckedChange={(checked) => {
-                                                            const currentValue = field.value || [];
-                                                            return checked
-                                                                ? field.onChange([...currentValue, language.value])
-                                                                : field.onChange(
-                                                                    currentValue?.filter(
-                                                                        (value) => value !== language.value
-                                                                    )
-                                                                );
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal">
-                                                    {language.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        );
-                                    }}
+                    <FormField
+                        control={form.control}
+                        name="teacherLanguages"
+                        render={({ field }) => (
+
+                            <FormItem>
+                                <FormLabel>Teacher Languages *</FormLabel>
+                                <FormDescription>Select languages spoken by your teaching staff</FormDescription>
+                                <MultiSelect
+                                    options={Object.values(LanguageEnums).map((language) => language)}
+                                    defaultValue={field.value}
+                                    onValueChange={field.onChange}
+                                    placeholder="Select options"
+                                    variant="inverted"
+                                    maxCount={10}
                                 />
-                            ))}
-                        </div>
-                        <FormMessage />
-                    </FormItem>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 )}
             />
 

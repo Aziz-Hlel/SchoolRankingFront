@@ -11,15 +11,22 @@ import DetachedStaff from '../../DetachedForms/Staff/DetachedStaff';
 import type z from 'zod';
 import { Form } from '@/components/ui/form';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
+import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 
 type SchoolStaff = z.infer<typeof schoolStaffSchema>;
 
 
-const StaffForm = () => {
+const StaffUpdatedForm = () => {
 
-    const form = useForm<SchoolStaff>({ resolver: zodResolver(schoolStaffSchema), });
+    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const school = detailedSchool!;
 
-    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(), formData);
+    const form = useForm<SchoolStaff>({
+        resolver: zodResolver(schoolStaffSchema),
+        defaultValues: school.schoolStaff
+    });
+
+    const mutationFn = (formData: SchoolStaff) => apiService.putThrowable(apiGateway.form.staff.update(school.schoolGeneral!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -33,12 +40,12 @@ const StaffForm = () => {
             console.error("Failed to submit general form", response.error);
             return;
         }
-
-        navigate('/forms/media');
+        await fetchMyDetailedSchool();
+        navigate('../../');
 
 
     };
-
+console.log("staff", form.formState.errors)
 
     return (
         <>
@@ -48,7 +55,7 @@ const StaffForm = () => {
 
                         <DetachedStaff form={form} />
 
-                        <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
+                        <NavigationButtons cancelPath="../../" currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
 
                     </form>
                 </Form>
@@ -57,4 +64,4 @@ const StaffForm = () => {
     )
 }
 
-export default StaffForm
+export default StaffUpdatedForm;

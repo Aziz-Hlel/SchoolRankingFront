@@ -8,7 +8,7 @@ import { SustainabilityEnums } from "@/enums/SustainabilityEnums";
 import { AccreditationEnums } from "@/enums/AccreditationEnums";
 import { LevelEnums } from "@/enums/LevelEnums";
 import z from "zod";
-import { RatingLevelEnum, } from "./school";
+import { RatingLevelEnums } from "@/enums/RatingLevelEnums";
 
 // Schemas 
 
@@ -24,7 +24,7 @@ export const schoolGeneralSchema = z.object({
     .min(1800, 'Year must be after 1800')
     .max(2025, 'Year cannot be in the future'),
   website: z.string().url('Please enter a valid website URL').optional(),
-  type: z.enum(Object.values(SchoolTypeEnums) as [string, ...string[]]),
+  type: z.enum(Object.values(SchoolTypeEnums).map(type => type.value) as [string, ...string[]]),
 });
 
 
@@ -60,7 +60,7 @@ export const schoolFacilitiesSchema = z.object({
     .min(10, 'CSR activities description must be at least 10 characters'),
   safetyCompliance: z.boolean({ required_error: 'Safety compliance is required' }),
   aiIntegration: z.boolean({ required_error: 'AI integration is required' }),
-  technologyReadiness: RatingLevelEnum.optional(),
+  technologyReadiness: z.enum(Object.keys(RatingLevelEnums) as [string, ...string[]]),
   industryPartnerships: z.array(z.string().min(2, 'Partnership name must be at least 2 characters'))
     .min(1, 'At least one industry partnership is required'),
   awardsAndRecognitions: z.string().optional(),
@@ -86,8 +86,7 @@ export const schoolStaffSchema = z.object({
   teacherQualifications: z.string()
     .min(10, 'Teacher qualifications must be at least 10 characters'),
 
-  teacherNationalities: z.array(z.enum(Object.values(CountryEnums).map(country => country.value) as [string, ...string[]]))
-    .min(1, 'At least one teacher nationality is required'),
+  teacherNationalities: z.array(z.string()),
 
   teacherLanguages: z.array(z.enum(Object.values(LanguageEnums).map(language => language.value) as [string, ...string[]]))
     .min(1, 'At least one teacher language is required'),

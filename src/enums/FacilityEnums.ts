@@ -1,70 +1,74 @@
-const LIBRARY = {
-    value: 'LIBRARY' as const,
-    label: 'Library'
+const LIB = {
+  value: 'LIB' as const,
+  label: 'Library'
 };
 
-const LABORATORY = {
-    value: 'LABORATORY' as const,
-    label: 'Laboratory'
+const LAB = {
+  value: 'LAB' as const,
+  label: 'Laboratory'
 };
 
-const GYMNASIUM = {
-    value: 'GYMNASIUM' as const,
-    label: 'Gymnasium'
+const GYM = {
+  value: 'GYM' as const,
+  label: 'Gymnasium'
 };
 
-const CAFETERIA = {
-    value: 'CAFETERIA' as const,
-    label: 'Cafeteria'
+const CAF = {
+  value: 'CAF' as const,
+  label: 'Cafeteria'
 };
 
-const AUDITORIUM = {
-    value: 'AUDITORIUM' as const,
-    label: 'Auditorium'
+const AUD = {
+  value: 'AUD' as const,
+  label: 'Auditorium'
 };
 
-const PLAYGROUND = {
-    value: 'PLAYGROUND' as const,
-    label: 'Playground'
+const PGD = {
+  value: 'PGD' as const,
+  label: 'Playground'
 };
 
-const SWIMMING_POOL = {
-    value: 'SWIMMING_POOL' as const,
-    label: 'Swimming Pool'
+const SWP = {
+  value: 'SWP' as const,
+  label: 'Swimming Pool'
 };
 
-const ART_STUDIO = {
-    value: 'ART_STUDIO' as const,
-    label: 'Art Studio'
+const ART = {
+  value: 'ART' as const,
+  label: 'Art Studio'
 };
 
-const MUSIC_ROOM = {
-    value: 'MUSIC_ROOM' as const,
-    label: 'Music Room'
+const MUS = {
+  value: 'MUS' as const,
+  label: 'Music Room'
 };
 
-const COMPUTER_LAB = {
-    value: 'COMPUTER_LAB' as const,
-    label: 'Computer Lab'
+const CLAB = {
+  value: 'CLAB' as const,
+  label: 'Computer Lab'
 };
 
-const SPORTS_FIELD = {
-    value: 'SPORTS_FIELD' as const,
-    label: 'Sports Field'
+const SFLD = {
+  value: 'SFLD' as const,
+  label: 'Sports Field'
 };
+
+
 
 export const FacilityEnums = {
-    LIBRARY,
-    LABORATORY,
-    GYMNASIUM,
-    CAFETERIA,
-    AUDITORIUM,
-    PLAYGROUND,
-    SWIMMING_POOL,
-    ART_STUDIO,
-    MUSIC_ROOM,
-    COMPUTER_LAB,
-    SPORTS_FIELD
+  LIB,
+  LAB,
+  GYM,
+  CAF,
+  AUD,
+  PGD,
+  SWP,
+  ART,
+  MUS,
+  CLAB,
+  SFLD
 } as const;
 
-export type FacilityEnums = typeof FacilityEnums[keyof typeof FacilityEnums];
+
+
+export type FacilityEnum = typeof FacilityEnums[keyof typeof FacilityEnums]['value'];

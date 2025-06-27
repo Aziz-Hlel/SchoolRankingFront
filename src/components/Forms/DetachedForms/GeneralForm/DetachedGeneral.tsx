@@ -8,6 +8,7 @@ import { CountryEnums, } from '@/enums/CountryEnums';
 import { SchoolTypeEnums } from '@/enums/SchoolTypeEnums';
 import { schoolGeneralSchema } from '@/types/School2.type';
 import type { FC } from 'react';
+import { CountryDropdown } from '@/components/ui/country-dropdown';
 
 
 interface DetachedFormProps {
@@ -54,8 +55,8 @@ const DetachedGeneral: FC<DetachedFormProps> = ({ form, }) => {
                             </FormControl>
                             <SelectContent>
                                 {Object.values(SchoolTypeEnums).map((type) => (
-                                    <SelectItem key={type} value={type}>
-                                        {type}
+                                    <SelectItem key={type.value} value={type.value}>
+                                        {type.label}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -71,20 +72,11 @@ const DetachedGeneral: FC<DetachedFormProps> = ({ form, }) => {
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Country</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl className=' w-full'>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select country" />
-                                </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                                {Object.values(CountryEnums).map((country) => (
-                                    <SelectItem key={country.value} value={country.value}>
-                                        {country.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <CountryDropdown
+                            placeholder="Country"
+                            defaultValue={field.value}
+                            onChange={(country) => { field.onChange(country.alpha2); }}
+                        />
                         <FormMessage />
                     </FormItem>
                 )}

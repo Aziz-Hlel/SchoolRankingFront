@@ -1,5 +1,4 @@
 import { Form } from '@/components/ui/form';
-import { useAuth } from '@/contexts/AuthContext';
 import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
 import { schoolGeneralSchema } from '@/types/School2.type';
@@ -12,6 +11,7 @@ import type z from 'zod';
 import DetachedGeneral from '../../DetachedForms/GeneralForm/DetachedGeneral';
 import AbstractWrapper from './AbstractWrapper';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
+import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 
 
 type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
@@ -20,11 +20,16 @@ type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
 
 const GeneralUpdateForm = () => {
 
-    const form = useForm<SchoolGeneral>({ resolver: zodResolver(schoolGeneralSchema), });
+    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const school = detailedSchool!;
 
-    const { refreshUser } = useAuth();
+    const form = useForm<SchoolGeneral>({
+        resolver: zodResolver(schoolGeneralSchema),
+        defaultValues: school.schoolGeneral
+    });
 
-    const mutationFn = (formData: SchoolGeneral) => apiService.postThrowable(apiGateway.form.general.create(), formData);
+
+    const mutationFn = (payload: SchoolGeneral) => apiService.putThrowable(apiGateway.form.general.update(school.schoolGeneral!.id), payload);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -38,8 +43,8 @@ const GeneralUpdateForm = () => {
             console.error("Failed to submit general form", response.error);
             return;
         }
-        refreshUser()
-        navigate("/forms/academics");
+        await fetchMyDetailedSchool();
+        navigate("../../");
 
 
     }
@@ -54,7 +59,7 @@ const GeneralUpdateForm = () => {
 
                         <DetachedGeneral form={form} />
 
-                        <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
+                        <NavigationButtons currentStep={0} cancelPath="../../" isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
 
 
                     </form>

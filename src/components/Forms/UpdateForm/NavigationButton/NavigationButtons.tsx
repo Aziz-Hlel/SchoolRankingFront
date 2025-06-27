@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import type { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 
 interface NavigationButtonsProps {
@@ -8,34 +9,33 @@ interface NavigationButtonsProps {
     onPrevious: () => void;
     onSubmit: () => void;
     isSubmitting?: boolean;
+    cancelPath: string;
 }
 
-const NavigationButtons: FC<NavigationButtonsProps> = ({ currentStep, onNext, onPrevious, onSubmit, isSubmitting = false }) => {
+const NavigationButtons: FC<NavigationButtonsProps> = ({ currentStep, cancelPath, onNext, onPrevious, onSubmit, isSubmitting = false }) => {
 
     const totalSteps = 4;
-    const isFirstStep = currentStep === 0;
     const isLastStep = currentStep === totalSteps - 1;
 
     return (
-        <div className="flex justify-end pt-6">
-            {/* <div>
-                {!isFirstStep && (
-                    <Button type="button" variant="outline" onClick={onPrevious}>
-                        Previous
-                    </Button>
-                )}
-            </div> */}
+        <div className="flex justify-between pt-6">
+
             <div>
-                {isLastStep ? (
-                    <Button onClick={onSubmit} disabled={isSubmitting}>
-                        {isSubmitting ? 'Completing...' : 'Complete Registration'}
+                <Link to={"../../"}>
+                    <Button type="button" variant="destructive" onClick={onPrevious} className=' cursor-pointer hover:bg-red-500'>
+                        Cancel
                     </Button>
-                ) : (
-                    <Button onClick={onNext} type='submit' disabled={isSubmitting} className=' cursor-pointer '>
-                        Next
-                    </Button>
-                )}
+                </Link>
+
             </div>
+
+            <div>
+                <Button onClick={onNext} type='submit' disabled={isSubmitting} className=' cursor-pointer bg-green-700 hover:bg-green-600 '>
+                    Update
+                </Button>
+            </div>
+
+
         </div>
     );
 

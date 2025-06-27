@@ -11,29 +11,26 @@ import type z from "zod";
 import DetachedAcademics from "../../DetachedForms/Academics/DetachedAcademics";
 import AbstractWrapper from "./AbstractWrapper";
 import NavigationButtons from "../NavigationButton/NavigationButtons";
+import { useDetailedSchool } from "@/contexts/DetailedSchoolProvider";
 
 
 
 type SchoolAcademics = z.infer<typeof schoolAcademicsSchema>;
 
-const AcademicsForm = () => {
+const AcademicsUpdateForm = () => {
 
+    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const school = detailedSchool!;
 
 
     const navigate = useNavigate();
 
     const form = useForm<SchoolAcademics>({
         resolver: zodResolver(schoolAcademicsSchema),
-        defaultValues: {
-            languagesOfInstruction: 1,
-            internationalAccreditations: [],
-            accreditationDocsLinks: '',
-            levelsOffered: [],
-            curriculums: [],
-        },
+        defaultValues: school.schoolAcademics
     });
 
-    const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(), payload);
+    const mutationFn = (payload: SchoolAcademics) => apiService.putThrowable(apiGateway.form.academics.update(school.schoolAcademics!.id), payload);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -45,7 +42,8 @@ const AcademicsForm = () => {
             console.error("Failed to submit academics form", response.error);
             return;
         }
-        navigate('/forms/facilities');
+        await fetchMyDetailedSchool();
+        navigate('../../');
 
 
 
@@ -60,7 +58,7 @@ const AcademicsForm = () => {
 
                         <DetachedAcademics form={form} />
 
-                        <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
+                        <NavigationButtons cancelPath='../../' currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
 
                     </form>
                 </Form>
@@ -70,4 +68,4 @@ const AcademicsForm = () => {
     )
 }
 
-export default AcademicsForm
+export default AcademicsUpdateForm;

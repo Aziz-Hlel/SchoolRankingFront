@@ -38,7 +38,7 @@ const GeneralForm = () => {
             console.error("Failed to submit general form", response.error);
             return;
         }
-        refreshUser()
+        await refreshUser();
         navigate("/forms/academics");
 
 

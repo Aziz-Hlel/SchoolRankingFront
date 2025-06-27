@@ -16,7 +16,7 @@ type IAuthContext = {
     signup: (data: signUpSchema) => Promise<ApiResponse<SignUpApiResponse>>;
     login: (data: sigInSchema) => Promise<ApiResponse<SigInApiResponse>>;
     logout: () => void;
-    refreshUser: () => void;
+    refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);

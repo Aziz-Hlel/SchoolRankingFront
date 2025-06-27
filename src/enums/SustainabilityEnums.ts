@@ -18,8 +18,8 @@ const ENERGY_EFFICIENT_LIGHTING = {
     label: 'Energy Efficient Lighting'
 };
 
-const GREEN = {
-    value: 'GREEN' as const,
+const GREEN_SPACES = {
+    value: 'GREEN_SPACES' as const,
     label: 'Green Building Certification'
 };
 
@@ -28,7 +28,7 @@ export const SustainabilityEnums = {
     RECYCLING,
     WATER_CONSERVATION,
     ENERGY_EFFICIENT_LIGHTING,
-    GREEN
+    GREEN_SPACES
 } as const;
 
 

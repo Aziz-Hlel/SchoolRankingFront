@@ -13,6 +13,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
+import { useAuth } from '@/contexts/AuthContext';
 
 type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
@@ -21,7 +22,8 @@ const MediaForm = () => {
 
     const { fetchProgress } = useFormProgress();
     const { fetchMyDetailedSchool } = useDetailedSchool();
-
+    const { refreshUser } = useAuth();
+    
     const form = useForm<SchoolMedia>({ resolver: zodResolver(schoolMediaSchema), });
 
 
@@ -44,6 +46,7 @@ const MediaForm = () => {
 
         await fetchProgress();
         await fetchMyDetailedSchool();
+        await refreshUser();
         navigate('/dashboard');
 
 

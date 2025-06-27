@@ -33,18 +33,23 @@ const apiGateway = {
     form: {
         general: {
             create: () => "/schools/" as const,
+            update: (schoolId: string) => `/schools/${schoolId}` as const, 
         },
         academics: {
             create: () => "/school-academics/" as const,
+            update: (schoolId: string) => `/school-academics/${schoolId}` as const,
         },
         facilities: {
             create: () => "/school-facilities/" as const,
+            update: (schoolId: string) => `/school-facilities/${schoolId}` as const,
         },
         staff: {
             create: () => "/school-staff/" as const,
+            update: (schoolId: string) => `/school-staff/${schoolId}` as const,
         },
         media: {
             create: () => "/school-media/" as const,
+            update: (schoolId: string) => `/school-media/${schoolId}` as const,
         },
     }
 

@@ -153,7 +153,7 @@ export const SchoolDataTable: React.FC<SchoolDataTableProps> = ({
                     <TableCell>{school.email}</TableCell>
                     <TableCell>{school.phoneNumber}</TableCell>
                     <TableCell>
-                      <Badge variant={school.isComplete ? 'default' : 'secondary'}>
+                      <Badge variant={school.isComplete ? 'default' : 'destructive'} className={!school.isComplete ? "text-white" : undefined}>
                         {school.isComplete ? 'Complete' : 'Incomplete'}
                       </Badge>
                     </TableCell>

@@ -1,10 +1,12 @@
+import { CountryEnums } from '@/enums/CountryEnums';
 import type { SchoolGeneral } from '@/types/School2.type'
 import { Globe, MapPin } from 'lucide-react'
+import { CircleFlag } from "react-circle-flags";
 
 const GeneralCardContent = ({ section }: { section?: SchoolGeneral }) => {
 
     if (!section) return null;
-    
+
     return (
         <div className="space-y-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -31,7 +33,11 @@ const GeneralCardContent = ({ section }: { section?: SchoolGeneral }) => {
             </div>
             <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
-                <p className="text-sm">{`${section.country}, ${section.city}, ${section.address}`}</p>
+                <CircleFlag
+                    countryCode={CountryEnums[section.country as keyof typeof CountryEnums]?.value.toLowerCase()}
+                    className='w-4 h-4 text-muted-foreground '
+                />
+                <p className="text-sm">{`${CountryEnums[section.country as keyof typeof CountryEnums]?.label ?? section.country}, ${section.city}, ${section.address}`}</p>
             </div>
             <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-muted-foreground" />

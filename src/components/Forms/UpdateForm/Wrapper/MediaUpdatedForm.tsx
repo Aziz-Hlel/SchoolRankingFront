@@ -3,7 +3,6 @@ import AbstractWrapper from './AbstractWrapper'
 import DetachedMedia from '../../DetachedForms/Media/DetachedMedia'
 import { schoolMediaSchema } from '@/types/School2.type';
 import type z from 'zod';
-import { useFormProgress } from '@/contexts/FormProgress';
 import { useForm } from 'react-hook-form';
 import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
@@ -17,15 +16,18 @@ import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
 
-const MediaForm = () => {
+const MediaUpdatedForm = () => {
 
-    const { fetchProgress } = useFormProgress();
-    const { fetchMyDetailedSchool } = useDetailedSchool();
+    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const school = detailedSchool!;
 
-    const form = useForm<SchoolMedia>({ resolver: zodResolver(schoolMediaSchema), });
+    const form = useForm<SchoolMedia>({
+        resolver: zodResolver(schoolMediaSchema),
+        defaultValues: school.schoolMedia
+    });
 
 
-    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.putThrowable(apiGateway.form.media.update(school.schoolMedia!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -42,9 +44,8 @@ const MediaForm = () => {
             return;
         }
 
-        await fetchProgress();
         await fetchMyDetailedSchool();
-        navigate('/dashboard');
+        navigate('../../');
 
 
     }
@@ -58,8 +59,7 @@ const MediaForm = () => {
 
                         <DetachedMedia form={form} />
 
-                        <NavigationButtons currentStep={4} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
-
+                        <NavigationButtons cancelPath='../../' currentStep={4} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
 
                     </form>
                 </Form>
@@ -69,4 +69,4 @@ const MediaForm = () => {
     )
 }
 
-export default MediaForm
+export default MediaUpdatedForm;

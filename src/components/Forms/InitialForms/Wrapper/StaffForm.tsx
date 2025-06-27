@@ -6,11 +6,12 @@ import { schoolStaffSchema } from '@/types/School2.type';
 import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, type FieldErrors } from 'react-hook-form';
 import DetachedStaff from '../../DetachedForms/Staff/DetachedStaff';
 import type z from 'zod';
 import { Form } from '@/components/ui/form';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
+import { useEffect } from 'react';
 
 type SchoolStaff = z.infer<typeof schoolStaffSchema>;
 
@@ -39,12 +40,21 @@ const StaffForm = () => {
 
     };
 
+    useEffect(() => {
+        console.log("errors : ", form.formState.errors)
+    }, [form.formState.errors])
+
+
+    const onError = (errors: FieldErrors<SchoolStaff>) => {
+        console.error("Form validation errors:", errors);
+    };
+
 
     return (
         <>
             <AbstractWrapper currentStep={3}>
                 <Form {...form} >
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+                    <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-8 max-w-3xl mx-auto py-10">
 
                         <DetachedStaff form={form} />
 

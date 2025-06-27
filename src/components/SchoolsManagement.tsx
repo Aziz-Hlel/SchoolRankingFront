@@ -43,7 +43,7 @@ const mockSchools: School[] = [
   },
 ];
 
-export const SchoolManagement: React.FC = () => {
+export const SchoolsManagement: React.FC = () => {
   const [schools, setSchools] = useState<School[]>(mockSchools);
 
   const page = 1;
