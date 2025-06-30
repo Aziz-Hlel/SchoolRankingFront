@@ -17,7 +17,7 @@ export const schoolGeneralSchema = z.object({
   country: z.enum(Object.values(CountryEnums).map(country => country.value) as [string, ...string[]]),
   city: z.string().min(2, 'City must be at least 2 characters'),
   address: z.string().min(5, 'Address must be at least 5 characters'),
-  phoneNumber: z.string().min(10, 'Phone number must be at least 10 characters'),
+  phoneNumber: z.string().min(8, 'Phone number must be at least 8 characters'),
   email: z.string().email('Please enter a valid email address'),
   yearEstablished: z.number()
     .int('Year must be a whole number')

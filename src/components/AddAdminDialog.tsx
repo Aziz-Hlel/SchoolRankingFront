@@ -57,7 +57,9 @@ export const AddAdminDialog = () => {
     const response = await safeAsyncMutate(mutateAsync, data);
 
     if (!response.success) {
-
+      console.log(response)
+      if (response.status === 409)
+        form.setError("email", { message: "Email already exists" });
       AlertToast({ title: "Failed to add admin", description: "Failed to add admin", icon: < CheckLine /> })
       return
     }

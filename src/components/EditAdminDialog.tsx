@@ -120,7 +120,9 @@ export const EditAdminDialog: React.FC<EditAdminDialogProps> = ({
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="Enter email address" {...field} disabled={true} />
+                    <div className=' cursor-not-allowed'>
+                      <Input type="email" placeholder="Enter email address" {...field} disabled  readOnly />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

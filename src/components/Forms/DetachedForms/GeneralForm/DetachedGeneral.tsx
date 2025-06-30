@@ -9,6 +9,7 @@ import { SchoolTypeEnums } from '@/enums/SchoolTypeEnums';
 import { schoolGeneralSchema } from '@/types/School2.type';
 import type { FC } from 'react';
 import { CountryDropdown } from '@/components/ui/country-dropdown';
+import { countries } from "country-data-list";
 
 
 interface DetachedFormProps {
@@ -22,6 +23,10 @@ type SchoolGeneral = z.infer<typeof schoolGeneralSchema>;
 
 const DetachedGeneral: FC<DetachedFormProps> = ({ form, }) => {
 
+
+    const countryOptions = countries.all.filter((country) => {
+        return CountryEnums.hasOwnProperty(country.alpha2)
+    })
     return (
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -75,6 +80,7 @@ const DetachedGeneral: FC<DetachedFormProps> = ({ form, }) => {
                         <CountryDropdown
                             placeholder="Country"
                             defaultValue={field.value}
+                            options={countryOptions}
                             onChange={(country) => { field.onChange(country.alpha2); }}
                         />
                         <FormMessage />

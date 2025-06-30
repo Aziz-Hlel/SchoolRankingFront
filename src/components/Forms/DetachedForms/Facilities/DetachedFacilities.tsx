@@ -231,9 +231,9 @@ const DetachedFacilities: FC<DetachedFormProps> = ({ form }) => {
                 name="universityDestinations"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>University Destinations *</FormLabel>
+                        <FormLabel>University Destinations *(click "enter" to add)</FormLabel>
                         <FormDescription>
-                            Enter universities where your graduates typically go
+                            Enter universities where your graduates typically go 
                         </FormDescription>
                         <FormControl>
                             <TagInput
@@ -270,8 +270,8 @@ const DetachedFacilities: FC<DetachedFormProps> = ({ form }) => {
                         <FormLabel>Technology Readiness *</FormLabel>
                         <FormDescription>Describe your school's technology readiness</FormDescription>
                         <FormControl>
-                            <Select>
-                                <SelectTrigger {...field}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value} >
+                                <SelectTrigger>
                                     <SelectValue placeholder="Select a level" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -294,8 +294,8 @@ const DetachedFacilities: FC<DetachedFormProps> = ({ form }) => {
                 name="industryPartnerships"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Industry Partnerships *</FormLabel>
-                        <FormDescription>List your industry partnerships (comma-separated)</FormDescription>
+                        <FormLabel>Industry Partnerships *(click "enter" to add)</FormLabel>
+                        <FormDescription>List your industry partnerships </FormDescription>
                         <FormControl>
 
                             <TagInput

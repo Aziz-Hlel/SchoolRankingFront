@@ -26,15 +26,16 @@ const Login = () => {
         if (Object.keys(validationErrors).length > 0) return;
 
         setIsSubmitting(true);
-
         const response = await login({ email, password });
+        console.log(response)
 
         if (response.success)
             navigate("/dashboard");
 
         if (!response.success && response.status === 401) setErrors({ email: "Invalid email or password" });
+        !response.success && console.log(response)
 
-        if (!response.success && response.status !== 401) alert("uncaught error");
+        // if (!response.success && response.status !== 401) alert("uncaught error");
 
         setIsSubmitting(false);
 
@@ -71,14 +72,14 @@ const Login = () => {
                 {isSubmitting ? "Logging in..." : "Login"}
             </button>
 
-            <div className="w-full flex justify-center">
+            {/* <div className="w-full flex justify-center">
                 <Link
                     to="/signup"
                     className=" flex justify-center  text-black rounded-md  transition "
                 >
                     Sign up
                 </Link>
-            </div>
+            </div> */}
         </form>
     );
 }

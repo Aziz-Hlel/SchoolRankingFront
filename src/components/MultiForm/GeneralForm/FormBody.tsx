@@ -84,8 +84,8 @@ const FormBody = () => {
                                     </FormControl>
                                     <SelectContent>
                                         {Object.values(SchoolTypeEnums).map((type) => (
-                                            <SelectItem key={type} value={type}>
-                                                {type}
+                                            <SelectItem key={type.value} value={type.value}>
+                                                {type.label}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

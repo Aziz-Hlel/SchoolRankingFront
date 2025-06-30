@@ -14,7 +14,7 @@ const AdminSchoolView = () => {
 
         <>
 
-            <SchoolView userRole={ROLES.SUPER_ADMIN} />
+            <SchoolView />
 
         </>
     )

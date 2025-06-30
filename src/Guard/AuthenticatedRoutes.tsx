@@ -1,5 +1,6 @@
+import LoadingSpinner from '@/LoadingSpinner';
 import { useAuth } from '../contexts/AuthContext'
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
 const AuthenticatedRoutes = () => {
 
@@ -7,14 +8,14 @@ const AuthenticatedRoutes = () => {
 
     const { user } = useAuth();
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     if (user === undefined)
-        return <> <div className=' pr-5'>Loading... user undefined</div> </>;
+        return <LoadingSpinner />
 
     if (user === null)
-        return <> <div className=' pr-5'>Not logged in user null</div> </>;
-//  <div className=' underline hover:cursor-pointer' onClick={() => navigate("/login")}>go Login</div>
+        return <Navigate to="/login" replace />;
+    //  <div className=' underline hover:cursor-pointer' onClick={() => navigate("/login")}>go Login</div>
     return <Outlet />;
 }
 

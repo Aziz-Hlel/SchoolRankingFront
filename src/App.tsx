@@ -4,7 +4,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import AuthenticatedRoutes from "./Guard/AuthenticatedRoutes";
-import SignUp from "./pages/SignUp";
 import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AdminManagement } from "./components/AdminManagement";
@@ -31,6 +30,7 @@ import FacilitiesUpdatedForm from "./components/Forms/UpdateForm/Wrapper/Facilit
 import StaffUpdatedForm from "./components/Forms/UpdateForm/Wrapper/StaffUpdatedForm";
 import MediaUpdatedForm from "./components/Forms/UpdateForm/Wrapper/MediaUpdatedForm";
 import SchoolViewManagemet from "./components/MySchool/SchoolViewManagemet";
+import Login2 from "./pages/Login2";
 
 
 const queryClient = new QueryClient();
@@ -52,8 +52,8 @@ function App() {
                 <Router>
                   <Routes>
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/login" element={<Login2 />} />
+                    {/* <Route path="/signup" element={<SignUp />} /> */}
 
                     <Route element={<AuthenticatedRoutes />}>
 
