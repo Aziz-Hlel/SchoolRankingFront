@@ -36,8 +36,7 @@ export const schoolAcademicsSchema = z.object({
     .max(10, 'Maximum 10 languages allowed'),
   internationalAccreditations: z.array(z.enum(Object.keys(AccreditationEnums) as [string, ...string[]]))
     .min(1, 'At least one accreditation is required'),
-  accreditationDocsLinks: z.string()
-    .min(5, 'Please provide documentation links'),
+  accreditationDocsLinks: z.string().optional(),
   levelsOffered: z.array(z.enum(Object.keys(LevelEnums) as [string, ...string[]]))
     .min(1, 'At least one level is required'),
   curriculums: z.array(z.enum(Object.keys(CurriculumEnums) as [string, ...string[]]))
