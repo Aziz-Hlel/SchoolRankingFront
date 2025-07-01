@@ -7,7 +7,7 @@ WORKDIR /app
 
 # Define build arguments for Vite env variables
 ARG VITE_API_URL
-ARG VITE_API_NODE_ENV
+ARG VITE_NODE_ENV
 
 # Copy package files and install dependencies
 COPY package.json package-lock.json ./
