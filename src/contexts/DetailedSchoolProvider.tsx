@@ -30,7 +30,6 @@ export const DetailedSchoolProvider: FC<{ children: ReactNode }> = ({ children }
 
 
 
-
     const fetchDetailedSchool = (schoolId: string) => setSchoolId(schoolId);
 
     const fetchMyDetailedSchool = async () => await refetch();

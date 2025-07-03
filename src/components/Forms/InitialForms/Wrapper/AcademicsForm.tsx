@@ -11,6 +11,7 @@ import type z from "zod";
 import DetachedAcademics from "../../DetachedForms/Academics/DetachedAcademics";
 import AbstractWrapper from "./AbstractWrapper";
 import NavigationButtons from "../NavigationButton/NavigationButtons";
+import { useDetailedSchool } from "@/contexts/DetailedSchoolProvider";
 
 
 
@@ -18,7 +19,7 @@ type SchoolAcademics = z.infer<typeof schoolAcademicsSchema>;
 
 const AcademicsForm = () => {
 
-
+    const { detailedSchool } = useDetailedSchool();
 
     const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ const AcademicsForm = () => {
         },
     });
 
-    const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(), payload);
+    const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(detailedSchool!.schoolGeneral!.id), payload);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 

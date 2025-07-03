@@ -3,7 +3,6 @@ import AbstractWrapper from './AbstractWrapper'
 import DetachedMedia from '../../DetachedForms/Media/DetachedMedia'
 import { schoolMediaSchema } from '@/types/School2.type';
 import type z from 'zod';
-import { useFormProgress } from '@/contexts/FormProgress';
 import { useForm } from 'react-hook-form';
 import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
@@ -20,14 +19,14 @@ type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
 const MediaForm = () => {
 
-    const { fetchProgress } = useFormProgress();
     const { fetchMyDetailedSchool } = useDetailedSchool();
     const { refreshUser } = useAuth();
-    
+
     const form = useForm<SchoolMedia>({ resolver: zodResolver(schoolMediaSchema), });
+    const { detailedSchool } = useDetailedSchool();
 
 
-    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(detailedSchool!.schoolGeneral!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -44,7 +43,6 @@ const MediaForm = () => {
             return;
         }
 
-        await fetchProgress();
         await fetchMyDetailedSchool();
         await refreshUser();
         navigate('/dashboard');

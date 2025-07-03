@@ -30,26 +30,30 @@ const apiGateway = {
         getFormProgress: () => "/schools/form-progress" as const,
     },
 
+    userSchool: {
+        getUserSchools: () => "/user-schools/" as const
+    },
+
     form: {
         general: {
-            create: () => "/schools/" as const,
-            update: (schoolId: string) => `/schools/${schoolId}` as const, 
+            create: () => `/schools/` as const,
+            update: (schoolId: string) => `/schools/${schoolId}` as const,
         },
         academics: {
-            create: () => "/school-academics/" as const,
-            update: (schoolId: string) => `/school-academics/${schoolId}` as const,
+            create: (schoolId: string) => `/schools/${schoolId}/school-academics/` as const,
+            update: (schoolId: string, schoolAcademicsId: string) => `/schools/${schoolId}/school-academics/${schoolAcademicsId}` as const,
         },
         facilities: {
-            create: () => "/school-facilities/" as const,
-            update: (schoolId: string) => `/school-facilities/${schoolId}` as const,
+            create: (schoolId: string) => `/schools/${schoolId}/school-facilities/` as const,
+            update: (schoolId: string, schoolFacilitiesId: string) => `/schools/${schoolId}/school-facilities/${schoolFacilitiesId}` as const,
         },
         staff: {
-            create: () => "/school-staff/" as const,
-            update: (schoolId: string) => `/school-staff/${schoolId}` as const,
+            create: (schoolId: string) => `/schools/${schoolId}/school-staff/` as const,
+            update: (schoolId: string, schoolStaffId: string) => `/schools/${schoolId}/school-staff/${schoolStaffId}` as const,
         },
         media: {
-            create: () => "/school-media/" as const,
-            update: (schoolId: string) => `/school-media/${schoolId}` as const,
+            create: (schoolId: string) => `/schools/${schoolId}/school-media/` as const,
+            update: (schoolId: string, schoolMediaId: string) => `/schools/${schoolId}/school-media/${schoolMediaId}` as const,
         },
     }
 

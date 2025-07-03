@@ -9,3 +9,5 @@
 - add authorized routes on top the authenticated one 
 
 - add a page object containing all pages details like paths, button names, and use Context and custom hook like in this one  
+
+- add zustand

@@ -7,15 +7,15 @@ import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 import { Outlet, useParams } from 'react-router-dom';
 import LoadingSpinner from '@/LoadingSpinner';
 
-const SchoolViewManagemet: FC<{ userRole: ROLES }> = ({ userRole }) => {
+const SchoolViewManagemet = () => {
 
 
-    const { changePage } = usePageContext();
+    // const { changePage } = usePageContext();
 
-    useEffect(() => {
-        userRole === ROLES.SUPER_ADMIN && changePage(PAGES.admins_school_view);
-        userRole === ROLES.ADMIN && changePage(PAGES.personalSchool);
-    }, [userRole]);
+    // useEffect(() => {
+    //     userRole === ROLES.SUPER_ADMIN && changePage(PAGES.admins_school_view);
+    //     userRole === ROLES.ADMIN && changePage(PAGES.personalSchool);
+    // }, [userRole]);
 
 
     const { detailedSchool, fetchDetailedSchool } = useDetailedSchool();
@@ -24,17 +24,20 @@ const SchoolViewManagemet: FC<{ userRole: ROLES }> = ({ userRole }) => {
     const { schoolId: schoolIdParam } = useParams();
 
     useEffect(() => {
-        if (schoolIdParam && userRole === ROLES.SUPER_ADMIN) fetchDetailedSchool(schoolIdParam);
+        console.log("schoolIdParam", schoolIdParam)
+        if (schoolIdParam) {
+            fetchDetailedSchool(schoolIdParam);
+        }
 
-    }, [userRole, schoolIdParam])
+    }, [schoolIdParam])
 
 
 
-
+    console.log('ousil houni nyk w scholId : ', schoolIdParam)
     if (!school) return <LoadingSpinner />;
 
 
-    return <Outlet />
+    return <Outlet />;
 }
 
 export default SchoolViewManagemet;

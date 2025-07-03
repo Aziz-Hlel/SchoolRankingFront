@@ -26,7 +26,7 @@ const StaffUpdatedForm = () => {
         defaultValues: school.schoolStaff
     });
 
-    const mutationFn = (formData: SchoolStaff) => apiService.putThrowable(apiGateway.form.staff.update(school.schoolGeneral!.id), formData);
+    const mutationFn = (formData: SchoolStaff) => apiService.putThrowable(apiGateway.form.staff.update(school.schoolGeneral!.id, school.schoolStaff!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -45,7 +45,7 @@ const StaffUpdatedForm = () => {
 
 
     };
-console.log("staff", form.formState.errors)
+    console.log("staff", form.formState.errors)
 
     return (
         <>

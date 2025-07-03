@@ -8,6 +8,7 @@ export const sidebarButton = {
     MySchool: "MySchool",
 } as const;
 
+type HeaderType = "MySchoolHeader" | "AdminsHeader" | "SchoolsHeader"
 
 export type SidebarButton = typeof sidebarButton[keyof typeof sidebarButton];
 export type s = keyof typeof sidebarButton;
@@ -22,6 +23,5 @@ export type Page = {
     icon: ComponentType<SVGProps<SVGSVGElement>>;
     sidebarLabel: string;
     path: string;
-    component: ComponentType;
-    Header: ComponentType;
+    headerType: HeaderType;
 }

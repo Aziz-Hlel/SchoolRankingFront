@@ -10,6 +10,7 @@ import type { Page } from '@/types/page';
 import { ordredPages, PAGES } from '@/data/pages';
 import { Outlet, } from 'react-router-dom';
 import { usePageContext } from '@/contexts/PageContext';
+import HeaderWrapper from './Headers/HeaderWrapper';
 
 
 
@@ -26,7 +27,6 @@ export const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
-  const CurrentHeader = currentPage.Header;
 
 
   return (
@@ -70,7 +70,7 @@ export const Dashboard = () => {
         {/* Desktop header */}
         <div className="hidden lg:block">
           {/* <Header currentPage={currentPage} /> */}
-          <CurrentHeader />
+          <HeaderWrapper />
         </div>
 
         {/* Page content */}

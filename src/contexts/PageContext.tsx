@@ -3,11 +3,17 @@ import type { Page } from "@/types/page";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { ROLES } from "@/enums/roles";
+import { sidebarButton, usePage, usePageStore } from "@/store/usePageStore";
+import useApi from "@/hooks/useApi";
+import apiGateway from "@/service/Api/apiGateway";
+import { School } from "lucide-react";
 
 
 interface PageContextProps {
     currentPage: Page;
     changePage: (page: Page) => void;
+    isLodadingSidebar: boolean;
+
     ordredPages: Page[]; // TODO : do you even need this one here 
 }
 
@@ -15,6 +21,7 @@ interface PageContextProps {
 const PageContext = createContext<PageContextProps | undefined>(undefined);
 
 
+type ApiUserSchoolsRes = { id: string, name: string, formCompleted: boolean, lastFormStep: number }
 
 
 export const PageProvider = ({ children }: { children: React.ReactNode }) => {
@@ -22,15 +29,46 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { user } = useAuth();
 
-    const userFirstRendredPage = PAGES.profile;
+    const { data, refetch, isLoading: isLodadingSidebar } = useApi<ApiUserSchoolsRes[]>({
+        url: apiGateway.userSchool.getUserSchools(),
+        queryKey: ["user-schools"],
+        options: { fetchOnMount: false, }
+    })
 
-    const [currentPage, setCurrentPage] = useState<Page>(userFirstRendredPage);
+    const { currentPage, setCurrentPage, ordredPages, addOrdredPages } = usePageStore();
+
 
     useEffect(() => {
         user && user.role === ROLES.SUPER_ADMIN && setCurrentPage(PAGES.admins);
         user && user.role === ROLES.ADMIN && setCurrentPage(PAGES.personalSchool);
 
     }, [user?.role]);
+
+
+    useEffect(() => {
+        if (user && user.role === ROLES.ADMIN) refetch();
+    }, [user?.role]);
+
+    const createPage = (data: ApiUserSchoolsRes): Page => {
+        return {
+            id: data.id,
+            sidebarTitle: data.name,
+            sidebarButton: sidebarButton.MySchool,
+            mainPageTitle: 'School Management', // or School Profile
+            mainPageDescription: 'Overview of your school information',
+            allowedRoles: [ROLES.ADMIN],
+            icon: School,
+            sidebarLabel: 'My School',
+
+            headerType: "MySchoolHeader",
+            path: `/dashboard/my-school/${data.id}`,
+
+        }
+    }
+    useEffect(() => {
+        if (data) addOrdredPages(data.data.map((item) => createPage(item)));
+    }, [data])
+
 
     const changePage = (page: Page) => {
         setCurrentPage(page);
@@ -39,6 +77,7 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
     const contextValue: PageContextProps = {
         currentPage,
         changePage,
+        isLodadingSidebar,
         ordredPages
     };
 

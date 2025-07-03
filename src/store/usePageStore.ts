@@ -1,15 +1,38 @@
-import AdminsHeader from '@/components/Headers/MySchoolHeader';
-import { HeaderAdminViewSchool } from '@/components/Headers/HeaderInspectSchool';
-import SchoolsHeader from '@/components/Headers/SchoolsHeader';
-import { ProfileInformation } from '@/components/Profile/ProfileInformation';
-import { SchoolsManagement } from '@/components/SchoolsManagement';
-import { SchoolProfile } from '@/components/SchoolProfile';
 import { ROLES } from '@/enums/roles';
-import { sidebarButton, type Page } from '@/types/page';
+import useApi from '@/hooks/useApi';
+import apiGateway from '@/service/Api/apiGateway';
+import type { ComponentType, SVGProps } from 'react';
+import { create } from 'zustand';
 import { Users, User, School } from 'lucide-react';
-import MySchoolHeader from '@/components/Headers/MySchoolHeader';
-import HeaderProfile from '@/components/Headers/HeaderProfile';
-import { AdminManagement } from '@/components/AdminManagement';
+
+
+
+export const sidebarButton = {
+    Schools: "Schools",
+    Admins: "Admins",
+    Profile: "Profile",
+    MySchool: "MySchool",
+} as const;
+
+export type SidebarButton = typeof sidebarButton[keyof typeof sidebarButton];
+
+type HeaderType = "MySchoolHeader" | "AdminsHeader" | "SchoolsHeader"
+
+export type Page = {
+    id: string;
+    sidebarTitle: string;
+    sidebarButton: SidebarButton;
+    mainPageTitle: string;
+    mainPageDescription: string;
+    allowedRoles: ROLES[];
+    icon: ComponentType<SVGProps<SVGSVGElement>>;
+    sidebarLabel: string;
+    path: string;
+    headerType: HeaderType;
+}
+
+
+
 
 
 
@@ -42,12 +65,14 @@ const schools: Page = {
     icon: School,
     sidebarLabel: 'Schools',
 
-    headerType: "SchoolsHeader",
 
     path: '/dashboard/schools',
-
+    headerType: "SchoolsHeader",
 
 }
+
+
+
 
 const admins_school_view: Page = {
     id: "admins-superadmin-school-view",
@@ -75,6 +100,7 @@ const personalSchool: Page = {
     allowedRoles: [ROLES.ADMIN],
     icon: School,
     sidebarLabel: 'My School',
+
     headerType: "MySchoolHeader",
     path: '/dashboard/my-school',
 
@@ -90,19 +116,50 @@ const profile: Page = {
     allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
     icon: User,
     sidebarLabel: 'Profile',
+
     headerType: "MySchoolHeader",
+
     path: '/dashboard/profile',
 
 
 }
 
-
-export const PAGES = {
+const PAGES: Record<string, Page> = {
     schools,
     admins,
     profile,
     personalSchool,
     admins_school_view
-} as const;
+};
+
 
 export const ordredPages = [PAGES.admins, PAGES.schools, PAGES.personalSchool];
+
+
+type PageStoreProps = {
+    currentPage: Page,
+    setCurrentPage: (page: Page) => void;
+    PAGES: Record<string, Page>;
+    ordredPages: Page[];
+    addOrdredPages: (pages: Page[]) => void
+}
+
+
+export const usePageStore = create<PageStoreProps>()((set) => ({
+    currentPage: PAGES.profile,
+    setCurrentPage: (page: Page) => set({ currentPage: page }),
+    PAGES: PAGES,
+    ordredPages: ordredPages,
+    addOrdredPages: (pages: Page[]) => set({ ordredPages: [...ordredPages, ...pages] }),
+}));
+
+
+
+export const usePage = () => usePageStore;
+
+
+
+
+export const useOrdredPages = () => usePageStore((state) => state.ordredPages);
+
+

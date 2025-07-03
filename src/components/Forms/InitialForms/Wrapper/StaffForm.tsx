@@ -12,6 +12,7 @@ import type z from 'zod';
 import { Form } from '@/components/ui/form';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useEffect } from 'react';
+import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 
 type SchoolStaff = z.infer<typeof schoolStaffSchema>;
 
@@ -19,8 +20,9 @@ type SchoolStaff = z.infer<typeof schoolStaffSchema>;
 const StaffForm = () => {
 
     const form = useForm<SchoolStaff>({ resolver: zodResolver(schoolStaffSchema), });
+    const { detailedSchool } = useDetailedSchool();
 
-    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(), formData);
+    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(detailedSchool!.schoolGeneral!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 

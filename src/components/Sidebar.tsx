@@ -9,6 +9,7 @@ import { PAGES } from '@/data/pages';
 import { Link } from 'react-router-dom';
 import type { FC } from 'react';
 import { usePageContext } from '@/contexts/PageContext';
+import { useOrdredPages } from '@/store/usePageStore';
 
 interface SidebarProps {
   currentPage: Page;
@@ -16,7 +17,7 @@ interface SidebarProps {
   ordredPages: Page[];
 }
 
-export const Sidebar: FC<SidebarProps> = ({ ordredPages }) => {
+export const Sidebar: FC<SidebarProps> = ({ }) => {
   const { user, logout } = useAuth();
 
   if (!user) return null;
@@ -25,8 +26,10 @@ export const Sidebar: FC<SidebarProps> = ({ ordredPages }) => {
 
   const { currentPage, changePage } = usePageContext();
 
+  const ordredPages = useOrdredPages();
 
-console.log("current page", currentPage);
+
+  console.log("current page", currentPage);
 
   return (
     <div className="w-64 bg-white border-r border-border h-screen flex flex-col">
@@ -38,8 +41,8 @@ console.log("current page", currentPage);
         </p>
       </div>
 
-      <nav className="flex-1 p-3 lg:p-4">
-        <div className="space-y-1 lg:space-y-2">
+      <nav className="flex-1 p-3 lg:p-4 overflow-y-auto">
+        <div className="flex flex-col  space-y-1 lg:space-y-2 ">
           {ordredPages.map((page, index) => {
 
             if (!page.allowedRoles.includes(userRole))
@@ -52,14 +55,14 @@ console.log("current page", currentPage);
                   key={page.id}
                   variant={page === currentPage ? 'default' : 'ghost'}
                   className={cn(
-                    'w-full justify-start text-sm lg:text-base h-10 lg:h-11',
-                    currentPage.sidebarButton === page.sidebarButton && 'bg-primary text-primary-foreground'
+                    'w-full justify-start text-sm lg:text-base h-10 lg:h-11 hover:cursor-pointer  ',
+                    currentPage.id === page.id && 'bg-primary text-primary-foreground'
                   )}
                   // onClick={() => onPageChange(page)}
                   onClick={() => changePage(page)}
                 >
                   <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="truncate">{page.sidebarLabel}</span>
+                  <span className="truncate">{page.sidebarTitle}</span>
                 </Button>
               </Link>
             );

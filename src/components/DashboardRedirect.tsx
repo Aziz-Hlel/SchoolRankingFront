@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { PAGES } from "@/data/pages";
 import { ROLES } from "@/enums/roles";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 
 
@@ -15,7 +15,7 @@ const DashboardRedirect = () => {
     if (user.role === ROLES.SUPER_ADMIN) return <Navigate to={PAGES.admins.path} replace />;
 
 
-    if (user.role === ROLES.ADMIN) return <Navigate to={PAGES.personalSchool.path} replace />;
+    if (user.role === ROLES.ADMIN) return <Outlet />;
 
     // Optional: fallback route
     return <Navigate to="/unauthorized" replace />;

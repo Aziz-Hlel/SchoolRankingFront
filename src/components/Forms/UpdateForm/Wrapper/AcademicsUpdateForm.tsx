@@ -30,7 +30,7 @@ const AcademicsUpdateForm = () => {
         defaultValues: school.schoolAcademics
     });
 
-    const mutationFn = (payload: SchoolAcademics) => apiService.putThrowable(apiGateway.form.academics.update(school.schoolAcademics!.id), payload);
+    const mutationFn = (payload: SchoolAcademics) => apiService.putThrowable(apiGateway.form.academics.update(school.schoolGeneral!.id, school.schoolAcademics!.id), payload);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 

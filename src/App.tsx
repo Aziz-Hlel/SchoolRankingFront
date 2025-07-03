@@ -11,8 +11,6 @@ import { SchoolsManagement } from "./components/SchoolsManagement";
 import { ProfileInformation } from "./components/Profile/ProfileInformation";
 import { SchoolView } from "./components/MySchool/SchoolView";
 import ChangePassword from "./components/Profile/ChangePassword";
-import ProgressFormCheckup from "./Guard/ProgressFormCheckup";
-import { FormProgressProvider } from "./contexts/FormProgress";
 import AuthorizedRoutes from "./Guard/AuthorizedRoutes";
 import { ROLES } from "./enums/roles";
 import DashboardRedirect from "./components/DashboardRedirect";
@@ -42,96 +40,94 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <PageProvider>
-          <QueryClientProvider client={queryClient}>
-            <FormProgressProvider>
-              <DetailedSchoolProvider>
+        <QueryClientProvider client={queryClient}>
+          <PageProvider>
+            <DetailedSchoolProvider>
 
-                <Sonner />
+              <Sonner />
 
-                <Router>
-                  <Routes>
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                    <Route path="/login" element={<Login2 />} />
-                    {/* <Route path="/signup" element={<SignUp />} /> */}
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/login" element={<Login2 />} />
+                  {/* <Route path="/signup" element={<SignUp />} /> */}
 
-                    <Route element={<AuthenticatedRoutes />}>
+                  <Route element={<AuthenticatedRoutes />}>
 
-                      <Route path="forms" element={<Outlet />}>
-                        <Route path="general" element={<GeneralForm />} />
-                        <Route path="academics" element={<AcademicsForm />} />
-                        <Route path="facilities" element={<FacilitiesForm />} />
-                        <Route path="staff" element={<StaffForm />} />
-                        <Route path="media" element={<MediaForm />} />
+                    <Route path="forms" element={<Outlet />}>
+                      <Route path="general" element={<GeneralForm />} />
+                      <Route path="academics" element={<AcademicsForm />} />
+                      <Route path="facilities" element={<FacilitiesForm />} />
+                      <Route path="staff" element={<StaffForm />} />
+                      <Route path="media" element={<MediaForm />} />
+                    </Route>
+
+                    {/* <Route path="/" element={<Dashboard />} /> */}
+                    <Route path="dashboard" element={<Dashboard />} >
+
+                      {/* Redirect when path is exactly /dashboard */}
+                      <Route index element={<DashboardRedirect />} />
+
+                      <Route element={<AuthorizedRoutes roles={[ROLES.SUPER_ADMIN]} />} >
+
+                        <Route path="admins" element={<AdminManagement />} />
+
+                        <Route path="schools" element={<Outlet />} >
+                          <Route index element={<SchoolsManagement />} />
+                          <Route path=":schoolId" element={<SchoolViewManagemet />} >
+                            <Route index element={<SchoolView />} />
+
+                            <Route element={<DetailedSchoolExists />}>
+                              <Route path="edit" element={<Outlet />} >
+                                <Route path="general" element={<GeneralUpdateForm />} />
+                                <Route path="academics" element={<AcademicsUpdateForm />} />
+                                <Route path="facilities" element={<FacilitiesUpdatedForm />} />
+                                <Route path="staff" element={<StaffUpdatedForm />} />
+                                <Route path="media" element={<MediaUpdatedForm />} />
+                              </Route>
+
+                            </Route>
+                          </Route>
+                        </Route>
+
                       </Route>
 
-                      <Route element={<ProgressFormCheckup />} >
-                        {/* <Route path="/" element={<Dashboard />} /> */}
-                        <Route path="dashboard" element={<Dashboard />} >
 
-                          {/* Redirect when path is exactly /dashboard */}
-                          <Route index element={<DashboardRedirect />} />
+                      <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
+                        <Route path="my-school/:schoolId" element={<SchoolViewManagemet />} >
 
-                          <Route element={<AuthorizedRoutes roles={[ROLES.SUPER_ADMIN]} />} >
+                          <Route index element={<SchoolView />} />
 
-                            <Route path="admins" element={<AdminManagement />} />
-
-                            <Route path="schools" element={<Outlet />} >
-                              <Route index element={<SchoolsManagement />} />
-                              <Route path=":schoolId" element={<SchoolViewManagemet userRole={ROLES.SUPER_ADMIN} />} >
-                                <Route index element={<SchoolView />} />
-
-                                <Route element={<DetailedSchoolExists />}>
-                                  <Route path="edit" element={<Outlet />} >
-                                    <Route path="general" element={<GeneralUpdateForm />} />
-                                    <Route path="academics" element={<AcademicsUpdateForm />} />
-                                    <Route path="facilities" element={<FacilitiesUpdatedForm />} />
-                                    <Route path="staff" element={<StaffUpdatedForm />} />
-                                    <Route path="media" element={<MediaUpdatedForm />} />
-                                  </Route>
-
-                                </Route>
-                              </Route>
-                            </Route>
-
+                          <Route path="edit" element={<Outlet />} >
+                            <Route path="general" element={<GeneralUpdateForm />} />
+                            <Route path="academics" element={<AcademicsUpdateForm />} />
+                            <Route path="facilities" element={<FacilitiesUpdatedForm />} />
+                            <Route path="staff" element={<StaffUpdatedForm />} />
+                            <Route path="media" element={<MediaUpdatedForm />} />
                           </Route>
 
-
-                          <Route element={<DetailedSchoolExists />}>
-                            <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
-                              <Route path="my-school" element={<SchoolViewManagemet userRole={ROLES.ADMIN} />} >
-                                <Route index element={<SchoolView />} />
-                                <Route path="edit" element={<Outlet />} >
-                                  <Route path="general" element={<GeneralUpdateForm />} />
-                                  <Route path="academics" element={<AcademicsUpdateForm />} />
-                                  <Route path="facilities" element={<FacilitiesUpdatedForm />} />
-                                  <Route path="staff" element={<StaffUpdatedForm />} />
-                                  <Route path="media" element={<MediaUpdatedForm />} />
-                                </Route>
-                              </Route>
-                            </Route>
-                          </Route>
-
-
-                          <Route path="profile" element={<ProfileInformation />} >
-                            <Route path="change-password" element={<ChangePassword />} />
-                          </Route>
 
                         </Route>
                       </Route>
 
+
+                      <Route path="profile" element={<ProfileInformation />} >
+                        <Route path="change-password" element={<ChangePassword />} />
+                      </Route>
+
                     </Route>
+                  </Route>
 
 
-                    <Route path="*" element={<NotFound />} />
+
+                  <Route path="*" element={<NotFound />} />
 
 
-                  </Routes>
-                </Router>
-              </DetailedSchoolProvider>
-            </FormProgressProvider>
-          </QueryClientProvider >
-        </PageProvider>
+                </Routes>
+              </Router>
+            </DetailedSchoolProvider>
+          </PageProvider >
+        </QueryClientProvider >
       </AuthProvider >
     </>
   )

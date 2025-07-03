@@ -12,12 +12,14 @@ import type z from 'zod';
 import DetachedFacilities from '../../DetachedForms/Facilities/DetachedFacilities';
 import AbstractWrapper from './AbstractWrapper';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
+import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 
 export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 
 
 const FacilitiesForm = () => {
 
+    const { detailedSchool } = useDetailedSchool();
 
     const form = useForm<SchoolFacilitiesData>({
         resolver: zodResolver(schoolFacilitiesSchema),
@@ -37,7 +39,7 @@ const FacilitiesForm = () => {
 
     const { refreshUser } = useAuth();
 
-    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(), formData);
+    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(detailedSchool!.schoolGeneral!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
@@ -71,7 +73,7 @@ const FacilitiesForm = () => {
                         <DetachedFacilities form={form} />
 
                         <NavigationButtons currentStep={0} isSubmitting={isPending} onNext={() => { }} onPrevious={() => { }} onSubmit={() => { }} />
-                    
+
                     </form>
                 </Form>
 

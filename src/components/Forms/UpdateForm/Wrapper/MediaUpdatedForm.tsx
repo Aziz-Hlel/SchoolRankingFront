@@ -27,7 +27,7 @@ const MediaUpdatedForm = () => {
     });
 
 
-    const mutationFn = (formData: SchoolMedia) => apiService.putThrowable(apiGateway.form.media.update(school.schoolMedia!.id), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.putThrowable(apiGateway.form.media.update(school.schoolGeneral!.id, school.schoolMedia!.id), formData);
 
     const { mutateAsync, isPending } = useMutation({ mutationFn, });
 
