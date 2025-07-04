@@ -7,7 +7,7 @@ interface NavigationButtonsProps {
     onNext: (data: any) => void;
     onPrevious: () => void;
     onSubmit: () => void;
-    isSubmitting?: boolean;
+    isSubmitting: boolean;
 }
 
 const NavigationButtons: FC<NavigationButtonsProps> = ({ currentStep, onNext, onPrevious, onSubmit, isSubmitting = false }) => {

@@ -42,9 +42,11 @@ const FacilitiesForm = () => {
     });
 
 
-    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(detailedSchool!.schoolGeneral!.id), formData);
+    const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(schoolId), formData);
 
-    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'],});
+    const queriesKeys = [["school", "detailed", schoolId], ['user-schools']]
+
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys });
 
 
     const navigate = useNavigate();

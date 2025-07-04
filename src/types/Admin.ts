@@ -9,8 +9,6 @@ export type Admin = {
     lastName: string;
     role: ROLES;
     email: string;
-    schoolName: string;
-    isCompleted: boolean;
     createdAt: Date
 }
 

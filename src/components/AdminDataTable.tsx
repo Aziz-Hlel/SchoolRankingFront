@@ -38,8 +38,7 @@ export const AdminDataTable: React.FC<AdminDataTableProps> = ({
 
   const filteredData = data.filter(admin =>
     admin.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (admin.schoolName && admin.schoolName.toLowerCase().includes(searchTerm.toLowerCase()))
+    admin.email.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -85,7 +84,7 @@ export const AdminDataTable: React.FC<AdminDataTableProps> = ({
                   className="min-w-[150px] cursor-pointer hover:bg-muted/50"
                   onClick={() => handleSort('username')}
                 >
-                  Name {sortBy === 'username' && (sortOrder === 'asc' ? '↑' : '↓')}
+                 Full Name {sortBy === 'username' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </TableHead>
                 <TableHead
                   className="min-w-[200px] cursor-pointer hover:bg-muted/50"
@@ -93,8 +92,6 @@ export const AdminDataTable: React.FC<AdminDataTableProps> = ({
                 >
                   Email {sortBy === 'email' && (sortOrder === 'asc' ? '↑' : '↓')}
                 </TableHead>
-                <TableHead className="hidden sm:table-cell min-w-[150px]">School</TableHead>
-                <TableHead className="hidden md:table-cell">School status</TableHead>
                 <TableHead className="hidden lg:table-cell">Created</TableHead>
                 <TableHead className="w-[70px]">Actions</TableHead>
               </TableRow>
@@ -111,14 +108,6 @@ export const AdminDataTable: React.FC<AdminDataTableProps> = ({
                   <TableRow key={admin.id} className=' hover:cursor-default'>
                     <TableCell className="font-medium">{admin.username}</TableCell>
                     <TableCell className="text-sm">{admin.email}</TableCell>
-                    <TableCell className="hidden sm:table-cell text-sm">
-                      {admin.schoolName || 'Not assigned'}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <Badge variant={admin.isCompleted ? 'default' : 'secondary'}>
-                        {admin.isCompleted ? 'Complete' : 'Uncompleted'}
-                      </Badge>
-                    </TableCell>
                     <TableCell className="hidden lg:table-cell text-sm">
                       {new Date(admin.createdAt).toLocaleDateString()}
                     </TableCell>

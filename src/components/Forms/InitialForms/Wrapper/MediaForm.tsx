@@ -30,7 +30,8 @@ const MediaForm = () => {
     const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(schoolId), formData);
 
     const queriesKeys = [["school", "detailed", schoolId], ['user-schools']]
-    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys: queriesKeys, });
+    
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys, });
 
 
     const navigate = useNavigate();

@@ -68,7 +68,7 @@ export const Sidebar: FC<SidebarProps> = ({ }) => {
                   <span className="truncate">{page.sidebarTitle}</span>
                   {page.additionalInfo?.formsCompleted === false &&
                     <>
-                      <span className='text-yellow-600 text-xs font-medium ml-2'>{page.additionalInfo?.lastFormStep + 1}/5</span>
+                      <span className='text-yellow-600 text-xs font-medium ml-2'>{page.additionalInfo?.lastFormStep }/5</span>
                       <CircleAlert className="text-yellow-600" />
 
                     </>

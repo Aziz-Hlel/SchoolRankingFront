@@ -40,7 +40,9 @@ const AcademicsForm = () => {
 
     const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(schoolId), payload);
 
-    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'], });
+    const queriesKeys = [["school", "detailed", schoolId], ['user-schools']]
+
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys });
 
     const onSubmit = async (data: SchoolAcademics) => {
 

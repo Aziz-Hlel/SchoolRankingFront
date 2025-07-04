@@ -22,10 +22,12 @@ const StaffForm = () => {
 
     const form = useForm<SchoolStaff>({ resolver: zodResolver(schoolStaffSchema), });
     const { detailedSchool } = useDetailedSchool();
+    const schoolId = detailedSchool!.schoolGeneral!.id
+    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(schoolId), formData);
 
-    const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(detailedSchool!.schoolGeneral!.id), formData);
+    const queriesKeys = [["school", "detailed", schoolId], ['user-schools']]
 
-    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'],});
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys });
 
     const navigate = useNavigate();
 
