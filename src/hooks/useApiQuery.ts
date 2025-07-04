@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import { HttpMethods, type HttpMethod } from "../constants/HttpMethod";
 import { apiService, type ApiResponse } from "../service/Api/apiService";
 import type { AxiosRequestConfig } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import type { Pageable } from "@/types/Apis/Pageable";
-import { useNavigate } from "react-router-dom";
 
 
 
 interface UseApiOptions {
     url: string;
     queryParams?: Pageable;
-    onError?: (error: any) => void;
+    onError?: (error: any, query: any) => void;
     onSuccess?: (data: any) => void;
     queryKey: string[];
     options: {
@@ -23,10 +20,9 @@ interface UseApiOptions {
 }
 
 
-const useApiQuery = <K>({ url, onSuccess, queryKey, options }: UseApiOptions) => {
+const useApiQuery = <K>({ url, onSuccess, onError, queryKey, options }: UseApiOptions) => {
     const fetch = () => apiService.getThrowable<K>(url, options.config);
 
-    const navigate = useNavigate();
 
     return useQuery<ApiResponse<K>, Error, ApiResponse<K>, any[]>({
         queryKey: [...queryKey, options.config?.params],
@@ -37,11 +33,7 @@ const useApiQuery = <K>({ url, onSuccess, queryKey, options }: UseApiOptions) =>
         refetchOnWindowFocus: false,
 
 
-        throwOnError: (error, query) => {
-            // Return true to throw, false to suppress
-            navigate('school/404');
-            return false;
-        },
+        throwOnError: (error, query) => { onError && onError(error, query); return false }
 
     });
 

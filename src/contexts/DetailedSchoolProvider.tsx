@@ -28,13 +28,16 @@ export const DetailedSchoolProvider: FC<{ children: ReactNode }> = ({ children }
     const { data, refetch, isError } = useApiQuery<SchoolDetailed>({
         url: apiGateway.school.getDetailedSchool(schoolId),
         queryKey: ["school", "detailed", schoolId],
-        options: { fetchOnMount: schoolId !== '' },
-        onError: () => { navigate('school/404'); console.log("t5l lerror") },
-
+        options: { fetchOnMount: schoolId !== '' }
     })
 
     const detailedSchool = data?.data;
 
+    useEffect(() => {
+        if (isError) {
+            navigate('/dashboard/school/404');
+        }
+    }, [isError, navigate]);
 
     const fetchDetailedSchool = (schoolId: string) => setSchoolId(schoolId);
 

@@ -132,11 +132,12 @@ function App() {
                         <Route path="change-password" element={<ChangePassword />} />
                       </Route>
 
+                      <Route path="school/404" element={<SchoolNotFound />} />
                     </Route>
                   </Route>
 
 
-                  <Route path="school/404" element={<SchoolNotFound />} />
+
                   <Route path="*" element={<NotFound />} />
 
 
