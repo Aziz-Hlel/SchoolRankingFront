@@ -33,8 +33,8 @@ const SchoolViewManagemet = () => {
 
 
 
-    console.log('ousil houni nyk w scholId : ', schoolIdParam)
-    if (!school) return <LoadingSpinner />;
+    console.log('ousil houni nyk w scholId : ', schoolIdParam, '\n w school = ', school);
+    if (!school || schoolIdParam !== school.schoolGeneral.id) return <LoadingSpinner />;
 
 
     return <Outlet />;

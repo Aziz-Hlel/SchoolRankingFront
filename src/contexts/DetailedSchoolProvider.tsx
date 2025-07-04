@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from "react";
 import { useAuth } from "./AuthContext";
 import apiGateway from "@/service/Api/apiGateway";
-import useApi from "@/hooks/useApi";
+import useApiQuery from "@/hooks/useApiQuery";
 import type { SchoolDetailed } from "@/types/School2.type";
 import { ROLES } from "@/enums/roles";
+import { replace, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 interface DetailedSchoolContextProps {
     detailedSchool: SchoolDetailed | undefined;
@@ -21,27 +23,23 @@ export const DetailedSchoolProvider: FC<{ children: ReactNode }> = ({ children }
 
     const [schoolId, setSchoolId] = useState<string>('');
 
+    const navigate = useNavigate();
 
-    const { user } = useAuth();
+    const { data, refetch, isError } = useApiQuery<SchoolDetailed>({
+        url: apiGateway.school.getDetailedSchool(schoolId),
+        queryKey: ["school", "detailed", schoolId],
+        options: { fetchOnMount: schoolId !== '' },
+        onError: () => { navigate('school/404'); console.log("t5l lerror") },
 
-    const { data, refetch } = useApi<SchoolDetailed>({ url: apiGateway.school.getDetailedSchool(schoolId), queryKey: ["school", "detailed", schoolId], options: { fetchOnMount: schoolId !== '' } })
+    })
 
     const detailedSchool = data?.data;
-
 
 
     const fetchDetailedSchool = (schoolId: string) => setSchoolId(schoolId);
 
     const fetchMyDetailedSchool = async () => await refetch();
 
-
-    useEffect(() => {
-
-        if (user && user.role === ROLES.ADMIN && user.schoolId) setSchoolId(user.schoolId);
-
-
-
-    }, [user?.schoolId])
 
 
 

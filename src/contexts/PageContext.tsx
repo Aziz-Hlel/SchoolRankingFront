@@ -1,10 +1,10 @@
 import { ordredPages, PAGES } from "@/data/pages";
-import type { Page } from "@/types/page";
+import { sidebarButton, type Page } from "@/types/page";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { ROLES } from "@/enums/roles";
-import { sidebarButton, usePage, usePageStore } from "@/store/usePageStore";
-import useApi from "@/hooks/useApi";
+import { usePage, usePageStore } from "@/store/usePageStore";
+import useApiQuery from "@/hooks/useApiQuery";
 import apiGateway from "@/service/Api/apiGateway";
 import { School } from "lucide-react";
 
@@ -21,7 +21,7 @@ interface PageContextProps {
 const PageContext = createContext<PageContextProps | undefined>(undefined);
 
 
-type ApiUserSchoolsRes = { id: string, name: string, formCompleted: boolean, lastFormStep: number }
+type ApiUserSchoolsRes = { id: string, name: string, formsCompleted: boolean, lastFormStep: number }
 
 
 export const PageProvider = ({ children }: { children: React.ReactNode }) => {
@@ -29,13 +29,13 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { user } = useAuth();
 
-    const { data, refetch, isLoading: isLodadingSidebar } = useApi<ApiUserSchoolsRes[]>({
+    const { data, refetch, isLoading: isLodadingSidebar } = useApiQuery<ApiUserSchoolsRes[]>({
         url: apiGateway.userSchool.getUserSchools(),
         queryKey: ["user-schools"],
-        options: { fetchOnMount: false, }
+        options: { fetchOnMount: user?.role === ROLES.ADMIN ? true : false, }
     })
 
-    const { currentPage, setCurrentPage, ordredPages, addOrdredPages } = usePageStore();
+    const { currentPage, setCurrentPage, ordredPages, addAminOrdredPages } = usePageStore();
 
 
     useEffect(() => {
@@ -45,9 +45,9 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
     }, [user?.role]);
 
 
-    useEffect(() => {
-        if (user && user.role === ROLES.ADMIN) refetch();
-    }, [user?.role]);
+    // useEffect(() => {
+    //     if (user && user.role === ROLES.ADMIN) refetch();
+    // }, [user?.role]);
 
     const createPage = (data: ApiUserSchoolsRes): Page => {
         return {
@@ -62,11 +62,12 @@ export const PageProvider = ({ children }: { children: React.ReactNode }) => {
 
             headerType: "MySchoolHeader",
             path: `/dashboard/my-school/${data.id}`,
+            additionalInfo: { formsCompleted: data.formsCompleted, lastFormStep: data.lastFormStep },
 
         }
     }
     useEffect(() => {
-        if (data) addOrdredPages(data.data.map((item) => createPage(item)));
+        if (data) addAminOrdredPages(data.data.map((item) => createPage(item)));
     }, [data])
 
 

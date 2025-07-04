@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SchoolDataTable } from './SchoolDataTable';
-import useApi from '@/hooks/useApi';
+import useApiQuery from '@/hooks/useApiQuery';
 import apiGateway from '@/service/Api/apiGateway';
 import type { PageSchool } from '@/types/SchoolPage';
 
@@ -49,7 +49,7 @@ export const SchoolsManagement: React.FC = () => {
   const page = 1;
   const size = 20;
 
-  const { data: schoolData } = useApi<PageSchool>({
+  const { data: schoolData } = useApiQuery<PageSchool>({
     url: apiGateway.school.getPageSchool(),
     queryParams: { page: 1, size: 20 },
     queryKey: ['schools'],

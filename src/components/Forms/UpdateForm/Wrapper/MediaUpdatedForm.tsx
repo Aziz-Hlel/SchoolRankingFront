@@ -12,24 +12,25 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
+import useApiMutation from '@/hooks/useApiMutation';
 
 type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
 
 const MediaUpdatedForm = () => {
 
-    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const { detailedSchool,  } = useDetailedSchool();
     const school = detailedSchool!;
-
+    const schoolId = school.schoolGeneral!.id
     const form = useForm<SchoolMedia>({
         resolver: zodResolver(schoolMediaSchema),
         defaultValues: school.schoolMedia
     });
 
 
-    const mutationFn = (formData: SchoolMedia) => apiService.putThrowable(apiGateway.form.media.update(school.schoolGeneral!.id, school.schoolMedia!.id), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.putThrowable(apiGateway.form.media.update(schoolId, school.schoolMedia!.id), formData);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ["school", "detailed", schoolId] });
 
 
 
@@ -37,14 +38,13 @@ const MediaUpdatedForm = () => {
 
     const onSubmit = async (data: SchoolMedia) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
+        const response = await safeAsyncMutate(data);
 
         if (!response.success) {
             console.error("Failed to submit general form", response.error);
             return;
         }
 
-        await fetchMyDetailedSchool();
         navigate('../../');
 
 

@@ -4,7 +4,7 @@ import { AddAdminDialog } from './AddAdminDialog';
 import { EditAdminDialog } from './EditAdminDialog';
 import { DeleteConfirmationDialog } from './DeleteConfirmationDialog';
 import { AdminDataTable } from './AdminDataTable';
-import useApi from '@/hooks/useApi';
+import useApiQuery from '@/hooks/useApiQuery';
 import apiGateway from '@/service/Api/apiGateway';
 import type { Admin, AdminPage } from '@/types/Admin';
 import { PAGES } from '@/data/pages';
@@ -18,7 +18,7 @@ export const AdminManagement: React.FC = () => {
 
   const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
   const [deletingAdmin, setDeletingAdmin] = useState<Admin | null>(null);
-  const { data } = useApi<AdminPage>({
+  const { data } = useApiQuery<AdminPage>({
     url: apiGateway.user.getPageUser,
     queryParams: { page: 1, size: 20 },
     queryKey: ['admins'],

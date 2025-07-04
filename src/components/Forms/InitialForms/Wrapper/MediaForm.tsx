@@ -8,11 +8,12 @@ import apiGateway from '@/service/Api/apiGateway';
 import { apiService } from '@/service/Api/apiService';
 import safeAsyncMutate from '@/utils/safeAsyncMutate';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
 import { useAuth } from '@/contexts/AuthContext';
+import useApiMutation from '@/hooks/useApiMutation';
 
 type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 
@@ -20,23 +21,23 @@ type SchoolMedia = z.infer<typeof schoolMediaSchema>;
 const MediaForm = () => {
 
     const { fetchMyDetailedSchool } = useDetailedSchool();
-    const { refreshUser } = useAuth();
 
     const form = useForm<SchoolMedia>({ resolver: zodResolver(schoolMediaSchema), });
     const { detailedSchool } = useDetailedSchool();
 
+    const schoolId = detailedSchool!.schoolGeneral!.id
 
-    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(detailedSchool!.schoolGeneral!.id), formData);
+    const mutationFn = (formData: SchoolMedia) => apiService.postThrowable(apiGateway.form.media.create(schoolId), formData);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
-
+    const queriesKeys = [["school", "detailed", schoolId], ['user-schools']]
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queriesKeys: queriesKeys, });
 
 
     const navigate = useNavigate();
 
     const onSubmit = async (data: SchoolMedia) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
+        const response = await safeAsyncMutate(data);
 
         if (!response.success) {
             console.error("Failed to submit general form", response.error);
@@ -44,8 +45,8 @@ const MediaForm = () => {
         }
 
         await fetchMyDetailedSchool();
-        await refreshUser();
-        navigate('/dashboard');
+        const schoolId = detailedSchool.schoolGeneral!.id
+        navigate(`/dashboard/my-school/${schoolId}`);
 
 
     }

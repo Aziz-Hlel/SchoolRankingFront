@@ -4,6 +4,7 @@ import { apiService, type ApiResponse } from "../service/Api/apiService";
 import type { AxiosRequestConfig } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import type { Pageable } from "@/types/Apis/Pageable";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -15,29 +16,35 @@ interface UseApiOptions {
     queryKey: string[];
     options: {
         fetchOnMount?: boolean; // Should auto-execute on mount
+        staleData?: boolean;
+        cacheData?: boolean;
         config?: AxiosRequestConfig & { params?: Pageable };
     }
 }
 
 
-const useApi = <K>({ url, onError, onSuccess, queryKey, options }: UseApiOptions) => {
-
-
+const useApiQuery = <K>({ url, onSuccess, queryKey, options }: UseApiOptions) => {
     const fetch = () => apiService.getThrowable<K>(url, options.config);
 
+    const navigate = useNavigate();
 
-    return useQuery({
+    return useQuery<ApiResponse<K>, Error, ApiResponse<K>, any[]>({
         queryKey: [...queryKey, options.config?.params],
         queryFn: fetch,
-        enabled: options.fetchOnMount, // don't fetch automatically
-        staleTime: 1000 * 60 * 5, // cache for 5 minutes
-        retry: 0, // retry failed requests twice
-        refetchOnWindowFocus: false, // refetch when window is focused
+        enabled: options.fetchOnMount,
+        staleTime: options.staleData === false ? 0 : 1000 * 60 * 5,
+        retry: 0,
+        refetchOnWindowFocus: false,
+
+
+        throwOnError: (error, query) => {
+            // Return true to throw, false to suppress
+            navigate('school/404');
+            return false;
+        },
+
     });
-
-
 
 }
 
-
-export default useApi;
+export default useApiQuery;

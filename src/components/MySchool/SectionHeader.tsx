@@ -9,11 +9,13 @@ interface sectionsProps {
     title: string,
     icon: ComponentType<SVGProps<SVGSVGElement>>,
     color: string,
-    editPath: string
+    editPath: string,
+    editable: boolean
+
 }
 
 
-const SchoolInfoHeader = ({ title, icon, color, editPath }: sectionsProps) => {
+const SchoolInfoHeader = ({ title, icon, color, editPath, editable }: sectionsProps) => {
 
 
 
@@ -31,12 +33,12 @@ const SchoolInfoHeader = ({ title, icon, color, editPath }: sectionsProps) => {
                         <CardTitle className="text-base lg:text-lg">{title}</CardTitle>
                     </div>
                 </div>
-                <Link to={editPath} >
+                <Link to={editable ? editPath : null}  >
                     <Button
                         variant="ghost"
                         size="sm"
                         // onClick={() => setEditingSection(id)}
-                        className="h-8 w-8 p-0"
+                        className={"h-8 w-8 p-0 " + (!editable && " hover:cursor-not-allowed")}
                     >
                         <Edit className="w-4 h-4" />
                     </Button>

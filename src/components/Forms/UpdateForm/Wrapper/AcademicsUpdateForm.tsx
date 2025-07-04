@@ -12,6 +12,7 @@ import DetachedAcademics from "../../DetachedForms/Academics/DetachedAcademics";
 import AbstractWrapper from "./AbstractWrapper";
 import NavigationButtons from "../NavigationButton/NavigationButtons";
 import { useDetailedSchool } from "@/contexts/DetailedSchoolProvider";
+import useApiMutation from "@/hooks/useApiMutation";
 
 
 
@@ -19,8 +20,9 @@ type SchoolAcademics = z.infer<typeof schoolAcademicsSchema>;
 
 const AcademicsUpdateForm = () => {
 
-    const { detailedSchool, fetchMyDetailedSchool } = useDetailedSchool();
+    const { detailedSchool } = useDetailedSchool();
     const school = detailedSchool!;
+    const schoolId = school.schoolGeneral!.id
 
 
     const navigate = useNavigate();
@@ -30,19 +32,20 @@ const AcademicsUpdateForm = () => {
         defaultValues: school.schoolAcademics
     });
 
-    const mutationFn = (payload: SchoolAcademics) => apiService.putThrowable(apiGateway.form.academics.update(school.schoolGeneral!.id, school.schoolAcademics!.id), payload);
+    const mutationFn = (payload: SchoolAcademics) => apiService.putThrowable(apiGateway.form.academics.update(schoolId, school.schoolAcademics!.id), payload);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    // const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ["school", "detailed", schoolId] });
+
 
     const onSubmit = async (data: SchoolAcademics) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
+        const response = await safeAsyncMutate(data);
 
         if (!response.success) {
             console.error("Failed to submit academics form", response.error);
             return;
         }
-        await fetchMyDetailedSchool();
         navigate('../../');
 
 

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/AuthContext";
 import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
+import NotFound from "./pages/Notfounds/NotFound";
 import AuthenticatedRoutes from "./Guard/AuthenticatedRoutes";
 import { Dashboard } from "./components/Dashboard";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -29,6 +29,8 @@ import StaffUpdatedForm from "./components/Forms/UpdateForm/Wrapper/StaffUpdated
 import MediaUpdatedForm from "./components/Forms/UpdateForm/Wrapper/MediaUpdatedForm";
 import SchoolViewManagemet from "./components/MySchool/SchoolViewManagemet";
 import Login2 from "./pages/Login2";
+import SchoolFormsCompleted from "./Guard/SchoolFormsCompleted";
+import SchoolNotFound from "./pages/Notfounds/SchoolNotFound";
 
 
 const queryClient = new QueryClient();
@@ -39,15 +41,16 @@ function App() {
 
   return (
     <>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <PageProvider>
-            <DetailedSchoolProvider>
+      <Router>
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <PageProvider>
+              <DetailedSchoolProvider>
 
-              <Sonner />
+                <Sonner />
 
-              <Router>
                 <Routes>
+
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/login" element={<Login2 />} />
                   {/* <Route path="/signup" element={<SignUp />} /> */}
@@ -96,18 +99,32 @@ function App() {
                       <Route element={<AuthorizedRoutes roles={[ROLES.ADMIN]} />} >
                         <Route path="my-school/:schoolId" element={<SchoolViewManagemet />} >
 
-                          <Route index element={<SchoolView />} />
+                          <Route element={<SchoolFormsCompleted />} >
+                            <Route index element={<SchoolView />} />
 
-                          <Route path="edit" element={<Outlet />} >
-                            <Route path="general" element={<GeneralUpdateForm />} />
-                            <Route path="academics" element={<AcademicsUpdateForm />} />
-                            <Route path="facilities" element={<FacilitiesUpdatedForm />} />
-                            <Route path="staff" element={<StaffUpdatedForm />} />
-                            <Route path="media" element={<MediaUpdatedForm />} />
+                            <Route path="edit" element={<Outlet />} >
+                              <Route path="general" element={<GeneralUpdateForm />} />
+                              <Route path="academics" element={<AcademicsUpdateForm />} />
+                              <Route path="facilities" element={<FacilitiesUpdatedForm />} />
+                              <Route path="staff" element={<StaffUpdatedForm />} />
+                              <Route path="media" element={<MediaUpdatedForm />} />
+                            </Route>
+
                           </Route>
 
 
                         </Route>
+
+                        <Route path="add-school" element={<Outlet />}>
+                          <Route index path="form/general" element={<GeneralForm />} />
+                          <Route element={<DetailedSchoolExists />}>
+                            <Route path=":schoolId/form/academics" element={<AcademicsForm />} />
+                            <Route path=":schoolId/form/facilities" element={<FacilitiesForm />} />
+                            <Route path=":schoolId/form/staff" element={<StaffForm />} />
+                            <Route path=":schoolId/form/media" element={<MediaForm />} />
+                          </Route>
+                        </Route>
+
                       </Route>
 
 
@@ -119,16 +136,17 @@ function App() {
                   </Route>
 
 
-
+                  <Route path="school/404" element={<SchoolNotFound />} />
                   <Route path="*" element={<NotFound />} />
 
 
                 </Routes>
-              </Router>
-            </DetailedSchoolProvider>
-          </PageProvider >
-        </QueryClientProvider >
-      </AuthProvider >
+
+              </DetailedSchoolProvider>
+            </PageProvider >
+          </QueryClientProvider >
+        </AuthProvider >
+      </Router >
     </>
   )
 }

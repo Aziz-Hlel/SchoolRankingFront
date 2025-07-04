@@ -12,6 +12,9 @@ import DetachedAcademics from "../../DetachedForms/Academics/DetachedAcademics";
 import AbstractWrapper from "./AbstractWrapper";
 import NavigationButtons from "../NavigationButton/NavigationButtons";
 import { useDetailedSchool } from "@/contexts/DetailedSchoolProvider";
+import { useChangePageById } from "@/store/usePageStore";
+import { useEffect } from "react";
+import useApiMutation from "@/hooks/useApiMutation";
 
 
 
@@ -22,7 +25,7 @@ const AcademicsForm = () => {
     const { detailedSchool } = useDetailedSchool();
 
     const navigate = useNavigate();
-
+    const schoolId = detailedSchool!.schoolGeneral!.id
     const form = useForm<SchoolAcademics>({
         resolver: zodResolver(schoolAcademicsSchema),
         defaultValues: {
@@ -34,19 +37,20 @@ const AcademicsForm = () => {
         },
     });
 
-    const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(detailedSchool!.schoolGeneral!.id), payload);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    const mutationFn = (payload: SchoolAcademics) => apiService.postThrowable(apiGateway.form.academics.create(schoolId), payload);
+
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'], });
 
     const onSubmit = async (data: SchoolAcademics) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
-
+        const response = await safeAsyncMutate(data);
+        console.log(response)
         if (!response.success) {
             console.error("Failed to submit academics form", response.error);
             return;
         }
-        navigate('/forms/facilities');
+        navigate(`/dashboard/add-school/${schoolId}/form/facilities`);
 
 
 

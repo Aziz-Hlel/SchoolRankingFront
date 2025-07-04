@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import type { FC } from 'react';
 import { usePageContext } from '@/contexts/PageContext';
 import { useOrdredPages } from '@/store/usePageStore';
+import { CircleAlert } from 'lucide-react';
 
 interface SidebarProps {
   currentPage: Page;
@@ -29,7 +30,7 @@ export const Sidebar: FC<SidebarProps> = ({ }) => {
   const ordredPages = useOrdredPages();
 
 
-  console.log("current page", currentPage);
+  console.log("ordredPages : : ", ordredPages);
 
   return (
     <div className="w-64 bg-white border-r border-border h-screen flex flex-col">
@@ -50,25 +51,29 @@ export const Sidebar: FC<SidebarProps> = ({ }) => {
 
             const Icon = page.icon;
             return (
-              <Link to={page.path} key={index} >
+              <Link to={page.path} key={index}>
                 <Button
                   key={page.id}
                   variant={page === currentPage ? 'default' : 'ghost'}
                   className={cn(
                     'w-full justify-start text-sm lg:text-base h-10 lg:h-11 hover:cursor-pointer  ',
-                    currentPage.id === page.id && 'bg-primary text-primary-foreground'
+                    currentPage.id === page.id && 'bg-primary text-primary-foreground',
+                    page.additionalInfo?.formsCompleted === false && 'bg-yellow-100 hover:bg-yellow-400 ',
+                    currentPage.id === page.id && page.additionalInfo?.formsCompleted === false && 'text-black'
                   )}
                   // onClick={() => onPageChange(page)}
                   onClick={() => changePage(page)}
                 >
-                  <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <Icon className="w-4 h-4 mr-2 flex-shrink-0 " />
                   <span className="truncate">{page.sidebarTitle}</span>
+                  {page.additionalInfo?.formsCompleted === false && <CircleAlert className="text-yellow-600" />}
                 </Button>
               </Link>
             );
           })}
+
         </div>
-      </nav>
+      </nav >
 
       <div className="p-3 lg:p-4 border-t border-border">
 

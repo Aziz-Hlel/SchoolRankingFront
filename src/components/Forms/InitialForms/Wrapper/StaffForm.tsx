@@ -13,6 +13,7 @@ import { Form } from '@/components/ui/form';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useEffect } from 'react';
 import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
+import useApiMutation from '@/hooks/useApiMutation';
 
 type SchoolStaff = z.infer<typeof schoolStaffSchema>;
 
@@ -24,27 +25,25 @@ const StaffForm = () => {
 
     const mutationFn = (formData: SchoolStaff) => apiService.postThrowable(apiGateway.form.staff.create(detailedSchool!.schoolGeneral!.id), formData);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'],});
 
     const navigate = useNavigate();
 
     const onSubmit = async (data: SchoolStaff) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
+        const response = await safeAsyncMutate(data);
 
         if (!response.success) {
             console.error("Failed to submit general form", response.error);
             return;
         }
 
-        navigate('/forms/media');
+        const schoolId = detailedSchool.schoolGeneral!.id
+        navigate(`/dashboard/add-school/${schoolId}/form/media`);
 
 
     };
 
-    useEffect(() => {
-        console.log("errors : ", form.formState.errors)
-    }, [form.formState.errors])
 
 
     const onError = (errors: FieldErrors<SchoolStaff>) => {

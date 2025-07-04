@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Sidebar } from './Sidebar';
+import { Sidebar } from './Sidebar/Sidebar';
 import { Header } from './Headers/Header';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';

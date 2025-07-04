@@ -109,8 +109,8 @@ class ApiService {
     }
 
     private throwErrorAlert = (statusCode: number, error: string) => {
-        if (ENV.NODE_ENV === 'prod') return
-        alert(`Request failed with status ${statusCode} -\nerror message: ${error}`);
+        // if (ENV.NODE_ENV === 'prod') return
+        // alert(`Request failed with status ${statusCode} -\nerror message: ${error}`);
         // AlertInfo("Error", error);
     }
 

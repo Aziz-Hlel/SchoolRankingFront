@@ -140,14 +140,22 @@ export const SchoolView = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
 
         <Card key={sections[0].id + "xx"} className="h-fit">
-          <SectionHeader color={sections[0].color} title={sections[0].title} icon={Icon} editPath={sections[0].editPath} />
+          <SectionHeader color={sections[0].color}
+            title={sections[0].title} icon={Icon}
+            editPath={sections[0].editPath}
+            editable={detailedSchool.schoolGeneral ? true : false}
+          />
           <CardContent className="pt-0">
             <GeneralCardContent section={detailedSchool.schoolGeneral} />
           </CardContent>
         </Card>
 
         <Card key={sections[1].id + "xx"} className="h-fit">
-          <SectionHeader color={sections[1].color} title={sections[1].title} icon={Icon} editPath={sections[1].editPath} />
+          <SectionHeader color={sections[1].color}
+            title={sections[1].title} icon={Icon}
+            editPath={sections[1].editPath}
+            editable={detailedSchool.schoolAcademics ? true : false}
+          />
           <CardContent className="pt-0">
             <AcademicCardContent section={detailedSchool.schoolAcademics} />
           </CardContent>
@@ -155,16 +163,24 @@ export const SchoolView = () => {
 
 
         <Card key={sections[2].id + "xx"} className="h-fit">
-          <SectionHeader color={sections[2].color} title={sections[2].title} icon={Icon} editPath={sections[2].editPath} />
+          <SectionHeader color={sections[2].color}
+            title={sections[2].title} icon={Icon}
+            editPath={sections[2].editPath}
+            editable={detailedSchool.schoolFacilities ? true : false}
+          />
           <CardContent className="pt-0">
             <FacilitiesCardContent section={detailedSchool.schoolFacilities} />
-
           </CardContent>
         </Card>
 
 
         <Card key={sections[3].id + "xx"} className="h-fit">
-          <SectionHeader color={sections[3].color} title={sections[3].title} icon={Icon} editPath={sections[3].editPath} />
+          <SectionHeader
+            color={sections[3].color}
+            title={sections[3].title}
+            icon={Icon} editPath={sections[3].editPath}
+            editable={detailedSchool.schoolStaff ? true : false}
+          />
           <CardContent className="pt-0">
             <StaffCardContent section={detailedSchool.schoolStaff} />
           </CardContent>
@@ -172,7 +188,12 @@ export const SchoolView = () => {
 
 
         <Card key={sections[4].id + "xx"} className="h-fit">
-          <SectionHeader color={sections[4].color} title={sections[4].title} icon={Icon} editPath={sections[4].editPath} />
+          <SectionHeader
+            color={sections[4].color}
+            title={sections[4].title}
+            icon={Icon} editPath={sections[4].editPath}
+            editable={detailedSchool.schoolMedia ? true : false}
+          />
           <CardContent className="pt-0">
             <MediaCardContent section={detailedSchool.schoolMedia} />
           </CardContent>

@@ -6,7 +6,8 @@ const safeAsyncMutate = async <TResponse, TData>(mutateAsync: UseMutateAsyncFunc
 
     try {
 
-        const response = await mutateAsync(data);
+        const response = await mutateAsync(data).then((res) => res);
+
         return response
 
     } catch (error) {

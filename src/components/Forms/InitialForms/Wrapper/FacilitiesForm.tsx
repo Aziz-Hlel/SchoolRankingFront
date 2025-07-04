@@ -13,6 +13,9 @@ import DetachedFacilities from '../../DetachedForms/Facilities/DetachedFacilitie
 import AbstractWrapper from './AbstractWrapper';
 import NavigationButtons from '../NavigationButton/NavigationButtons';
 import { useDetailedSchool } from '@/contexts/DetailedSchoolProvider';
+import { useChangePageById } from '@/store/usePageStore';
+import { useEffect } from 'react';
+import useApiMutation from '@/hooks/useApiMutation';
 
 export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 
@@ -20,6 +23,7 @@ export type SchoolFacilitiesData = z.infer<typeof schoolFacilitiesSchema>;
 const FacilitiesForm = () => {
 
     const { detailedSchool } = useDetailedSchool();
+    const schoolId = detailedSchool.schoolGeneral!.id
 
     const form = useForm<SchoolFacilitiesData>({
         resolver: zodResolver(schoolFacilitiesSchema),
@@ -37,24 +41,24 @@ const FacilitiesForm = () => {
         },
     });
 
-    const { refreshUser } = useAuth();
 
     const mutationFn = (formData: SchoolFacilitiesData) => apiService.postThrowable(apiGateway.form.facilities.create(detailedSchool!.schoolGeneral!.id), formData);
 
-    const { mutateAsync, isPending } = useMutation({ mutationFn, });
+    const { safeAsyncMutate, isPending } = useApiMutation({ mutationFn, queryKey: ['user-schools'],});
+
 
     const navigate = useNavigate();
 
     const onSubmit = async (data: SchoolFacilitiesData) => {
 
-        const response = await safeAsyncMutate(mutateAsync, data);
+        const response = await safeAsyncMutate(data);
 
         if (!response.success) {
             console.error("Failed to submit general form", response.error);
             return;
         }
-        refreshUser()
-        navigate('/forms/staff');
+
+        navigate(`/dashboard/add-school/${schoolId}/form/staff`);
 
 
     }

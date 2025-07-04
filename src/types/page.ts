@@ -24,4 +24,8 @@ export type Page = {
     sidebarLabel: string;
     path: string;
     headerType: HeaderType;
+    additionalInfo?: {
+        formsCompleted: boolean;
+        lastFormStep: number;
+    }
 }

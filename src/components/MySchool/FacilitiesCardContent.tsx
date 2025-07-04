@@ -57,7 +57,7 @@ const FacilitiesCardContent = ({ section }: { section?: SchoolFacilities }) => {
 
                 <div className=' flex gap-2 '>
                     <p className="text-sm">AI itegration</p>
-                    <span>{section.safetyCompliance ? <Bot className='text-green-700' /> : <BotOff className='' />}</span>
+                    <span>{section.aiIntegration ? <Bot className='text-green-700' /> : <BotOff className='' />}</span>
                 </div>
 
             </div>

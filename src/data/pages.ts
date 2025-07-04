@@ -1,15 +1,8 @@
-import AdminsHeader from '@/components/Headers/MySchoolHeader';
-import { HeaderAdminViewSchool } from '@/components/Headers/HeaderInspectSchool';
-import SchoolsHeader from '@/components/Headers/SchoolsHeader';
-import { ProfileInformation } from '@/components/Profile/ProfileInformation';
-import { SchoolsManagement } from '@/components/SchoolsManagement';
-import { SchoolProfile } from '@/components/SchoolProfile';
+
 import { ROLES } from '@/enums/roles';
 import { sidebarButton, type Page } from '@/types/page';
-import { Users, User, School } from 'lucide-react';
-import MySchoolHeader from '@/components/Headers/MySchoolHeader';
-import HeaderProfile from '@/components/Headers/HeaderProfile';
-import { AdminManagement } from '@/components/AdminManagement';
+import { Users, User, School, Plus } from 'lucide-react';
+
 
 
 
@@ -42,12 +35,14 @@ const schools: Page = {
     icon: School,
     sidebarLabel: 'Schools',
 
-    headerType: "SchoolsHeader",
 
     path: '/dashboard/schools',
-
+    headerType: "SchoolsHeader",
 
 }
+
+
+
 
 const admins_school_view: Page = {
     id: "admins-superadmin-school-view",
@@ -75,6 +70,7 @@ const personalSchool: Page = {
     allowedRoles: [ROLES.ADMIN],
     icon: School,
     sidebarLabel: 'My School',
+
     headerType: "MySchoolHeader",
     path: '/dashboard/my-school',
 
@@ -90,19 +86,41 @@ const profile: Page = {
     allowedRoles: [ROLES.ADMIN, ROLES.SUPER_ADMIN],
     icon: User,
     sidebarLabel: 'Profile',
+
     headerType: "MySchoolHeader",
+
     path: '/dashboard/profile',
 
 
 }
 
+const addSchool: Page = {
+    id: "add-school",
+    sidebarTitle: 'Add school',
+    sidebarButton: sidebarButton.Schools,
+    mainPageTitle: 'Add School',
+    mainPageDescription: 'Add new school to the system',
+    allowedRoles: [ROLES.ADMIN,],
+    icon: Plus,
+    sidebarLabel: 'Add School',
+    headerType: "SchoolsHeader",
+    path: '/dashboard/add-school/form/general',
+}
 
-export const PAGES = {
+export const PAGES: Record<string, Page> = {
+    // SUPER ADMIN
     schools,
     admins,
-    profile,
+    admins_school_view,
+
+    // ADMIN
     personalSchool,
-    admins_school_view
-} as const;
+    addSchool,
+
+    // COMMON
+    profile,
+};
+
+
 
 export const ordredPages = [PAGES.admins, PAGES.schools, PAGES.personalSchool];
