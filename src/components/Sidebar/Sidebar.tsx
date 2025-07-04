@@ -66,7 +66,14 @@ export const Sidebar: FC<SidebarProps> = ({ }) => {
                 >
                   <Icon className="w-4 h-4 mr-2 flex-shrink-0 " />
                   <span className="truncate">{page.sidebarTitle}</span>
-                  {page.additionalInfo?.formsCompleted === false && <CircleAlert className="text-yellow-600" />}
+                  {page.additionalInfo?.formsCompleted === false &&
+                    <>
+                      <span className='text-yellow-600 text-xs font-medium ml-2'>{page.additionalInfo?.lastFormStep + 1}/5</span>
+                      <CircleAlert className="text-yellow-600" />
+
+                    </>
+
+                  }
                 </Button>
               </Link>
             );
