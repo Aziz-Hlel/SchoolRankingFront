@@ -7,7 +7,7 @@ const AuthenticatedRoutes = () => {
     console.log("ousll protected routes");
 
     const { user } = useAuth();
-console.log('user === ', user);
+    console.log('user === ', user);
     // const navigate = useNavigate();
 
     if (user === undefined)
